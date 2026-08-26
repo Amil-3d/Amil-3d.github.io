@@ -1,10 +1,10 @@
-# amil.engineer
+# Amil Dhookie — engineering portfolio
 
-Personal engineering portfolio. Static site, hosted on GitHub Pages.
+Static site, hosted on GitHub Pages at <https://amil-3d.github.io>
 
 ## Adding or editing a project
 
-1. Open <https://amil.engineer/editor.html>
+1. Open <https://amil-3d.github.io/editor.html>
 2. Add/edit/reorder projects, click **Generate JSON**, then **Copy**
 3. Open `projects.json` in this repo on github.com, click the pencil, select all, paste, **Commit changes**
 
@@ -28,4 +28,9 @@ Drop a file named `resume.pdf` in the repo root and the "Résumé (PDF)" button 
 - `projects.json` — project content, the only file you normally edit
 - `editor.html` — form UI that writes `projects.json` for you
 - `img/` — project photos
-- `CNAME` — the custom domain; do not delete, Pages needs it
+
+## Custom domain, later
+
+Nothing here is tied to `amil-3d.github.io`. To move to a domain you own: buy it, point four A records
+and four AAAA records at GitHub's Pages IPs, then enter the domain under Settings -> Pages -> Custom domain.
+No changes to any file in this repo.
