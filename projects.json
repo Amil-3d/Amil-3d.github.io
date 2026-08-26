@@ -1,0 +1,47 @@
+[
+  {
+    "title": "Competition Fixed-Wing UAV",
+    "role": "Team Captain · Mechanical & Systems Lead — SUAS",
+    "featured": true,
+    "image": "",
+    "summary": "Led airframe and systems development for a student-built competition UAV: structural layout, servo and control-surface linkages, power and connector standards, and integration between the mechanical and avionics sides of the team.",
+    "tags": ["Fusion 360", "Airframe design", "Servo linkages", "LiPo / power", "Systems integration"],
+    "link": ""
+  },
+  {
+    "title": "Robotics Club — Curriculum & Builds",
+    "role": "Student Leader",
+    "featured": false,
+    "image": "",
+    "summary": "Wrote and taught a ground-up curriculum on motor fundamentals and intro CAD, and mentored students one-on-one on their own builds. Regular attendance grew from about 5 to 20.",
+    "tags": ["Teaching", "CAD", "Motors & drivetrain"],
+    "link": ""
+  },
+  {
+    "title": "3D Printing & Design for Manufacture",
+    "role": "Personal Work",
+    "featured": false,
+    "image": "",
+    "summary": "Bambu Lab P1S with AMS plus heavily modified secondary printers. Ongoing work in tolerance tuning, print-oriented part design, and functional prototyping for the projects on this page.",
+    "tags": ["FDM", "DFM", "Tolerancing", "Prototyping"],
+    "link": ""
+  },
+  {
+    "title": "FPV Drone Builds",
+    "role": "Personal Work",
+    "featured": false,
+    "image": "",
+    "summary": "Building, tuning, and repairing FPV quads — frame and component selection, soldering and wiring, flight-controller tuning, and the failure analysis that follows every hard landing.",
+    "tags": ["Soldering", "Flight tuning", "Repair"],
+    "link": ""
+  },
+  {
+    "title": "Custom PC Build",
+    "role": "Personal Work",
+    "featured": false,
+    "image": "",
+    "summary": "Full specification and assembly of a workstation for CAD and simulation — Ryzen 7 7700X, RX 7900 GRE, 32 GB DDR5 — with attention to thermals and airflow under sustained load.",
+    "tags": ["Thermals", "Assembly", "Spec & sourcing"],
+    "link": ""
+  }
+]
