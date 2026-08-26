@@ -120,6 +120,7 @@ footer{padding:40px 0 56px;font-family:var(--mono);font-size:12px;color:var(--in
   <div class="wrap">
     <a class="brand" href="#top">amil<span>.</span>dhookie</a>
     <a class="nl" href="#work">work</a>
+    <a class="nl" href="#teaching">teaching</a>
     <a class="nl" href="#about">about</a>
     <a class="nl" href="#contact">contact</a>
     <button id="theme" aria-label="Toggle color theme">◐</button>
@@ -146,6 +147,13 @@ footer{padding:40px 0 56px;font-family:var(--mono);font-size:12px;color:var(--in
   </div>
 </section>
 
+<section id="teaching">
+  <div class="wrap">
+    <div class="shead"><h2>Teaching &amp; Outreach</h2><div class="rule"></div></div>
+    <div class="grid" id="teaching-grid"></div>
+  </div>
+</section>
+
 <section id="about">
   <div class="wrap">
     <div class="shead"><h2>About</h2><div class="rule"></div></div>
@@ -153,12 +161,12 @@ footer{padding:40px 0 56px;font-family:var(--mono);font-size:12px;color:var(--in
       <div>
         <p>I'm a mechanical engineering student at Virginia Tech. I got here the long way around — Lego, then RC cars, then drones, then printers — and somewhere in there taking things apart turned into designing them.</p>
         <p>What I like most is the loop between a CAD model and a part you can hold. A design is a guess until it's printed, loaded, and flown, and the interesting work happens in what breaks and why.</p>
-        <p>Outside the shop I tutor elementary students in STEM, run a robotics club, and spend more time than I should tuning a golf swing.</p>
+        <p>The other half of it is teaching. I co-led a robotics club, tutored elementary students in STEM, and spent a year showing senior citizens how their own devices work — and explaining a motor to someone who has never seen one is its own kind of design problem.</p>
       </div>
       <dl class="skills">
-        <dt>CAD</dt><dd>Fusion 360, SOLIDWORKS</dd>
+        <dt>CAD &amp; Design</dt><dd>Fusion 360 · SOLIDWORKS (learning)</dd>
         <dt>Programming</dt><dd>Python, Java</dd>
-        <dt>Fabrication</dt><dd>FDM printing, soldering, hand tools, assembly</dd>
+        <dt>Fabrication</dt><dd>FDM 3D printing, rapid prototyping, PC assembly, RC/UAV electronics</dd>
         <dt>Languages</dt><dd>English, Spanish, Afrikaans</dd>
       </dl>
     </div>
@@ -170,9 +178,8 @@ footer{padding:40px 0 56px;font-family:var(--mono);font-size:12px;color:var(--in
     <div class="shead"><h2>Contact</h2><div class="rule"></div></div>
     <p class="lede" style="margin-bottom:20px">Open to internships, research positions, and build projects worth staying up for.</p>
     <div class="contact-row">
-      <a class="btn pri" href="mailto:amil.dhookie@gmail.com">Email</a>
+      <a class="btn pri" href="mailto:amild@vt.edu">amild@vt.edu</a>
       <a class="btn" href="https://github.com/Amil-3d">GitHub</a>
-      <a class="btn" href="https://www.linkedin.com/in/LINKEDIN_HANDLE">LinkedIn</a>
     </div>
   </div>
 </section>
@@ -220,7 +227,14 @@ function cardHTML(p){
 fetch('projects.json')
   .then(function(r){ return r.json(); })
   .then(function(list){
-    document.getElementById('projects').innerHTML = list.map(cardHTML).join('');
+    var work = list.filter(function(p){ return p.kind !== 'teaching'; });
+    var teaching = list.filter(function(p){ return p.kind === 'teaching'; });
+    document.getElementById('projects').innerHTML = work.map(cardHTML).join('');
+    if(teaching.length){
+      document.getElementById('teaching-grid').innerHTML = teaching.map(cardHTML).join('');
+    } else {
+      document.getElementById('teaching').style.display = 'none';
+    }
   })
   .catch(function(){
     document.getElementById('projects').innerHTML =

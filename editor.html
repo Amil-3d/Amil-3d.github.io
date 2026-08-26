@@ -36,12 +36,13 @@ h1{font-size:26px;letter-spacing:-.02em;margin:0 0 6px}
 .itemhead{display:flex;align-items:center;gap:8px;margin-bottom:14px}
 .itemhead .n{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-right:auto}
 label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin:12px 0 5px}
-input[type=text],textarea{
+input[type=text],textarea,select{
   width:100%;background:var(--bg);border:1px solid var(--line);border-radius:7px;
   padding:9px 11px;color:var(--ink);font-family:var(--sans);font-size:14.5px;
 }
 textarea{min-height:78px;resize:vertical}
-input:focus,textarea:focus{outline:none;border-color:var(--accent)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
+select{cursor:pointer}
 .row{display:flex;gap:14px;flex-wrap:wrap}
 .row>div{flex:1;min-width:200px}
 .feat{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:14px;color:var(--ink-2)}
@@ -91,7 +92,7 @@ button.sm{padding:4px 9px;font-size:12px}
 </div>
 
 <pre id="out">Click Generate JSON.</pre>
-<p class="note">Tip: mark exactly one project as <strong>Featured</strong> — it gets the big wide card at the top.</p>
+<p class="note">Tip: mark exactly one project as <strong>Featured</strong> — it gets the big wide card at the top of Selected Work. <strong>Section</strong> decides which of the two grids a card lands in.</p>
 
 </div>
 
@@ -99,7 +100,7 @@ button.sm{padding:4px 9px;font-size:12px}
 var items = [];
 
 function blank(){
-  return {title:"", role:"", featured:false, image:"", summary:"", tags:[], link:""};
+  return {title:"", role:"", kind:"work", featured:false, image:"", summary:"", tags:[], link:""};
 }
 
 function render(){
@@ -124,6 +125,7 @@ function render(){
         '<div><label>Link (optional — GitHub, writeup, video)</label><input type="text" data-f="link" data-i="' + i + '"></div>' +
       '</div>' +
       '<label>Tags (comma separated)</label><input type="text" data-f="tags" data-i="' + i + '">' +
+      '<label>Section</label><select data-f="kind" data-i="' + i + '"><option value="work">Selected Work</option><option value="teaching">Teaching &amp; Outreach</option></select>' +
       '<div class="feat"><input type="checkbox" data-f="featured" data-i="' + i + '"><span>Featured — show as the large card</span></div>';
     box.appendChild(d);
 
@@ -134,8 +136,15 @@ function render(){
     d.querySelector('[data-f=link]').value = p.link || '';
     d.querySelector('[data-f=tags]').value = (p.tags || []).join(', ');
     d.querySelector('[data-f=featured]').checked = !!p.featured;
+    d.querySelector('[data-f=kind]').value = p.kind || 'work';
   });
 }
+
+document.getElementById('items').addEventListener('change', function(e){
+  if(e.target.getAttribute('data-f') === 'kind'){
+    items[Number(e.target.getAttribute('data-i'))].kind = e.target.value;
+  }
+});
 
 document.getElementById('items').addEventListener('input', function(e){
   var f = e.target.getAttribute('data-f');

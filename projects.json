@@ -1,47 +1,62 @@
 [
   {
     "title": "Competition Fixed-Wing UAV",
-    "role": "Team Captain · Mechanical & Systems Lead — SUAS",
+    "role": "Team Manager · Airframe & Mechanical Systems Lead — SUAS · 2024–2026",
+    "kind": "work",
     "featured": true,
     "image": "",
-    "summary": "Led airframe and systems development for a student-built competition UAV: structural layout, servo and control-surface linkages, power and connector standards, and integration between the mechanical and avionics sides of the team.",
-    "tags": ["Fusion 360", "Airframe design", "Servo linkages", "LiPo / power", "Systems integration"],
+    "summary": "Designed the fuselage and a 3D-printable wing with integrated ailerons and elevators, built around a 1×1 in aluminium spar, through repeated CAD-and-test iterations. Ran the team itself as well as the airframe: coordinating airframe, electronics, software and mechanical sub-teams against deadlines we set ourselves.",
+    "tags": ["Fusion 360", "Airframe design", "3D-printed structures", "Control surfaces", "Systems integration"],
     "link": ""
   },
   {
-    "title": "Robotics Club — Curriculum & Builds",
-    "role": "Student Leader",
+    "title": "Custom PC Case & Build",
+    "role": "Personal Project · 2025–2026",
+    "kind": "work",
     "featured": false,
     "image": "",
-    "summary": "Wrote and taught a ground-up curriculum on motor fundamentals and intro CAD, and mentored students one-on-one on their own builds. Regular attendance grew from about 5 to 20.",
-    "tags": ["Teaching", "CAD", "Motors & drivetrain"],
+    "summary": "Designed and assembled a desktop from the case outward — working through component compatibility, power delivery and thermal management, and resolving hardware conflicts as they surfaced during the build.",
+    "tags": ["Enclosure design", "Thermals", "Power delivery", "Assembly"],
     "link": ""
   },
   {
-    "title": "3D Printing & Design for Manufacture",
-    "role": "Personal Work",
+    "title": "FDM 3D Printer Modding",
+    "role": "Personal Project · 2025–2026",
+    "kind": "work",
     "featured": false,
     "image": "",
-    "summary": "Bambu Lab P1S with AMS plus heavily modified secondary printers. Ongoing work in tolerance tuning, print-oriented part design, and functional prototyping for the projects on this page.",
-    "tags": ["FDM", "DFM", "Tolerancing", "Prototyping"],
+    "summary": "Ongoing modification and tuning of FDM printers — the machines that produce parts for everything else on this page. PLACEHOLDER: replace this with what you actually changed and what it bought you.",
+    "tags": ["FDM", "Hardware modding", "Calibration"],
     "link": ""
   },
   {
-    "title": "FPV Drone Builds",
-    "role": "Personal Work",
+    "title": "Robotics Club",
+    "role": "Co-Leader & Mentor · 2024–2026",
+    "kind": "teaching",
     "featured": false,
     "image": "",
-    "summary": "Building, tuning, and repairing FPV quads — frame and component selection, soldering and wiring, flight-controller tuning, and the failure analysis that follows every hard landing.",
-    "tags": ["Soldering", "Flight tuning", "Repair"],
+    "summary": "Taught foundational classes on motor fundamentals and CAD basics; regular attendance grew from about 5 members to 20. Mentored 3+ students weekly one-on-one on RoboCup robots, 3D printing and troubleshooting, soldering, and basic circuits.",
+    "tags": ["Teaching", "CAD", "Motors", "Soldering"],
     "link": ""
   },
   {
-    "title": "Custom PC Build",
-    "role": "Personal Work",
+    "title": "Senior Tech Help",
+    "role": "Co-Leader · 2025–2026",
+    "kind": "teaching",
     "featured": false,
     "image": "",
-    "summary": "Full specification and assembly of a workstation for CAD and simulation — Ryzen 7 7700X, RX 7900 GRE, 32 GB DDR5 — with attention to thermals and airflow under sustained load.",
-    "tags": ["Thermals", "Assembly", "Spec & sourcing"],
+    "summary": "Taught digital literacy to 5+ senior citizens through step-by-step, hands-on instruction. Repeat questions ran at roughly one person per week, which is the number I actually cared about — it meant the teaching was sticking.",
+    "tags": ["Instruction", "Patience"],
+    "link": ""
+  },
+  {
+    "title": "STEM Roots",
+    "role": "Member · 2024–2025",
+    "kind": "teaching",
+    "featured": false,
+    "image": "",
+    "summary": "Tutored elementary students through hands-on STEM activities, adapting explanations and projects to whoever was in front of me.",
+    "tags": ["Tutoring", "Outreach"],
     "link": ""
   }
 ]
