@@ -1,62 +1,120 @@
 [
   {
     "title": "Competition Fixed-Wing UAV",
-    "role": "Team Manager · Airframe & Mechanical Systems Lead — SUAS · 2024–2026",
-    "kind": "work",
+    "role": "SUAS Competition Team · Airframe & Structures · 2024–2026",
     "featured": true,
-    "image": "",
-    "summary": "Designed the fuselage and a 3D-printable wing with integrated ailerons and elevators, built around a 1×1 in aluminium spar, through repeated CAD-and-test iterations. Ran the team itself as well as the airframe: coordinating airframe, electronics, software and mechanical sub-teams against deadlines we set ourselves.",
+    "summary": "Designed the fuselage and a 3D-printable wing with integrated ailerons and elevators, built around a 1×1 in aluminium spar, through repeated CAD-and-test iterations. Foam board airframes carried the early testing: cheap to cut, quick to rebuild, and honest about what the design actually did in the air. Alongside the airframe I ran the team itself, coordinating the airframe, electronics, software and mechanical sub-teams against deadlines we set ourselves.",
+    "images": [
+      { "src": "img/foam-rc-planes/foam-rc-planes-01-foam-plane-field.jpg", "alt": "Foam board test airframe being prepped for a flight test at the field" },
+      { "src": "img/foam-rc-planes/foam-rc-planes-02-foam-plane-buildroom.jpg", "alt": "Foam board aircraft under construction in the lab" },
+      { "src": "img/foam-rc-planes/foam-rc-planes-03-foam-plane-night-test.jpg", "alt": "Foam board plane staged for a night test flight" },
+      { "src": "img/foam-rc-planes/foam-rc-planes-04-servo-wiring-harness.jpg", "alt": "Hand-built servo extension harness" },
+      { "src": "img/foam-rc-planes/foam-rc-planes-05-foam-plane-postcrash.jpg", "alt": "Airframe disassembled after a crash, electronics recovered for the rebuild" }
+    ],
     "tags": ["Fusion 360", "Airframe design", "3D-printed structures", "Control surfaces", "Systems integration"],
+    "link": ""
+  },
+  {
+    "title": "3D-Printed RC Plane",
+    "role": "Personal Project · 2025–2026",
+    "featured": true,
+    "summary": "A high-wing aircraft printed almost end to end: twin tail booms, a V-tail, and wing panels with servo bays and control horns designed into the print rather than cut in afterwards. Fuselage sections use internal lattice ribbing to hold their shape without adding weight. It flies, which is the part that took the most revisions.",
+    "images": [
+      { "src": "img/printed-rc-plane/printed-rc-plane-01-printed-plane-assembled.jpg", "alt": "Fully assembled 3D printed RC plane with high wing, twin tail booms and V-tail" },
+      { "src": "img/printed-rc-plane/printed-rc-plane-03-printed-plane-wing-panel.jpg", "alt": "Full printed wing panel laid out with servo bays and control horns wired" },
+      { "src": "img/printed-rc-plane/printed-rc-plane-02-printed-plane-tail-servos.jpg", "alt": "Printed tail boom and control surfaces with servo installed" },
+      { "src": "img/printed-rc-plane/printed-rc-plane-04-printed-plane-fuselage-print.jpg", "alt": "Fuselage half on the printer bed showing internal lattice ribbing" }
+    ],
+    "video": {
+      "src": "video/printed-rc-plane-flight.mp4",
+      "poster": "video/printed-rc-plane-flight-poster.jpg",
+      "label": "Flight test"
+    },
+    "tags": ["Design for print", "Lattice structures", "V-tail", "Servo integration", "Flight testing"],
+    "link": ""
+  },
+  {
+    "title": "FPV Quadcopter Builds",
+    "role": "Personal Project · 2024–2026",
+    "summary": "5 in freestyle quads built from bare frames: soldering the flight controller stack, fitting the VTX and camera, wiring the XT60 lead and tuning the result until it flies the way I want. A sub-250 g micro build on 2.5 in props runs an ELRS all-in-one board and DJI O4 Pro, which is a very different set of packaging problems in a much smaller space.",
+    "images": [
+      { "src": "img/fpv-quads/fpv-quads-01-quad-lumenier-assembled.jpg", "alt": "Assembled 5 inch FPV quad on the bench, powered up with status LEDs lit" },
+      { "src": "img/fpv-quads/fpv-quads-02-quad-in-hand.jpg", "alt": "5 inch quad held in hand showing the FPV camera in a purple mount and the FC stack" },
+      { "src": "img/fpv-quads/fpv-quads-03-quad-build-bench.jpg", "alt": "5 inch quad mid-build on the cutting mat with camera, VTX and soldering iron" },
+      { "src": "img/fpv-quads/fpv-quads-04-quad-fc-soldering.jpg", "alt": "Flight controller stack soldered to the frame with the XT60 lead being fitted" }
+    ],
+    "tags": ["Soldering", "FC stacks", "ELRS", "Betaflight tuning", "Power delivery"],
+    "link": ""
+  },
+  {
+    "title": "Ducted Prop Guard Drone",
+    "role": "Personal Project · 2025",
+    "summary": "A quad frame designed in Onshape around full ducts instead of bolt-on prop guards, so the protection is structure rather than an accessory. The camera and FC stack mount inside the same printed shell, which keeps the whole airframe to one part off the printer.",
+    "images": [
+      { "src": "img/prop-guard-drone/prop-guard-drone-01-prop-guard-cad.jpg", "alt": "Onshape CAD model of the ducted prop guard frame with camera and stack" },
+      { "src": "img/prop-guard-drone/prop-guard-drone-02-prop-guard-printed.jpg", "alt": "Printed prop guard frame in blue PLA" }
+    ],
+    "tags": ["Onshape", "Ducted frame", "Single-part airframe", "3D printing"],
     "link": ""
   },
   {
     "title": "Custom PC Case & Build",
     "role": "Personal Project · 2025–2026",
-    "kind": "work",
-    "featured": false,
-    "image": "",
-    "summary": "Designed and assembled a desktop from the case outward — working through component compatibility, power delivery and thermal management, and resolving hardware conflicts as they surfaced during the build.",
-    "tags": ["Enclosure design", "Thermals", "Power delivery", "Assembly"],
+    "featured": true,
+    "summary": "A mini-ITX machine designed from the case outward. The enclosure went through several printed iterations before the final one, plus a rear I/O bracket and a dual-fan GPU shroud sized to the card. Getting a 240 mm AIO, a modular PSU and a PCIe riser into that volume meant working the compatibility, airflow and cable routing problems in CAD first and then fixing what the print disagreed with.",
+    "images": [
+      { "src": "img/pc-build/pc-build-01-pc-final-build.jpg", "alt": "Finished mini ITX build with 240mm AIO, modular PSU and PCIe riser in the final case" },
+      { "src": "img/pc-build/pc-build-02-pc-final-build-side.jpg", "alt": "Side view of the finished build showing AIO routing and PSU placement" },
+      { "src": "img/pc-build/pc-build-07-pc-case-cad.jpg", "alt": "Onshape case assembly next to the printed panels and the donor PC" },
+      { "src": "img/pc-build/pc-build-03-pc-printed-case-blue.jpg", "alt": "Printed case iteration in blue with GPU and motherboard test fitted" },
+      { "src": "img/pc-build/pc-build-04-pc-printed-case-white.jpg", "alt": "White printed case with the GPU and B650I board mounted" },
+      { "src": "img/pc-build/pc-build-06-pc-case-shell-black.jpg", "alt": "Black case shell panels around the bare motherboard during fitment" },
+      { "src": "img/pc-build/pc-build-05-pc-printed-io-bracket.jpg", "alt": "Printed rear I/O bracket fitted against the graphics card" },
+      { "src": "img/pc-build/pc-build-08-pc-gpu-fan-shroud.jpg", "alt": "Printed dual fan shroud mounted over a GPU heatsink" }
+    ],
+    "tags": ["Enclosure design", "Thermals", "Power delivery", "Design for print", "Assembly"],
     "link": ""
   },
   {
-    "title": "FDM 3D Printer Modding",
-    "role": "Personal Project · 2025–2026",
-    "kind": "work",
-    "featured": false,
-    "image": "",
-    "summary": "Ongoing modification and tuning of FDM printers — the machines that produce parts for everything else on this page. PLACEHOLDER: replace this with what you actually changed and what it bought you.",
-    "tags": ["FDM", "Hardware modding", "Calibration"],
+    "title": "FDM Printer Modding",
+    "role": "Personal Project · 2024–2026",
+    "summary": "The machines that produce parts for everything else on this page, rebuilt to keep up. On the i3-style printer that meant upgraded belts and a new toolhead, a custom fan shroud for part cooling, a bed probe wired into the toolhead breakout, and Klipper flashed and hosted on a Raspberry Pi so acceleration, jerk and input shaping could actually be tuned. Print acceleration went from 80 to over 300 mm/s². An enclosure followed once ABS was on the menu.",
+    "images": [
+      { "src": "img/printer-mods/printer-mods-01-ender-toolhead.jpg", "alt": "Modified toolhead with aftermarket hotend, printed fan duct and cable chain" },
+      { "src": "img/printer-mods/printer-mods-02-ender-probe-wiring.jpg", "alt": "Wiring the bed probe into the toolhead breakout board" },
+      { "src": "img/printer-mods/printer-mods-03-ender-sonic-pad-print.jpg", "alt": "Klipper interface monitoring an ABS enclosure print with live camera and tuning sliders" }
+    ],
+    "video": {
+      "src": "video/printer-mods-printing.mp4",
+      "poster": "video/printer-mods-printing-poster.jpg",
+      "label": "Mid-print"
+    },
+    "tags": ["Klipper", "Input shaping", "Hardware modding", "Calibration", "Part cooling"],
     "link": ""
   },
   {
-    "title": "Robotics Club",
-    "role": "Co-Leader & Mentor · 2024–2026",
-    "kind": "teaching",
-    "featured": false,
-    "image": "",
-    "summary": "Taught foundational classes on motor fundamentals and CAD basics; regular attendance grew from about 5 members to 20. Mentored 3+ students weekly one-on-one on RoboCup robots, 3D printing and troubleshooting, soldering, and basic circuits.",
-    "tags": ["Teaching", "CAD", "Motors", "Soldering"],
+    "title": "Hand-Wired Macropad",
+    "role": "Personal Project · 2025",
+    "summary": "A 3×3 macropad wired by hand on a Pro Micro: diodes soldered across the switch matrix, rows and columns run out to the board, then firmware to map it. Small enough to finish in a weekend and a clean way to learn matrix scanning properly instead of reading about it.",
+    "images": [
+      { "src": "img/macropad/macropad-01-macropad-switch-matrix.jpg", "alt": "3x3 switch plate with diodes soldered across the matrix" },
+      { "src": "img/macropad/macropad-02-macropad-wiring.jpg", "alt": "Matrix rows and columns wired out to the Pro Micro" },
+      { "src": "img/macropad/macropad-03-macropad-bench.jpg", "alt": "Bench setup during the macropad build" }
+    ],
+    "tags": ["Switch matrix", "Soldering", "Pro Micro", "Firmware"],
     "link": ""
   },
   {
-    "title": "Senior Tech Help",
-    "role": "Co-Leader · 2025–2026",
-    "kind": "teaching",
-    "featured": false,
-    "image": "",
-    "summary": "Taught digital literacy to 5+ senior citizens through step-by-step, hands-on instruction. Repeat questions ran at roughly one person per week, which is the number I actually cared about — it meant the teaching was sticking.",
-    "tags": ["Instruction", "Patience"],
-    "link": ""
-  },
-  {
-    "title": "STEM Roots",
-    "role": "Member · 2024–2025",
-    "kind": "teaching",
-    "featured": false,
-    "image": "",
-    "summary": "Tutored elementary students through hands-on STEM activities, adapting explanations and projects to whoever was in front of me.",
-    "tags": ["Tutoring", "Outreach"],
+    "title": "Curtain Rod Bracket",
+    "role": "Practical Print · 2025",
+    "size": "small",
+    "summary": "My mom needed a curtain rod to hang where nothing off the shelf would fit. Two printed halves, sized to the door frame and the load, installed and still holding. Not glamorous, but it is the shortest version of why I like this: a specific problem, a part that did not exist, and an afternoon.",
+    "images": [
+      { "src": "img/misc-prints/misc-prints-02-curtain-bracket-installed.jpg", "alt": "Bracket installed on the wall above the door frame" },
+      { "src": "img/misc-prints/misc-prints-01-curtain-bracket-printed.jpg", "alt": "Two printed curtain rod bracket halves off the printer" },
+      { "src": "img/misc-prints/misc-prints-03-curtain-bracket-loaded.jpg", "alt": "Bracket in service holding a hanging textile" }
+    ],
+    "tags": ["Design to fit", "Load-bearing print"],
     "link": ""
   }
 ]

@@ -41,6 +41,8 @@ input[type=text],textarea,select{
   padding:9px 11px;color:var(--ink);font-family:var(--sans);font-size:14.5px;
 }
 textarea{min-height:78px;resize:vertical}
+textarea.photos{min-height:96px;font-family:var(--mono);font-size:12.5px}
+label code{font-family:var(--mono);font-size:11px;text-transform:none;letter-spacing:0}
 input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
 select{cursor:pointer}
 .row{display:flex;gap:14px;flex-wrap:wrap}
@@ -78,7 +80,7 @@ button.sm{padding:4px 9px;font-size:12px}
     <li>Add or edit projects below, then click <strong>Generate JSON</strong> and <strong>Copy</strong>.</li>
     <li>Go to <code>github.com/Amil-3d/Amil-3d.github.io</code> → click <code>projects.json</code> → pencil icon.</li>
     <li>Select all, paste, then <strong>Commit changes</strong>.</li>
-    <li>For photos: open the <code>img</code> folder → <strong>Add file → Upload files</strong> → drag your photo in. Then set that project's Image field to <code>img/your-photo.jpg</code>.</li>
+    <li>For photos: open the <code>img</code> folder → <strong>Add file → Upload files</strong> → drag your photos in. Then list them in that project's <strong>Photos</strong> box, one per line, as <code>img/folder/photo.jpg | what the photo shows</code>.</li>
     <li>Site updates in about a minute.</li>
   </ol>
 </div>
@@ -92,7 +94,7 @@ button.sm{padding:4px 9px;font-size:12px}
 </div>
 
 <pre id="out">Click Generate JSON.</pre>
-<p class="note">Tip: mark exactly one project as <strong>Featured</strong> — it gets the big wide card at the top of Selected Work. <strong>Section</strong> decides which of the two grids a card lands in.</p>
+<p class="note">Tips: <strong>Featured</strong> makes a card full-width with the photos beside the text — good for two or three of your strongest projects, not all of them. <strong>Card size</strong> set to Small gives a project a lighter card. The first photo in the list is the one people see first; the rest appear as thumbnails they can click through.</p>
 
 </div>
 
@@ -100,7 +102,27 @@ button.sm{padding:4px 9px;font-size:12px}
 var items = [];
 
 function blank(){
-  return {title:"", role:"", kind:"work", featured:false, image:"", summary:"", tags:[], link:""};
+  return {title:"", role:"", featured:false, size:"", images:[], video:null, summary:"", tags:[], link:""};
+}
+
+/* Photos round-trip through a textarea as one line per photo:
+   img/folder/photo.jpg | what the photo shows            */
+function photosToText(p){
+  var imgs = p.images;
+  if(!imgs && p.image){ imgs = [p.image]; }
+  return (imgs || []).map(function(it){
+    if(typeof it === 'string'){ return it; }
+    return it.alt ? it.src + ' | ' + it.alt : it.src;
+  }).join('\n');
+}
+function textToPhotos(txt){
+  return txt.split('\n').map(function(line){
+    return line.trim();
+  }).filter(Boolean).map(function(line){
+    var bar = line.indexOf('|');
+    if(bar === -1){ return {src:line, alt:''}; }
+    return {src:line.slice(0, bar).trim(), alt:line.slice(bar + 1).trim()};
+  });
 }
 
 function render(){
@@ -120,29 +142,38 @@ function render(){
       '</div>' +
       '<label>Summary (2–3 sentences: what you built, what you were responsible for, what it took)</label>' +
       '<textarea data-f="summary" data-i="' + i + '"></textarea>' +
+      '<label>Photos — one per line, as <code>img/folder/photo.jpg | what it shows</code></label>' +
+      '<textarea class="photos" data-f="images" data-i="' + i + '"></textarea>' +
       '<div class="row">' +
-        '<div><label>Image path (e.g. img/uav.jpg)</label><input type="text" data-f="image" data-i="' + i + '"></div>' +
-        '<div><label>Link (optional — GitHub, writeup, video)</label><input type="text" data-f="link" data-i="' + i + '"></div>' +
+        '<div><label>Video file (optional, e.g. video/flight.mp4)</label><input type="text" data-f="videoSrc" data-i="' + i + '"></div>' +
+        '<div><label>Video poster image (optional)</label><input type="text" data-f="videoPoster" data-i="' + i + '"></div>' +
+        '<div><label>Video label (e.g. Flight test)</label><input type="text" data-f="videoLabel" data-i="' + i + '"></div>' +
+      '</div>' +
+      '<div class="row">' +
+        '<div><label>Link (optional — GitHub, writeup)</label><input type="text" data-f="link" data-i="' + i + '"></div>' +
+        '<div><label>Card size</label><select data-f="size" data-i="' + i + '"><option value="">Normal</option><option value="small">Small</option></select></div>' +
       '</div>' +
       '<label>Tags (comma separated)</label><input type="text" data-f="tags" data-i="' + i + '">' +
-      '<label>Section</label><select data-f="kind" data-i="' + i + '"><option value="work">Selected Work</option><option value="teaching">Teaching &amp; Outreach</option></select>' +
-      '<div class="feat"><input type="checkbox" data-f="featured" data-i="' + i + '"><span>Featured — show as the large card</span></div>';
+      '<div class="feat"><input type="checkbox" data-f="featured" data-i="' + i + '"><span>Featured — full-width card with the photos beside the text</span></div>';
     box.appendChild(d);
 
     d.querySelector('[data-f=title]').value = p.title;
     d.querySelector('[data-f=role]').value = p.role;
     d.querySelector('[data-f=summary]').value = p.summary;
-    d.querySelector('[data-f=image]').value = p.image;
+    d.querySelector('[data-f=images]').value = photosToText(p);
+    d.querySelector('[data-f=videoSrc]').value = (p.video && p.video.src) || '';
+    d.querySelector('[data-f=videoPoster]').value = (p.video && p.video.poster) || '';
+    d.querySelector('[data-f=videoLabel]').value = (p.video && p.video.label) || '';
     d.querySelector('[data-f=link]').value = p.link || '';
     d.querySelector('[data-f=tags]').value = (p.tags || []).join(', ');
     d.querySelector('[data-f=featured]').checked = !!p.featured;
-    d.querySelector('[data-f=kind]').value = p.kind || 'work';
+    d.querySelector('[data-f=size]').value = p.size || '';
   });
 }
 
 document.getElementById('items').addEventListener('change', function(e){
-  if(e.target.getAttribute('data-f') === 'kind'){
-    items[Number(e.target.getAttribute('data-i'))].kind = e.target.value;
+  if(e.target.getAttribute('data-f') === 'size'){
+    items[Number(e.target.getAttribute('data-i'))].size = e.target.value;
   }
 });
 
@@ -155,6 +186,12 @@ document.getElementById('items').addEventListener('input', function(e){
     items[i].tags = e.target.value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
   } else if(f === 'featured'){
     items[i].featured = e.target.checked;
+  } else if(f === 'images'){
+    items[i].images = textToPhotos(e.target.value);
+    delete items[i].image;
+  } else if(f === 'videoSrc' || f === 'videoPoster' || f === 'videoLabel'){
+    if(!items[i].video){ items[i].video = {src:'', poster:'', label:''}; }
+    items[i].video[f.replace('video', '').toLowerCase()] = e.target.value;
   } else {
     items[i][f] = e.target.value;
   }
@@ -180,8 +217,32 @@ document.getElementById('add').addEventListener('click', function(){
   window.scrollTo(0, document.body.scrollHeight);
 });
 
+/* Drop empty fields so projects.json stays readable. */
+function clean(list){
+  return list.map(function(p){
+    var o = {title:p.title, role:p.role};
+    if(p.featured){ o.featured = true; }
+    if(p.size){ o.size = p.size; }
+    o.summary = p.summary;
+    var imgs = p.images || [];
+    if(imgs.length){
+      o.images = imgs.map(function(it){
+        return it.alt ? {src:it.src, alt:it.alt} : {src:it.src};
+      });
+    }
+    if(p.video && p.video.src){
+      o.video = {src:p.video.src};
+      if(p.video.poster){ o.video.poster = p.video.poster; }
+      if(p.video.label){ o.video.label = p.video.label; }
+    }
+    o.tags = p.tags || [];
+    o.link = p.link || '';
+    return o;
+  });
+}
+
 document.getElementById('gen').addEventListener('click', function(){
-  document.getElementById('out').textContent = JSON.stringify(items, null, 2);
+  document.getElementById('out').textContent = JSON.stringify(clean(items), null, 2);
 });
 
 document.getElementById('copy').addEventListener('click', function(){

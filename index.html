@@ -4,10 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Amil Dhookie — Mechanical Engineering</title>
-<meta name="description" content="Mechanical engineering portfolio of Amil Dhookie — UAV systems, robotics, 3D printing, and design for manufacture.">
+<meta name="description" content="Mechanical engineering portfolio of Amil Dhookie — UAV systems, FPV drones, 3D printing, and design for manufacture.">
 <meta property="og:title" content="Amil Dhookie — Mechanical Engineering">
-<meta property="og:description" content="UAV systems, robotics, 3D printing, and design for manufacture.">
+<meta property="og:description" content="UAV systems, FPV drones, 3D printing, and design for manufacture.">
 <meta property="og:type" content="website">
+<meta property="og:image" content="img/printed-rc-plane/printed-rc-plane-01-printed-plane-assembled.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -85,10 +86,8 @@ section{padding:64px 0;border-bottom:1px solid var(--line)}
 .shead .rule{flex:1;height:1px;background:var(--line)}
 
 .grid{display:grid;gap:18px}
-.card{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;overflow:hidden;transition:.18s}
+.card{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;overflow:hidden;transition:border-color .18s,transform .18s}
 .card:hover{border-color:var(--line-2);transform:translateY(-2px)}
-.card .thumb{aspect-ratio:16/9;background:var(--accent-soft);display:grid;place-items:center;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--ink-3);text-align:center;padding:12px}
-.card .thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .card .body{padding:22px}
 .card h3{margin:0 0 6px;font-size:19px;letter-spacing:-.015em}
 .card .role{font-family:var(--mono);font-size:12px;color:var(--accent);margin-bottom:12px}
@@ -97,12 +96,65 @@ section{padding:64px 0;border-bottom:1px solid var(--line)}
 .chip{font-family:var(--mono);font-size:11px;color:var(--ink-3);border:1px solid var(--line);border-radius:20px;padding:3px 10px}
 .card .more{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--accent);text-decoration:none}
 .card .more:hover{text-decoration:underline}
+
+/* media: stage + thumbnail strip */
+.media{display:flex;flex-direction:column;border-bottom:1px solid var(--line);background:var(--accent-soft)}
+.stage{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--accent-soft)}
+.stage img,.stage video{width:100%;height:100%;object-fit:cover;display:block}
+.stage .open{
+  position:absolute;inset:0;width:100%;height:100%;padding:0;margin:0;border:0;
+  background:none;cursor:zoom-in;
+}
+.stage .badge{
+  position:absolute;right:10px;bottom:10px;font-family:var(--mono);font-size:11px;
+  color:#fff;background:rgba(0,0,0,.62);border-radius:6px;padding:3px 8px;pointer-events:none;
+  opacity:0;transition:opacity .15s;
+}
+.stage:hover .badge{opacity:1}
+.stage.empty{display:grid;place-items:center;font-family:var(--mono);font-size:12px;color:var(--ink-3);text-align:center;padding:12px}
+.strip{display:flex;gap:6px;padding:8px;overflow-x:auto;background:var(--bg-2);border-top:1px solid var(--line);scrollbar-width:thin}
+.strip button{
+  flex:0 0 auto;width:58px;height:40px;padding:0;border:1px solid var(--line);border-radius:5px;
+  overflow:hidden;background:var(--accent-soft);cursor:pointer;opacity:.5;transition:.15s;position:relative;
+}
+.strip button img{width:100%;height:100%;object-fit:cover;display:block}
+.strip button:hover{opacity:.85}
+.strip button[aria-current="true"]{opacity:1;border-color:var(--accent)}
+.strip button .play{
+  position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:13px;
+  background:rgba(0,0,0,.35);text-shadow:0 1px 3px rgba(0,0,0,.6);
+}
+
 @media(min-width:720px){
   .grid{grid-template-columns:1fr 1fr}
-  .card.wide{grid-column:1/-1;display:grid;grid-template-columns:1.1fr 1fr}
-  .card.wide .thumb{aspect-ratio:auto;min-height:280px;border-bottom:none;border-right:1px solid var(--line)}
+  .card.wide{grid-column:1/-1;display:grid;grid-template-columns:1.1fr 1fr;align-items:stretch}
+  .card.wide .media{border-bottom:none;border-right:1px solid var(--line);justify-content:center}
+  .card.wide .stage{aspect-ratio:auto;flex:1;min-height:300px}
   .card.wide .body{padding:30px}
 }
+.card.small .stage{aspect-ratio:2/1}
+.card.small .body{padding:18px}
+.card.small h3{font-size:16px}
+.card.small p{font-size:14px}
+.card.small .strip button{width:46px;height:32px}
+
+/* lightbox */
+#lb{position:fixed;inset:0;z-index:100;background:rgba(8,8,7,.93);display:none;place-items:center}
+#lb.on{display:grid}
+#lb img{max-width:min(1200px,92vw);max-height:82vh;object-fit:contain;border-radius:6px}
+#lb .cap{
+  position:absolute;left:0;right:0;bottom:26px;text-align:center;color:#d8d6cd;
+  font-family:var(--mono);font-size:12px;padding:0 60px;
+}
+#lb button{
+  position:absolute;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+  color:#fff;border-radius:8px;cursor:pointer;font-size:18px;line-height:1;
+  width:44px;height:44px;display:grid;place-items:center;
+}
+#lb button:hover{background:rgba(255,255,255,.18)}
+#lb .prev{left:16px;top:50%;transform:translateY(-50%)}
+#lb .next{right:16px;top:50%;transform:translateY(-50%)}
+#lb .close{right:16px;top:16px}
 
 .about{display:grid;gap:32px}
 @media(min-width:720px){.about{grid-template-columns:1.4fr 1fr}}
@@ -112,6 +164,12 @@ section{padding:64px 0;border-bottom:1px solid var(--line)}
 
 .contact-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
 footer{padding:40px 0 56px;font-family:var(--mono);font-size:12px;color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .card,.stage .badge,.strip button{transition:none}
+  .card:hover{transform:none}
+}
 </style>
 </head>
 <body>
@@ -120,7 +178,6 @@ footer{padding:40px 0 56px;font-family:var(--mono);font-size:12px;color:var(--in
   <div class="wrap">
     <a class="brand" href="#top">amil<span>.</span>dhookie</a>
     <a class="nl" href="#work">work</a>
-    <a class="nl" href="#teaching">teaching</a>
     <a class="nl" href="#about">about</a>
     <a class="nl" href="#contact">contact</a>
     <button id="theme" aria-label="Toggle color theme">◐</button>
@@ -131,10 +188,9 @@ footer{padding:40px 0 56px;font-family:var(--mono);font-size:12px;color:var(--in
   <div class="wrap">
     <div class="tag">Mechanical Engineering · Virginia Tech</div>
     <h1>Amil Dhookie</h1>
-    <p class="lede">I design and build <strong>flying and moving hardware</strong> — fixed-wing UAVs, robots, and printed mechanisms. My approach is the same every time: <strong>test, tune, measure, repeat</strong>.</p>
+    <p class="lede">I design and build <strong>flying and moving hardware</strong> — fixed-wing UAVs, FPV quads, and printed mechanisms. My approach is the same every time: <strong>test, tune, measure, repeat</strong>.</p>
     <div class="cta">
       <a class="btn pri" href="#work">See the work</a>
-      <a class="btn" href="resume.pdf">Résumé (PDF)</a>
       <a class="btn" href="https://github.com/Amil-3d">GitHub</a>
     </div>
   </div>
@@ -142,15 +198,8 @@ footer{padding:40px 0 56px;font-family:var(--mono);font-size:12px;color:var(--in
 
 <section id="work">
   <div class="wrap">
-    <div class="shead"><h2>Selected Work</h2><div class="rule"></div></div>
+    <div class="shead"><h2>Projects</h2><div class="rule"></div></div>
     <div class="grid" id="projects"></div>
-  </div>
-</section>
-
-<section id="teaching">
-  <div class="wrap">
-    <div class="shead"><h2>Teaching &amp; Outreach</h2><div class="rule"></div></div>
-    <div class="grid" id="teaching-grid"></div>
   </div>
 </section>
 
@@ -161,10 +210,9 @@ footer{padding:40px 0 56px;font-family:var(--mono);font-size:12px;color:var(--in
       <div>
         <p>I'm a mechanical engineering student at Virginia Tech. I got here the long way around — Lego, then RC cars, then drones, then printers — and somewhere in there taking things apart turned into designing them.</p>
         <p>What I like most is the loop between a CAD model and a part you can hold. A design is a guess until it's printed, loaded, and flown, and the interesting work happens in what breaks and why.</p>
-        <p>The other half of it is teaching. I co-led a robotics club, tutored elementary students in STEM, and spent a year showing senior citizens how their own devices work — and explaining a motor to someone who has never seen one is its own kind of design problem.</p>
       </div>
       <dl class="skills">
-        <dt>CAD &amp; Design</dt><dd>Fusion 360 · SOLIDWORKS (learning)</dd>
+        <dt>CAD &amp; Design</dt><dd>Fusion 360 · Onshape · SOLIDWORKS (learning)</dd>
         <dt>Programming</dt><dd>Python, Java</dd>
         <dt>Fabrication</dt><dd>FDM 3D printing, rapid prototyping, PC assembly, RC/UAV electronics</dd>
         <dt>Languages</dt><dd>English, Spanish, Afrikaans</dd>
@@ -189,6 +237,14 @@ footer{padding:40px 0 56px;font-family:var(--mono);font-size:12px;color:var(--in
   <span>Built and hosted on GitHub Pages</span>
 </footer>
 
+<div id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <img id="lbimg" alt="">
+  <div class="cap" id="lbcap"></div>
+  <button class="prev" id="lbprev" aria-label="Previous photo">&larr;</button>
+  <button class="next" id="lbnext" aria-label="Next photo">&rarr;</button>
+  <button class="close" id="lbclose" aria-label="Close viewer">&times;</button>
+</div>
+
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
 
@@ -210,13 +266,65 @@ function esc(s){
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-function cardHTML(p){
-  var thumb = p.image
-    ? '<div class="thumb"><img src="' + esc(p.image) + '" alt="' + esc(p.title) + '" loading="lazy"></div>'
-    : '<div class="thumb">[ add a photo: set "image" in projects.json ]</div>';
+/* Media list for one project: images (and a video, if there is one) as slides.
+   Accepts either the newer "images" array or a single legacy "image" string. */
+function mediaOf(p){
+  var out = [];
+  var imgs = p.images;
+  if(!imgs && p.image){ imgs = [p.image]; }
+  (imgs || []).forEach(function(it){
+    var src = typeof it === 'string' ? it : it.src;
+    if(!src){ return; }
+    out.push({ type:'image', src:src, alt:(typeof it === 'string' ? p.title : (it.alt || p.title)) });
+  });
+  if(p.video && p.video.src){
+    out.push({
+      type:'video', src:p.video.src,
+      poster:p.video.poster || '',
+      alt:(p.video.label || 'Video') + ' — ' + p.title
+    });
+  }
+  return out;
+}
+
+var MEDIA = [];   // MEDIA[cardIndex] = slides for that card
+
+function slideHTML(m){
+  if(m.type === 'video'){
+    return '<video controls preload="metadata"' +
+      (m.poster ? ' poster="' + esc(m.poster) + '"' : '') +
+      '><source src="' + esc(m.src) + '" type="video/mp4">Your browser cannot play this video.</video>';
+  }
+  return '<img src="' + esc(m.src) + '" alt="' + esc(m.alt) + '" loading="lazy">' +
+    '<button class="open" aria-label="View larger"></button>' +
+    '<span class="badge">Click to enlarge</span>';
+}
+
+function cardHTML(p, ci){
+  var slides = MEDIA[ci];
+  var media;
+  if(!slides.length){
+    media = '<div class="media"><div class="stage empty">[ add photos: set "images" in projects.json ]</div></div>';
+  } else {
+    var strip = slides.length > 1
+      ? '<div class="strip" role="tablist">' + slides.map(function(m, i){
+          var thumbSrc = m.type === 'video' ? m.poster : m.src;
+          return '<button data-card="' + ci + '" data-i="' + i + '" aria-current="' + (i === 0) + '" ' +
+            'aria-label="' + esc(m.alt) + '">' +
+            (thumbSrc ? '<img src="' + esc(thumbSrc) + '" alt="" loading="lazy">' : '') +
+            (m.type === 'video' ? '<span class="play">&#9654;</span>' : '') +
+            '</button>';
+        }).join('') + '</div>'
+      : '';
+    media = '<div class="media"><div class="stage" data-stage="' + ci + '">' +
+      slideHTML(slides[0]) + '</div>' + strip + '</div>';
+  }
+
   var chips = (p.tags || []).map(function(t){ return '<span class="chip">' + esc(t) + '</span>'; }).join('');
   var more = p.link ? '<a class="more" href="' + esc(p.link) + '">More on this project &rarr;</a>' : '';
-  return '<article class="card' + (p.featured ? ' wide' : '') + '">' + thumb +
+  var cls = 'card' + (p.featured ? ' wide' : '') + (p.size === 'small' ? ' small' : '');
+
+  return '<article class="' + cls + '">' + media +
     '<div class="body"><h3>' + esc(p.title) + '</h3>' +
     '<div class="role">' + esc(p.role) + '</div>' +
     '<p>' + esc(p.summary) + '</p>' +
@@ -224,17 +332,76 @@ function cardHTML(p){
     '</div></article>';
 }
 
+/* ---- lightbox ---- */
+var lb = document.getElementById('lb'), lbimg = document.getElementById('lbimg'),
+    lbcap = document.getElementById('lbcap');
+var lbCard = 0, lbIndex = 0;
+
+function lbPhotos(ci){
+  return MEDIA[ci].filter(function(m){ return m.type === 'image'; });
+}
+function lbShow(){
+  var list = lbPhotos(lbCard);
+  if(!list.length){ return; }
+  if(lbIndex < 0){ lbIndex = list.length - 1; }
+  if(lbIndex >= list.length){ lbIndex = 0; }
+  var m = list[lbIndex];
+  lbimg.src = m.src;
+  lbimg.alt = m.alt;
+  lbcap.textContent = m.alt + '  (' + (lbIndex + 1) + '/' + list.length + ')';
+}
+function lbOpen(ci, src){
+  lbCard = ci;
+  var list = lbPhotos(ci);
+  lbIndex = 0;
+  list.forEach(function(m, i){ if(m.src === src){ lbIndex = i; } });
+  lb.classList.add('on');
+  document.body.style.overflow = 'hidden';
+  lbShow();
+}
+function lbClose(){
+  lb.classList.remove('on');
+  lbimg.src = '';
+  document.body.style.overflow = '';
+}
+document.getElementById('lbclose').addEventListener('click', lbClose);
+document.getElementById('lbprev').addEventListener('click', function(e){ e.stopPropagation(); lbIndex--; lbShow(); });
+document.getElementById('lbnext').addEventListener('click', function(e){ e.stopPropagation(); lbIndex++; lbShow(); });
+lb.addEventListener('click', function(e){ if(e.target === lb || e.target === lbimg){ lbClose(); } });
+document.addEventListener('keydown', function(e){
+  if(!lb.classList.contains('on')){ return; }
+  if(e.key === 'Escape'){ lbClose(); }
+  if(e.key === 'ArrowLeft'){ lbIndex--; lbShow(); }
+  if(e.key === 'ArrowRight'){ lbIndex++; lbShow(); }
+});
+
+/* ---- wiring ---- */
+function wire(container){
+  container.addEventListener('click', function(e){
+    var thumb = e.target.closest('.strip button');
+    if(thumb){
+      var ci = +thumb.getAttribute('data-card'), i = +thumb.getAttribute('data-i');
+      var strip = thumb.parentNode;
+      strip.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-current', b === thumb); });
+      var stage = strip.parentNode.querySelector('.stage');
+      stage.innerHTML = slideHTML(MEDIA[ci][i]);
+      return;
+    }
+    var opener = e.target.closest('.stage .open');
+    if(opener){
+      var st = opener.closest('.stage');
+      lbOpen(+st.getAttribute('data-stage'), st.querySelector('img').getAttribute('src'));
+    }
+  });
+}
+
 fetch('projects.json')
   .then(function(r){ return r.json(); })
   .then(function(list){
-    var work = list.filter(function(p){ return p.kind !== 'teaching'; });
-    var teaching = list.filter(function(p){ return p.kind === 'teaching'; });
-    document.getElementById('projects').innerHTML = work.map(cardHTML).join('');
-    if(teaching.length){
-      document.getElementById('teaching-grid').innerHTML = teaching.map(cardHTML).join('');
-    } else {
-      document.getElementById('teaching').style.display = 'none';
-    }
+    MEDIA = list.map(mediaOf);
+    var host = document.getElementById('projects');
+    host.innerHTML = list.map(cardHTML).join('');
+    wire(host);
   })
   .catch(function(){
     document.getElementById('projects').innerHTML =
