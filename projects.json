@@ -3,7 +3,7 @@
     "title": "Competition Fixed-Wing UAV",
     "role": "SUAS Competition Team · Airframe & Structures · 2024–2026",
     "featured": true,
-    "summary": "Designed the fuselage and a 3D-printable wing with integrated ailerons and elevators, built around a 1×1 in aluminium spar, through repeated CAD-and-test iterations. Foam board airframes carried the early testing: cheap to cut, quick to rebuild, and honest about what the design actually did in the air. Alongside the airframe I ran the team itself, coordinating the airframe, electronics, software and mechanical sub-teams against deadlines we set ourselves.",
+    "summary": "Designed the fuselage and a 3D-printable wing with integrated ailerons and elevators, built around a 1×1 in aluminium spar, through repeated CAD-and-test iterations.",
     "images": [
       { "src": "img/foam-rc-planes/foam-rc-planes-01-foam-plane-field.jpg", "alt": "Foam board test airframe being prepped for a flight test at the field" },
       { "src": "img/foam-rc-planes/foam-rc-planes-02-foam-plane-buildroom.jpg", "alt": "Foam board aircraft under construction in the lab" },
@@ -18,7 +18,7 @@
     "title": "3D-Printed RC Plane",
     "role": "Personal Project · 2025–2026",
     "featured": true,
-    "summary": "A high-wing aircraft printed almost end to end: twin tail booms, a V-tail, and wing panels with servo bays and control horns designed into the print rather than cut in afterwards. Fuselage sections use internal lattice ribbing to hold their shape without adding weight. It flies, which is the part that took the most revisions.",
+    "summary": "End of year physics project where I mastered servo motors and control surfaces.",
     "images": [
       { "src": "img/printed-rc-plane/printed-rc-plane-01-printed-plane-assembled.jpg", "alt": "Fully assembled 3D printed RC plane with high wing, twin tail booms and V-tail" },
       { "src": "img/printed-rc-plane/printed-rc-plane-03-printed-plane-wing-panel.jpg", "alt": "Full printed wing panel laid out with servo bays and control horns wired" },
@@ -36,7 +36,7 @@
   {
     "title": "FPV Quadcopter Builds",
     "role": "Personal Project · 2024–2026",
-    "summary": "5 in freestyle quads built from bare frames: soldering the flight controller stack, fitting the VTX and camera, wiring the XT60 lead and tuning the result until it flies the way I want. A sub-250 g micro build on 2.5 in props runs an ELRS all-in-one board and DJI O4 Pro, which is a very different set of packaging problems in a much smaller space.",
+    "summary": "Freestyle 5 inch prop drone.",
     "images": [
       { "src": "img/fpv-quads/fpv-quads-01-quad-lumenier-assembled.jpg", "alt": "Assembled 5 inch FPV quad on the bench, powered up with status LEDs lit" },
       { "src": "img/fpv-quads/fpv-quads-02-quad-in-hand.jpg", "alt": "5 inch quad held in hand showing the FPV camera in a purple mount and the FC stack" },
@@ -49,7 +49,7 @@
   {
     "title": "Ducted Prop Guard Drone",
     "role": "Personal Project · 2025",
-    "summary": "A quad frame designed in Onshape around full ducts instead of bolt-on prop guards, so the protection is structure rather than an accessory. The camera and FC stack mount inside the same printed shell, which keeps the whole airframe to one part off the printer.",
+    "summary": "A quad frame designed in Onshape to come off the printer as one piece, with the ducts, camera and FC stack built into the same shell. I designed it around a 250 g limit to stay under the FAA rules.",
     "images": [
       { "src": "img/prop-guard-drone/prop-guard-drone-01-prop-guard-cad.jpg", "alt": "Onshape CAD model of the ducted prop guard frame with camera and stack" },
       { "src": "img/prop-guard-drone/prop-guard-drone-02-prop-guard-printed.jpg", "alt": "Printed prop guard frame in blue PLA" }
@@ -61,7 +61,7 @@
     "title": "Custom PC Case & Build",
     "role": "Personal Project · 2025–2026",
     "featured": true,
-    "summary": "A mini-ITX machine designed from the case outward. The enclosure went through several printed iterations before the final one, plus a rear I/O bracket and a dual-fan GPU shroud sized to the card. Getting a 240 mm AIO, a modular PSU and a PCIe riser into that volume meant working the compatibility, airflow and cable routing problems in CAD first and then fixing what the print disagreed with.",
+    "summary": "A mini-ITX machine designed from the case outward. I came into the project wanting to design for FDM manufacturing first, with as little support material as possible, so the enclosure, the rear I/O bracket and the dual-fan GPU shroud are all shaped to come off the bed clean. Getting a 240 mm AIO, a modular PSU and a PCIe riser into that volume meant working the compatibility, airflow and cable routing problems in CAD first.",
     "images": [
       { "src": "img/pc-build/pc-build-01-pc-final-build.jpg", "alt": "Finished mini ITX build with 240mm AIO, modular PSU and PCIe riser in the final case" },
       { "src": "img/pc-build/pc-build-02-pc-final-build-side.jpg", "alt": "Side view of the finished build showing AIO routing and PSU placement" },
@@ -78,7 +78,7 @@
   {
     "title": "FDM Printer Modding",
     "role": "Personal Project · 2024–2026",
-    "summary": "The machines that produce parts for everything else on this page, rebuilt to keep up. On the i3-style printer that meant upgraded belts and a new toolhead, a custom fan shroud for part cooling, a bed probe wired into the toolhead breakout, and Klipper flashed and hosted on a Raspberry Pi so acceleration, jerk and input shaping could actually be tuned. Print acceleration went from 80 to over 300 mm/s². An enclosure followed once ABS was on the menu.",
+    "summary": "The machines that produce parts for everything else on this page, rebuilt to keep up. On the i3-style printer that meant upgraded belts and a new toolhead, a custom fan shroud for part cooling, a bed probe wired into the toolhead breakout, and Klipper flashed and hosted on a Raspberry Pi so acceleration, jerk and input shaping could actually be tuned. Print acceleration went from 80 to over 300 mm/s².",
     "images": [
       { "src": "img/printer-mods/printer-mods-01-ender-toolhead.jpg", "alt": "Modified toolhead with aftermarket hotend, printed fan duct and cable chain" },
       { "src": "img/printer-mods/printer-mods-02-ender-probe-wiring.jpg", "alt": "Wiring the bed probe into the toolhead breakout board" },
