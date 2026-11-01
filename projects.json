@@ -96,6 +96,8 @@
     "role": "Personal Project · 2024–2026",
     "summary": "The machines that produce parts for everything else on this page, rebuilt to keep up. On the i3-style printer that meant upgraded belts and a new toolhead, a custom fan shroud for part cooling, a bed probe wired into the toolhead breakout, and Klipper flashed and hosted on a Raspberry Pi so acceleration, jerk and input shaping could actually be tuned. Print acceleration went from 80 to over 300 mm/s².",
     "images": [
+      { "src": "img/printer-mods/printer-mods-00-modded-printer-enclosure.jpg", "alt": "After the mods: linear rail on the X axis, custom toolhead with dual part cooling ducts, breakout board and cable chain, running inside an enclosure" },
+      { "src": "img/printer-mods/printer-mods-00b-stock-printer-before.jpg", "alt": "Before the mods: the same printer with its stock toolhead" },
       { "src": "img/printer-mods/printer-mods-01-ender-toolhead.jpg", "alt": "Modified toolhead with aftermarket hotend, printed fan duct and cable chain" },
       { "src": "img/printer-mods/printer-mods-02-ender-probe-wiring.jpg", "alt": "Wiring the bed probe into the toolhead breakout board" },
       { "src": "img/printer-mods/printer-mods-03-ender-sonic-pad-print.jpg", "alt": "Klipper interface monitoring an ABS enclosure print with live camera and tuning sliders" }
