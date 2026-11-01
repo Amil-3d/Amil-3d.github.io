@@ -1,7 +1,23 @@
 [
   {
+    "title": "Orbital Launch Vehicle Team",
+    "role": "Virginia Tech OLVT · Structures · 2026–present",
+    "featured": true,
+    "summary": "Structures work on the team's two-stage rocket. I designed the 3D-printed wiring channel in the forward closure from scratch: a channel body with heat-set threaded inserts, a removable insert that holds the Molex connectors, and a screw-down plate. The connectors let the motor section and the flash bay separate so the drogue chute can deploy at apogee, and the main design challenge was making sure the parachute couldn't catch on the connectors or the channel itself. I also refined the sustainer and booster bulkheads for tolerancing and friction fits, laser cut bulkheads, wet sanded carbon fiber body tubes, and helped with general assembly.",
+    "images": [
+      { "src": "img/olvt/olvt-00-sustainer-forward-closure.png", "alt": "CAD render of the full sustainer with the forward closure circled, just ahead of the motor casing, where the wiring channel sits" },
+      { "src": "img/olvt/olvt-01-wiring-channel-exploded.png", "alt": "Exploded CAD view of the forward closure wiring channel: screw-down plate, Molex connector insert, and channel body with heat-set inserts" },
+      { "src": "img/olvt/olvt-03-wiring-channel-printed-closeup.jpg", "alt": "Printed wiring channel with the screw-down plate fastened and the Molex connector seated in its opening" },
+      { "src": "img/olvt/olvt-02-wiring-channel-section.png", "alt": "Section view of the wiring channel showing the Molex connector seated in its insert and the heat-set inserts in the channel body" },
+      { "src": "img/olvt/olvt-04-wiring-channel-printed-wired.jpg", "alt": "Printed wiring channel assembled and wired, held up in the OLVT bay" },
+      { "src": "img/olvt/olvt-05-wiring-channel-printed-hand.jpg", "alt": "Assembled wiring channel in hand with leads running out both ends" }
+    ],
+    "tags": ["Design for print", "Recovery systems", "Tolerancing", "Composites", "Laser cutting", "Assembly"],
+    "link": ""
+  },
+  {
     "title": "Competition Fixed-Wing UAV",
-    "role": "SUAS Competition Team · Airframe & Structures · 2024–2026",
+    "role": "SUAS Competition Team · Captain, Mechanical & Systems Lead · 2024–2026",
     "featured": true,
     "summary": "Designed the fuselage and a 3D-printable wing with integrated ailerons and elevators, built around a 1×1 in aluminium spar, through repeated CAD-and-test iterations.",
     "images": [
@@ -18,7 +34,7 @@
     "title": "3D-Printed RC Plane",
     "role": "Personal Project · 2025–2026",
     "featured": true,
-    "summary": "End of year physics project where I mastered servo motors and control surfaces.",
+    "summary": "My end of year physics project with a partner: a fully 3D printed plane with a high wing, twin tail booms and a V-tail, with internal lattice ribbing to keep the printed parts light. This is where I really learned servos and control surfaces, from laying out the servo bays to setting up the control horns, and it flew.",
     "images": [
       { "src": "img/printed-rc-plane/printed-rc-plane-01-printed-plane-assembled.jpg", "alt": "Fully assembled 3D printed RC plane with high wing, twin tail booms and V-tail" },
       { "src": "img/printed-rc-plane/printed-rc-plane-03-printed-plane-wing-panel.jpg", "alt": "Full printed wing panel laid out with servo bays and control horns wired" },
@@ -36,7 +52,7 @@
   {
     "title": "FPV Quadcopter Builds",
     "role": "Personal Project · 2024–2026",
-    "summary": "Freestyle 5 inch prop drone.",
+    "summary": "Freestyle 5 inch quads built from the frame up. I soldered the flight controller stack and power leads, set up the ELRS radio link and FPV camera, and tuned the flight behavior in Betaflight.",
     "images": [
       { "src": "img/fpv-quads/fpv-quads-01-quad-lumenier-assembled.jpg", "alt": "Assembled 5 inch FPV quad on the bench, powered up with status LEDs lit" },
       { "src": "img/fpv-quads/fpv-quads-02-quad-in-hand.jpg", "alt": "5 inch quad held in hand showing the FPV camera in a purple mount and the FC stack" },
