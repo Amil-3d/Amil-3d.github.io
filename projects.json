@@ -94,7 +94,7 @@
   {
     "title": "FDM Printer Modding",
     "role": "Personal Project · 2024–2026",
-    "summary": "The machines that produce parts for everything else on this page, rebuilt to keep up. On the i3-style printer that meant upgraded belts and a new toolhead, a custom fan shroud for part cooling, a bed probe wired into the toolhead breakout, and Klipper flashed and hosted on a Raspberry Pi so acceleration, jerk and input shaping could actually be tuned. Print acceleration went from 80 to over 300 mm/s².",
+    "summary": "The machines that produce parts for everything else on this page, rebuilt to keep up. On the i3-style printer that meant swapping to linear rails on both the X and Y axes, upgraded belts and a new toolhead, a custom fan shroud for part cooling, a bed probe wired into the toolhead breakout, and Klipper flashed and hosted on a Raspberry Pi so acceleration, jerk and input shaping could actually be tuned. Print acceleration went from 80 to over 300 mm/s².",
     "images": [
       { "src": "img/printer-mods/printer-mods-00-modded-printer-enclosure.jpg", "alt": "After the mods: linear rail on the X axis, custom toolhead with dual part cooling ducts, breakout board and cable chain, running inside an enclosure" },
       { "src": "img/printer-mods/printer-mods-00b-stock-printer-before.jpg", "alt": "Before the mods: the same printer with its stock toolhead" },
@@ -107,7 +107,7 @@
       "poster": "video/printer-mods-printing-poster.jpg",
       "label": "Mid-print"
     },
-    "tags": ["Klipper", "Input shaping", "Hardware modding", "Calibration", "Part cooling"],
+    "tags": ["Klipper", "Input shaping", "Linear rails", "Hardware modding", "Calibration", "Part cooling"],
     "link": ""
   },
   {
