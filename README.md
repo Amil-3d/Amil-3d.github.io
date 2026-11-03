@@ -2,7 +2,7 @@
 
 Static site, hosted on GitHub Pages at <https://amil-3d.github.io>
 
-It is a project portfolio and nothing else: one grid of build cards, a short about, and a contact line.
+It is a project portfolio: a home page with the project grid, plus separate About and Contact pages.
 
 ## Adding or editing a project
 
@@ -35,7 +35,12 @@ inline. Keep videos web-sized — 1280 px long edge, faststart enabled.
 
 ## Files
 
-- `index.html` — the whole site (structure, styling, rendering, gallery, lightbox)
+- `index.html` — home page: intro, project grid, gallery, lightbox
+- `about.html` — About page (intro and skills)
+- `contact.html` — Contact page (email, phone, LinkedIn, GitHub)
+- `style.css` — shared styling for every page, including the accent color (`--accent`)
+- `site.js` — shared dark/light toggle and footer year
+- `favicon.svg`, `favicon.png`, `apple-touch-icon.png` — the gear tab icon
 - `projects.json` — project content, the only file you normally edit
 - `editor.html` — form UI that writes `projects.json` for you
 - `img/` — project photos, one subfolder per project
