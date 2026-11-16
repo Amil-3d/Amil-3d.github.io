@@ -134,5 +134,15 @@
     ],
     "tags": ["Design to fit", "Load-bearing print"],
     "link": ""
+  },
+  {
+    "title": "Text-Message AI Assistant",
+    "role": "Personal Project · Software · 2026",
+    "summary": "A personal assistant I text like a person. A small Python bot takes each message, answers the quick things itself, and hands longer jobs to a few specialized AI agents, each on the cheapest model that can do the job, with a spending cap on every job and on the day. It also runs things on a schedule, and it can save a job that took a lot of steps as a skill for next time. Anything that sends or changes something waits for my yes. The link goes to its dashboard, which shows how it is built and a few live numbers.",
+    "images": [
+      { "src": "img/assistant/assistant-01-architecture.png", "alt": "Diagram of the assistant: a text goes to the bot, which answers it, runs plain code, or starts one of several agents" }
+    ],
+    "tags": ["Python", "Flask", "AI agents", "Claude API", "Automation", "Cost controls"],
+    "link": "assistant.html"
   }
 ]
