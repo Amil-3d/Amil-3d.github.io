@@ -38,6 +38,7 @@ inline. Keep videos web-sized — 1280 px long edge, faststart enabled.
 - `index.html` — home page: intro, project grid, gallery, lightbox
 - `about.html` — About page (intro and skills)
 - `contact.html` — Contact page (email, phone, LinkedIn, GitHub)
+- `assistant.html`, `assistant.css`, `assistant.js` — the Assistant project page and its private dashboard. They hold no data: the page fetches it from the bot, and the private part only after a password
 - `style.css` — shared styling for every page, including the accent color (`--accent`)
 - `site.js` — shared dark/light toggle and footer year
 - `favicon.svg`, `favicon.png`, `apple-touch-icon.png` — the gear tab icon
