@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assistant · Amil Dhookie</title>
+<meta name="description" content="A personal assistant I text: a small bot that routes work to a team of Claude agents, with hard rules on what they can do alone.">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src https://nia-bot-uvyk.onrender.com; base-uri 'none'; form-action 'none'">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="assistant.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="index.html">amil<span>.</span>dhookie</a>
+    <a class="nl" href="index.html#work">work</a>
+    <a class="nl" href="about.html">about</a>
+    <a class="nl" href="contact.html">contact</a>
+    <button id="theme" aria-label="Toggle color theme">◐</button>
+  </div>
+</nav>
+
+<header class="page">
+  <div class="wrap">
+    <div class="tag">Personal project · Software</div>
+    <h1>Assistant</h1>
+    <p class="lede sub">A personal assistant I text like a friend. A small bot answers the quick things itself and hands real work to a <strong>team of Claude agents</strong>, each with its own job, tools and spending cap. The rules that matter are <strong>written in code</strong>, not left to a model.</p>
+    <div class="cta">
+      <a class="btn pri" href="#how">How it works</a>
+      <a class="btn" href="#private">Private dashboard</a>
+    </div>
+  </div>
+</header>
+
+<section id="live">
+  <div class="wrap">
+    <div class="shead"><h2>Live numbers</h2><div class="rule"></div><span class="pulse" id="pulse">connecting</span></div>
+    <div class="stats">
+      <div class="stat"><div class="n" id="n-jobs">–</div><div class="k">Jobs run today</div></div>
+      <div class="stat"><div class="n" id="n-cost">–</div><div class="k">Average cost per job</div></div>
+      <div class="stat"><div class="n" id="n-up">–</div><div class="k">Uptime, last 7 days</div></div>
+      <div class="stat"><div class="n" id="n-recipes">–</div><div class="k">Recipes</div></div>
+      <div class="stat"><div class="n" id="n-skills">–</div><div class="k">Skills it wrote itself</div></div>
+      <div class="stat"><div class="n" id="n-agents">–</div><div class="k">Agents</div></div>
+    </div>
+    <p class="fine" id="live-note">Read straight from the running bot. Numbers only: nothing personal is ever sent to this part of the page.</p>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="shead"><h2>How it works</h2><div class="rule"></div></div>
+    <div class="flow" role="img" aria-label="Architecture: a text goes to the bot, which answers it, runs plain code, or starts an agent. Agents use tools the bot controls, and anything that leaves waits for a yes by text.">
+      <div class="node end">A text from my phone</div>
+      <div class="arrow" aria-hidden="true">↓</div>
+      <div class="node core">
+        <div class="t">The bot</div>
+        <div class="d">A small always-on server. Replies to quick texts itself, decides what kind of job each request is, and enforces every rule.</div>
+      </div>
+      <div class="arrow" aria-hidden="true">↓</div>
+      <div class="lanes">
+        <div class="node">
+          <div class="t">Plain code</div>
+          <div class="d">To-dos, time tracking, reminders and marking mail read. No model runs, so these cost nothing.</div>
+        </div>
+        <div class="node">
+          <div class="t">Agents on request</div>
+          <div class="d">One short session per job: a quick lookup, an email draft, or open-ended work on a cloud computer.</div>
+        </div>
+        <div class="node">
+          <div class="t">Agents on a timer</div>
+          <div class="d">A heartbeat that decides whether anything deserves a text, an inbox watch, and recipes I set up by text.</div>
+        </div>
+      </div>
+      <div class="arrow" aria-hidden="true">↓</div>
+      <div class="lanes two">
+        <div class="node soft">
+          <div class="t">What agents can reach</div>
+          <div class="d">Their own memory, the web, a hosted browser signed in to one read-only site, and mail and spreadsheet tools the bot hands out one call at a time.</div>
+        </div>
+        <div class="node soft">
+          <div class="t">What only the bot can do</div>
+          <div class="d">Send an email, after I text yes to the exact draft. Hold the logins. Stop a job at its cap and pause everything at the daily limit.</div>
+        </div>
+      </div>
+      <div class="arrow" aria-hidden="true">↓</div>
+      <div class="node end">A text back to me</div>
+    </div>
+  </div>
+</section>
+
+<section id="agents">
+  <div class="wrap">
+    <div class="shead"><h2>The agents</h2><div class="rule"></div></div>
+    <div class="agents">
+      <article class="agent"><h3>Worker</h3><div class="role">Claude Opus 5.5</div><p>The general worker for anything that needs judgment or several steps: research, writing, building files. Has a cloud sandbox, the web, the browser and its own memory.</p></article>
+      <article class="agent"><h3>Lookup</h3><div class="role">Claude Haiku 5.5</div><p>Read-only quick answers, such as what is due this week or what is in the inbox. It can name mail to mark read, but the bot does the marking.</p></article>
+      <article class="agent"><h3>Email writer</h3><div class="role">Claude Sonnet 5.5</div><p>Writes every first draft with only the email tools and my writing rules. It can save a draft and nothing more.</p></article>
+      <article class="agent"><h3>Email writer, second opinion</h3><div class="role">Claude Opus 5.5</div><p>The same slim writer on a bigger model, used only when I text back asking for a redo.</p></article>
+      <article class="agent"><h3>Heartbeat</h3><div class="role">Claude Haiku 5.5</div><p>Wakes on a timer, reads a snapshot the bot prepares with plain code, and decides whether anything deserves a text. Most runs the answer is no.</p></article>
+      <article class="agent"><h3>Inbox watch</h3><div class="role">Claude Haiku 5.5</div><p>Sorts new mail. The bot checks for new mail with plain code first, so no model runs when nothing arrived.</p></article>
+      <article class="agent"><h3>Recipe runner</h3><div class="role">Claude Haiku 5.5</div><p>Runs the scheduled jobs I set up by text and texts me the result. Limited to a fixed number of tool calls per run.</p></article>
+      <article class="agent"><h3>Skill writer</h3><div class="role">Claude Sonnet 5.5 · no tools</div><p>After a long or corrected job it drafts a short how-to for next time. It never sees what a tool or an email returned, and the bot refuses any how-to that touches a rule.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="shead"><h2>What it does</h2><div class="rule"></div></div>
+    <ul class="feats">
+      <li><b>Texting first.</b> Everything happens over iMessage. A tapback is a full answer when nothing more needs saying.</li>
+      <li><b>The right model for the job.</b> The bot picks the cheapest agent that can do each job, and uses no model at all when plain code will do.</li>
+      <li><b>Nothing leaves without a yes.</b> No agent has a send tool. A draft is shown to me word for word, checked again before sending, and only goes out after my own text says yes.</li>
+      <li><b>Spending caps in code.</b> Every job has a cap, there is a daily limit that pauses new work, and I get a text when either is hit.</li>
+      <li><b>Recipes by text.</b> I describe a scheduled job in a text and it is live, with a limit on how many there can be and how often they run.</li>
+      <li><b>Skills it writes itself.</b> How-tos saved from jobs that took many steps or that I corrected, so the next one goes faster and my way.</li>
+      <li><b>Memory.</b> One store it can write to and one read-only store of facts and rules.</li>
+      <li><b>A browser as a swappable tool.</b> One hosted browser today, a machine at home later, with no change to the agents.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="private">
+  <div class="wrap">
+    <div class="shead"><h2>Private dashboard</h2><div class="rule"></div><span class="pulse" id="lockstate">locked</span></div>
+
+    <div id="gate" class="panel">
+      <p class="contact-note">This part is for me. Nothing private is stored on this page or in its code. After the right password, the page asks the bot for it over an encrypted connection.</p>
+      <form id="loginform" autocomplete="on">
+        <label class="lab" for="pw">Password</label>
+        <div class="row">
+          <input id="pw" type="password" autocomplete="current-password" required maxlength="200">
+          <button class="btn pri" type="submit" id="go">Unlock</button>
+        </div>
+        <p class="msg" id="loginmsg" role="status"></p>
+      </form>
+      <details id="setpw">
+        <summary>Set or change the password</summary>
+        <p class="fine">Type a new password twice. This page turns it into a hash here in your browser and sends nothing anywhere. Paste the line it gives you into Render as <code>DASHBOARD_PASSWORD_HASH</code> and save. The bot restarts and the new password works.</p>
+        <form id="hashform" autocomplete="off">
+          <label class="lab" for="np1">New password</label>
+          <input id="np1" type="password" autocomplete="new-password" minlength="10" maxlength="200" required>
+          <label class="lab" for="np2">Again</label>
+          <input id="np2" type="password" autocomplete="new-password" minlength="10" maxlength="200" required>
+          <button class="btn" type="submit">Make the hash</button>
+          <p class="msg" id="hashmsg" role="status"></p>
+          <textarea id="hashout" readonly rows="3" aria-label="The hash to paste into Render" hidden></textarea>
+          <button class="btn" type="button" id="hashcopy" hidden>Copy</button>
+        </form>
+      </details>
+    </div>
+
+    <div id="dash" hidden>
+      <div class="bar">
+        <span class="fine" id="asof"></span>
+        <span class="grow"></span>
+        <button class="btn" type="button" id="refresh">Refresh</button>
+        <button class="btn" type="button" id="signout">Sign out</button>
+      </div>
+      <p class="msg" id="dashmsg" role="status"></p>
+      <div id="cards" class="cards"></div>
+      <p class="fine">View only. Nothing on this page can approve, send or change anything.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <span>© <span id="yr">2026</span> Amil Dhookie</span>
+  <span>Built and hosted on GitHub Pages</span>
+</footer>
+
+<script src="site.js"></script>
+<script src="assistant.js"></script>
+</body>
+</html>

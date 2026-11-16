@@ -1,0 +1,93 @@
+/* Assistant page. Builds on style.css and uses its colors. */
+.lede.sub{margin-top:20px}
+.fine{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin:16px 0 0;max-width:70ch}
+.fine code{color:var(--ink-2);word-break:break-all}
+.pulse{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+.pulse::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--line-2);margin-right:7px;vertical-align:1px}
+.pulse.on{color:var(--accent-ink)}
+.pulse.on::before{background:var(--accent)}
+.pulse.bad::before{background:#c9483a}
+
+/* live numbers */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:720px){.stats{grid-template-columns:repeat(3,1fr)}}
+.stat{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px}
+.stat .n{font-size:clamp(26px,5vw,34px);font-weight:700;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat .k{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-top:8px}
+
+/* architecture */
+.flow{display:flex;flex-direction:column;align-items:stretch;gap:0}
+.node{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.node .t{font-weight:600;font-size:15px;margin-bottom:4px}
+.node .d{color:var(--ink-2);font-size:14px;line-height:1.5}
+.node.end{align-self:center;font-family:var(--mono);font-size:13px;color:var(--ink-2);border-radius:999px;padding:9px 18px}
+.node.core{border-color:var(--accent);background:var(--accent-soft)}
+.node.core .t{color:var(--accent-ink);font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.node.core .d{color:var(--ink)}
+.node.soft{border-style:dashed}
+.arrow{text-align:center;color:var(--ink-3);font-size:18px;line-height:1;padding:10px 0}
+.lanes{display:grid;gap:12px}
+@media(min-width:720px){.lanes{grid-template-columns:repeat(3,1fr)}.lanes.two{grid-template-columns:repeat(2,1fr)}}
+
+/* agents and features */
+.agents{display:grid;gap:12px}
+@media(min-width:720px){.agents{grid-template-columns:1fr 1fr}}
+.agent{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:18px}
+.agent h3{margin:0 0 4px;font-size:16px;letter-spacing:-.01em}
+.agent .role{font-family:var(--mono);font-size:12px;color:var(--accent-ink);margin-bottom:10px}
+.agent p{margin:0;color:var(--ink-2);font-size:14px;line-height:1.55}
+.feats{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--bg-2);overflow:hidden}
+.feats li{padding:15px 18px;border-top:1px solid var(--line);color:var(--ink-2);font-size:15px}
+.feats li:first-child{border-top:0}
+.feats b{color:var(--ink);font-weight:600}
+
+/* the gate */
+.panel{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:22px;max-width:620px}
+.panel .contact-note{margin-bottom:18px}
+.lab{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:12px 0 6px}
+.row{display:flex;gap:10px}
+.panel input,.panel textarea{
+  width:100%;min-width:0;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);
+  border:1px solid var(--line-2);border-radius:8px;padding:10px 12px;
+}
+.panel textarea{font-family:var(--mono);font-size:12px;margin-top:12px;resize:none;word-break:break-all}
+.panel input:focus-visible,.panel textarea:focus-visible,.btn:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.btn{cursor:pointer;font-family:var(--mono);min-height:44px}
+button.btn[disabled]{opacity:.55;cursor:default}
+.msg{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin:10px 0 0;min-height:1.2em}
+.msg.bad{color:#c9483a}
+details{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+summary{font-family:var(--mono);font-size:12px;color:var(--accent-ink);cursor:pointer;padding:6px 0}
+#hashform .btn{margin-top:14px}
+
+/* the dashboard */
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.bar .grow{flex:1}
+.bar .fine{margin:0}
+.cards{display:grid;gap:14px;margin-top:14px}
+@media(min-width:860px){.cards{grid-template-columns:1fr 1fr}.dcard.wide{grid-column:1/-1}}
+.dcard{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:18px;min-width:0}
+.dcard h3{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:0 0 12px}
+.dcard h4{font-size:13px;font-weight:600;margin:16px 0 6px;color:var(--ink-2)}
+.big{font-size:28px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.big small{font-size:14px;font-weight:500;color:var(--ink-3);letter-spacing:0}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:10px 0 4px}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;min-width:2px}
+.meter.hot i{background:#c9483a}
+.items{list-style:none;margin:0;padding:0}
+.items li{padding:10px 0;border-top:1px solid var(--line);font-size:14px;overflow-wrap:anywhere}
+.items li:first-child{border-top:0;padding-top:0}
+.items .top{display:flex;gap:10px;align-items:baseline;justify-content:space-between}
+.items .main{color:var(--ink);font-weight:500;min-width:0}
+.items .side{font-family:var(--mono);font-size:12px;color:var(--ink-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.items .sub{color:var(--ink-2);font-size:13px;margin-top:3px}
+.items .meta{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:4px}
+.empty{color:var(--ink-3);font-size:14px;margin:0}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;border:1px solid var(--line-2);border-radius:20px;padding:1px 8px;color:var(--ink-2);margin-left:6px;white-space:nowrap}
+.pill.ok{color:var(--accent-ink);border-color:var(--accent)}
+.pill.warn{color:#c9483a;border-color:#c9483a}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-family:var(--mono);font-size:12px;margin:0}
+.kv dt{color:var(--ink-2);overflow-wrap:anywhere;min-width:0}
+.kv dd{margin:0;color:var(--ink);text-align:right;overflow-wrap:anywhere}
+.kv dd.dim{color:var(--ink-3)}
+[hidden]{display:none !important}
