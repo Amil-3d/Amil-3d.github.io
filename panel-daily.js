@@ -352,9 +352,9 @@
       c.appendChild(el('p', 'p-row-meta', 'Quiet from ' + clock(k.last) + ' to ' + clock(k.first) + '. Your rule keeps ' + clock(k.latest) + ' to ' + clock(k.earliest) + ' quiet whatever is picked, and check-ins stay 2.5 hours apart.'));
 
       c = P.card(body, 'Inbox watch');
-      list = P.rows(c);
-      switchRow(list, 'Silent comparison', 'The bot\'s own inbox watch only runs silently beside the hourly task for now. It changes nothing in your mail and texts nothing.',
-                w.inbox_watch === 'shadow', 'Inbox watch', function(on, b){ setSwitch('inbox_watch', on ? 'shadow' : 'off', b, on ? 'The silent inbox watch is on.' : 'The silent inbox watch is off.'); });
+      picker(c, 'The bot\'s hourly inbox watch', [['on', 'On'], ['shadow', 'Silent comparison'], ['off', 'Off']], w.inbox_watch,
+             function(v, s){ setSwitch('inbox_watch', v, s, 'The inbox watch is ' + (v === 'shadow' ? 'in silent comparison' : v) + '.'); });
+      c.appendChild(el('p', 'p-row-meta', 'On: it sorts new mail, marks read, drafts replies and texts you. Silent comparison: it only records what it would have done.'));
 
       c = P.card(body, 'Recipes');
       if(!w.recipes_on){ c.appendChild(el('p', 'p-empty', 'Recipes are switched off on Render.')); }
