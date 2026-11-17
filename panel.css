@@ -177,6 +177,30 @@ select.p-input{appearance:auto}
 .p-switch[disabled]{opacity:.55}
 @media (prefers-reduced-motion: reduce){ .p-switch-knob{transition:none} }
 
+/* the Inside section: heartbeat runs, spend, logins */
+.p-sum{margin:12px 0 4px;color:var(--p-ink);font-weight:500}
+.p-after{margin-top:12px}
+.p-run-pills{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px}
+.p-run-text{margin:8px 0 4px}
+.p-run-part{display:flex;gap:10px;margin-top:6px;font-size:13px;color:var(--p-ink-2)}
+.p-run-label{flex:none;width:56px;font-family:var(--p-mono);font-size:var(--p-size-tiny);letter-spacing:.06em;text-transform:uppercase;color:var(--p-ink-3);padding-top:2px}
+.p-runs .p-actions{margin-top:4px}
+.p-btn.p-link{min-height:36px;padding:0;color:var(--p-accent-ink)}
+.p-snap{margin:6px 0 0;padding:12px;max-height:60vh;overflow:auto;background:var(--p-bg);border:1px solid var(--p-line);border-radius:var(--p-radius-small);font-family:var(--p-mono);font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.p-big{margin:0 0 10px;font-size:24px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.p-meter{display:block;width:100%;height:10px;margin:0 0 6px;border:0;border-radius:5px;overflow:hidden;background:var(--p-line);appearance:none;-webkit-appearance:none}
+.p-meter::-webkit-progress-bar{background:var(--p-line)}
+.p-meter::-webkit-progress-value{background:var(--p-accent)}
+.p-meter::-moz-progress-bar{background:var(--p-accent)}
+.p-meter.full::-webkit-progress-value{background:var(--p-bad)}
+.p-meter.full::-moz-progress-bar{background:var(--p-bad)}
+.p-amount{align-items:center;margin-top:0}
+.p-amount-sign{font-family:var(--p-mono);color:var(--p-ink-3)}
+.p-site-line{margin:8px 0 0;font-size:15px;font-weight:500;overflow-wrap:anywhere}
+.p-steps{margin:14px 0 0;padding-left:20px;font-size:14px;color:var(--p-ink-2)}
+.p-steps li{margin-top:6px}
+.p-actions .p-row-meta{flex-basis:100%;margin-top:0}
+
 /* section tabs, fixed to the bottom on a phone */
 .p-tabs{
   position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;
