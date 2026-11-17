@@ -134,11 +134,12 @@
     <div class="shead"><h2>Private dashboard</h2><div class="rule"></div><span class="pulse" id="lockstate">locked</span></div>
 
     <div id="gate" class="panel">
-      <p class="contact-note">This part is for me. Nothing private is stored on this page or in its code. After the right password, the page asks the bot for it over an encrypted connection.</p>
+      <p class="contact-note">This part is for me. Nothing private is stored on this page or in its code. After the right password, and on a new device a code texted to my phone, the page asks the bot for it over an encrypted connection.</p>
       <form id="loginform" autocomplete="on">
-        <label class="lab" for="pw">Password</label>
+        <label class="lab" for="pw" id="pwlab">Password</label>
         <div class="row">
           <input id="pw" type="password" autocomplete="current-password" required maxlength="200">
+          <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" hidden>
           <button class="btn pri" type="submit" id="go">Unlock</button>
         </div>
         <p class="msg" id="loginmsg" role="status"></p>
@@ -163,12 +164,13 @@
       <div class="bar">
         <span class="fine" id="asof"></span>
         <span class="grow"></span>
+        <a class="btn" href="panel.html">Control panel</a>
         <button class="btn" type="button" id="refresh">Refresh</button>
         <button class="btn" type="button" id="signout">Sign out</button>
       </div>
       <p class="msg" id="dashmsg" role="status"></p>
       <div id="cards" class="cards"></div>
-      <p class="fine">View only. Nothing on this page can approve, send or change anything.</p>
+      <p class="fine">View only. Nothing on this page can approve, send or change anything. The control panel is a separate page behind the same login.</p>
     </div>
   </div>
 </section>
@@ -179,6 +181,7 @@
 </footer>
 
 <script src="site.js"></script>
+<script src="assistant-login.js"></script>
 <script src="assistant.js"></script>
 </body>
 </html>

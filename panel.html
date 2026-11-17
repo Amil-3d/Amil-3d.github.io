@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Assistant panel</title>
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src https://nia-bot-uvyk.onrender.com; base-uri 'none'; form-action 'none'">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- The whole panel is styled from this one file. Reskin the panel by changing it and nothing else. -->
+<link rel="stylesheet" href="panel.css">
+</head>
+<body>
+
+<header class="p-top">
+  <a class="p-brand" href="assistant.html">Assistant <span>panel</span></a>
+  <span class="p-grow"></span>
+  <span class="p-device" id="device"></span>
+  <button class="p-btn quiet" type="button" id="signout" hidden>Sign out</button>
+</header>
+
+<main class="p-main">
+  <section id="gate" class="p-card p-gate" hidden>
+    <h1>Sign in</h1>
+    <p class="p-note">The same login as the dashboard. On a new device I text you a code.</p>
+    <form id="loginform" autocomplete="on">
+      <label class="p-label" for="pw" id="pwlab">Password</label>
+      <input id="pw" class="p-input" type="password" autocomplete="current-password" required maxlength="200">
+      <input id="code" class="p-input" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" hidden>
+      <button class="p-btn main" type="submit" id="go">Unlock</button>
+      <p class="msg" id="loginmsg" role="status"></p>
+    </form>
+  </section>
+
+  <div id="app" hidden>
+    <p class="msg" id="appmsg" role="status"></p>
+    <div id="view"></div>
+  </div>
+</main>
+
+<nav class="p-tabs" id="tabs" aria-label="Panel sections" hidden></nav>
+
+<script src="assistant-login.js"></script>
+<script src="panel.js"></script>
+</body>
+</html>

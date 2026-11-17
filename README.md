@@ -52,3 +52,16 @@ inline. Keep videos web-sized — 1280 px long edge, faststart enabled.
 Nothing here is tied to `amil-3d.github.io`. To move to a domain you own: buy it, point four A records
 and four AAAA records at GitHub's Pages IPs, then enter the domain under Settings → Pages → Custom domain.
 No changes to any file in this repo.
+
+## Assistant dashboard and control panel
+
+`assistant.html` is the public project page with the view-only private dashboard. `panel.html` is the control
+panel. Both hold no data, no keys and nothing private: after the login they ask the bot for everything.
+
+- `assistant-login.js` is the one login for both pages: the password, then on a new device a code the bot texts.
+- `panel.css` is the only stylesheet the panel uses. To reskin the panel, change the values at the top of that
+  one file.
+- `panel.js` is the shell. A section is added with `Panel.section({...})`, and every button goes through
+  `Panel.press()`, so the bot logs it.
+
+Never put a key, a phone number, an email address or a private link in this repo.

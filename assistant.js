@@ -2,8 +2,7 @@
    Every value from the bot is put on the page as text, never as HTML. */
 (function(){
   var API = 'https://nia-bot-uvyk.onrender.com';
-  var KEY = 'assistant-login';
-  var token = null, refreshTimer = null;
+  var refreshTimer = null;
 
   function $(id){ return document.getElementById(id); }
   function el(tag, cls, text){
@@ -310,32 +309,30 @@
     showChecks(pic.checks);
   }
 
-  /* ---------- login ---------- */
-  function remember(value){
-    token = value;
-    try{ if(value){ sessionStorage.setItem(KEY, value); } else { sessionStorage.removeItem(KEY); } }catch(e){}
-  }
+  /* ---------- login: the steps themselves are in assistant-login.js ---------- */
+  var Login = window.AssistantLogin;
+  var form = Login.wire({ form: $('loginform'), label: $('pwlab'), password: $('pw'), code: $('code'),
+                          button: $('go'), message: $('loginmsg'), onIn: start });
   function locked(message){
-    remember(null);
     clearInterval(refreshTimer);
     $('cards').textContent = '';
     $('dash').hidden = true;
     $('gate').hidden = false;
     $('lockstate').textContent = 'locked';
     $('lockstate').className = 'pulse';
-    say('loginmsg', message || '', false);
+    form.reset();
+    form.say(message || '', false);
   }
   function say(id, text, bad){ $(id).textContent = text; $(id).className = 'msg' + (bad ? ' bad' : ''); }
-  function minutes(seconds){
-    var m = Math.ceil(seconds / 60);
-    return m >= 120 ? Math.round(m / 60) + ' hours' : m + ' minute' + (m === 1 ? '' : 's');
-  }
   function loadPrivate(first){
-    if(!token){ return; }
+    if(!Login.has()){ return; }
     $('refresh').disabled = true;
-    call('/dash/private', { headers: { 'Authorization': 'Bearer ' + token } }).then(function(r){
+    Login.call('/dash/private').then(function(r){
       $('refresh').disabled = false;
-      if(r.status === 401){ return locked(first ? '' : 'Your login ran out. Enter the password again.'); }
+      if(r.status === 401){
+        Login.forget();
+        return locked(first ? '' : 'Your login ran out. Enter the password again.');
+      }
       if(r.status !== 200){ throw new Error('status ' + r.status); }
       $('gate').hidden = true;
       $('dash').hidden = false;
@@ -344,45 +341,19 @@
       render(r.body);
     }).catch(function(){
       $('refresh').disabled = false;
-      if($('dash').hidden){ say('loginmsg', 'The bot did not answer. Try again in a minute.', true); }
+      if($('dash').hidden){ form.say('The bot did not answer. Try again in a minute.', true); }
       else{ say('dashmsg', 'Could not refresh just now. Showing the last picture.', true); }
     });
   }
-  $('loginform').addEventListener('submit', function(e){
-    e.preventDefault();
-    var pw = $('pw').value;
-    if(!pw){ return; }
-    $('go').disabled = true;
-    say('loginmsg', 'Checking…', false);
-    call('/dash/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw }) })
-      .then(function(r){
-        $('go').disabled = false;
-        $('pw').value = '';
-        if(r.status === 200 && r.body.token){
-          remember(r.body.token);
-          say('loginmsg', '', false);
-          loadPrivate(true);
-          clearInterval(refreshTimer);
-          refreshTimer = setInterval(function(){ if(!document.hidden){ loadPrivate(false); } }, 120000);
-        } else if(r.status === 401){
-          say('loginmsg', 'Wrong password. ' + r.body.tries_left + ' tr' + (r.body.tries_left === 1 ? 'y' : 'ies') + ' left before it locks.', true);
-        } else if(r.status === 429){
-          say('loginmsg', 'Too many wrong tries. Locked for ' + minutes(r.body.retry_seconds || 60) + '.', true);
-        } else if(r.status === 503){
-          say('loginmsg', 'No password is set yet. Use "Set or change the password" below.', true);
-        } else {
-          say('loginmsg', 'The bot refused the request.', true);
-        }
-      }).catch(function(){
-        $('go').disabled = false;
-        say('loginmsg', 'The bot did not answer. Try again in a minute.', true);
-      });
-  });
+  function start(){
+    loadPrivate(true);
+    clearInterval(refreshTimer);
+    refreshTimer = setInterval(function(){ if(!document.hidden){ loadPrivate(false); } }, 120000);
+  }
   $('refresh').addEventListener('click', function(){ loadPrivate(false); });
   $('signout').addEventListener('click', function(){
-    var old = token;
+    Login.signOut();
     locked('Signed out.');
-    if(old){ call('/dash/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + old } }).catch(function(){}); }
   });
 
   /* ---------- making a password hash, in the browser only ---------- */
@@ -425,9 +396,5 @@
 
   /* ---------- start ---------- */
   loadPublic();
-  try{ token = sessionStorage.getItem(KEY); }catch(e){}
-  if(token){
-    loadPrivate(true);
-    refreshTimer = setInterval(function(){ if(!document.hidden){ loadPrivate(false); } }, 120000);
-  }
+  if(Login.has()){ start(); }
 })();
