@@ -63,5 +63,7 @@ panel. Both hold no data, no keys and nothing private: after the login they ask 
   one file.
 - `panel.js` is the shell. A section is added with `Panel.section({...})`, and every button goes through
   `Panel.press()`, so the bot logs it.
+- `panel-daily.js` is the Assistant section: Waiting on you (drafts), Today (tracker row and to-dos) and
+  Switches (with Pause Everything). It has no styles of its own.
 
 Never put a key, a phone number, an email address or a private link in this repo.

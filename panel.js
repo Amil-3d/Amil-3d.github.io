@@ -66,6 +66,7 @@
     $('tabs').hidden = true;
     $('signout').hidden = true;
     $('device').textContent = '';
+    $('banner').hidden = true;
     $('gate').hidden = false;
     form.reset();
     form.say(message || '', false);
@@ -93,9 +94,10 @@
 
   /* ---------- the shell ---------- */
   function show(id){
-    var s = sections.filter(function(x){ return x.id === id; })[0] || sections[0];
+    var want = String(id || '').split('/')[0];   /* "assistant/today" is the Assistant section, on its Today view */
+    var s = sections.filter(function(x){ return x.id === want; })[0] || sections[0];
     current = s.id;
-    try{ history.replaceState(null, '', '#' + s.id); }catch(e){}
+    if(String(id || '').indexOf('/') < 0){ try{ history.replaceState(null, '', '#' + s.id); }catch(e){} }
     Array.prototype.forEach.call($('tabs').children, function(t){
       if(t.dataset.id === s.id){ t.setAttribute('aria-current', 'page'); } else { t.removeAttribute('aria-current'); }
     });
@@ -126,6 +128,7 @@
       $('tabs').hidden = false;
       $('signout').hidden = false;
       $('device').textContent = home.device.label;
+      paused(home.paused);
       show(current || location.hash.slice(1));
     }).catch(function(e){
       if(e.message === 'signed out'){ return; }
@@ -133,6 +136,9 @@
       else{ say('Could not refresh just now.', true); }
     });
   }
+
+  /* The line across the top while Pause Everything is on */
+  function paused(on){ $('banner').hidden = !on; }
 
   var form = Login.wire({ form: $('loginform'), label: $('pwlab'), password: $('pw'), code: $('code'),
                           button: $('go'), message: $('loginmsg'), onIn: load });
@@ -142,15 +148,19 @@
   });
 
   window.Panel = {
-    section: function(s){ sections.push(s); },
-    press: press, ask: ask, reload: load, say: say,
+    /* A section with an id that is already there takes that one's place, in the same spot */
+    section: function(s){
+      for(var i = 0; i < sections.length; i++){ if(sections[i].id === s.id){ sections[i] = s; return; } }
+      sections.push(s);
+    },
+    press: press, ask: ask, reload: load, say: say, paused: paused,
     el: el, card: card, rows: rows, row: row, pill: pill, button: button, when: when
   };
 
   /* ---------- sections ---------- */
   Panel.section({ id: 'assistant', title: 'Assistant', render: function(root){
     var c = card(root, 'Assistant');
-    c.appendChild(el('p', 'p-empty', 'Drafts waiting on you, today\'s tracker and to-dos, and the switches arrive here in the next phase.'));
+    c.appendChild(el('p', 'p-empty', 'This part of the panel did not load. Reload the page.'));
     var a = el('div', 'p-actions');
     var link = el('a', 'p-btn', 'Open the dashboard');
     link.href = 'assistant.html#private';
@@ -244,6 +254,9 @@
       }
     });
   }});
+
+  /* A link or the back button that only changes the part after # */
+  window.addEventListener('hashchange', function(){ if(home){ show(location.hash.slice(1)); } });
 
   /* ---------- start ---------- */
   /* Waits for the page to finish loading, so sections added by later files are in the tabs too */
