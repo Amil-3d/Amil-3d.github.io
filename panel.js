@@ -151,6 +151,8 @@
     /* A section with an id that is already there takes that one's place, in the same spot */
     section: function(s){
       for(var i = 0; i < sections.length; i++){ if(sections[i].id === s.id){ sections[i] = s; return; } }
+      /* "after" names the section this one sits behind in the tabs; without it, it goes last */
+      for(i = 0; i < sections.length; i++){ if(s.after && sections[i].id === s.after){ sections.splice(i + 1, 0, s); return; } }
       sections.push(s);
     },
     press: press, ask: ask, reload: load, say: say, paused: paused,

@@ -63,6 +63,8 @@ panel. Both hold no data, no keys and nothing private: after the login they ask 
   one file.
 - `panel.js` is the shell. A section is added with `Panel.section({...})`, and every button goes through
   `Panel.press()`, so the bot logs it.
+- `panel-inside.js` is the Inside section: Why (what each heartbeat run saw and why it texted or stayed quiet),
+  Spend (today, credits left, the caps) and Logins (Canvas, Outlook, Google, with a way to fix each).
 - `panel-daily.js` is the Assistant section: Waiting on you (drafts), Today (tracker row and to-dos) and
   Switches (with Pause Everything). It has no styles of its own.
 
