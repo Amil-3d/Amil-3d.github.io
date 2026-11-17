@@ -4,9 +4,9 @@
    writes each press to the log. Styles come only from panel.css. */
 (function(){
   var P = window.Panel, el = P.el;
-  var VIEWS = [['waiting', 'Waiting on you'], ['today', 'Today'], ['switches', 'Switches']];
+  var VIEWS = [['today', 'Today'], ['waiting', 'Waiting on you'], ['switches', 'Switches']];   /* the panel opens on the first */
   var view = (/^#assistant\/(\w+)/.exec(location.hash) || [])[1];
-  if(!VIEWS.some(function(v){ return v[0] === view; })){ view = 'waiting'; }
+  if(!VIEWS.some(function(v){ return v[0] === view; })){ view = VIEWS[0][0]; }
   var body = null, timer = null, run = 0;
 
   function clock(text){   /* "14:30" becomes "2:30 PM" */
