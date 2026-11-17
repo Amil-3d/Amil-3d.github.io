@@ -204,9 +204,10 @@
   function showHeartbeat(d){
     if(!d){ return missing('Heartbeat'); }
     var c = card('Heartbeat', true);
+    var live = String(d.mode || '').indexOf('live') === 0;
     var u = list(c);
     item(u, d.last_run ? 'Last run ' + when(d.last_run) : 'No run seen yet', d.runs_today + ' today', 'Mode: ' + d.mode, money(d.cents_today) + ' today');
-    heading(c, 'What it would have texted today');
+    heading(c, live ? 'What it decided to text today' : 'What it would have texted today');
     if(!d.would_have_texted.length){ empty(c, 'Nothing today.'); }
     else{
       var t = list(c);
@@ -217,7 +218,7 @@
     else{
       var l = list(c);
       d.log.forEach(function(e){
-        var li = item(l, e.why || e.decision, when(e.at), e.hand_off ? 'Would hand off: ' + e.hand_off : null);
+        var li = item(l, e.why || e.decision, when(e.at), e.hand_off ? (live ? 'Offered: ' : 'Would hand off: ') + e.hand_off : null);
         pill(li, e.decision, e.decision === 'nothing' ? '' : 'ok');
       });
     }
