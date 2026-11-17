@@ -137,7 +137,17 @@
     agentRows(c, d.month_by_agent);
     heading(c, 'Today by agent');
     agentRows(c, d.today_by_agent);
-    c.appendChild(el('p', 'fine', 'Counted the way the daily limit counts: every job is at least 1 cent. Agents only; the bot\'s own replies are billed separately.'));
+    var r = d.replies;
+    if(r){
+      heading(c, 'The bot\'s own replies');
+      var u = list(c);
+      item(u, 'Today', money(r.today_cents), r.today_count + (r.today_count === 1 ? ' reply' : ' replies'));
+      item(u, d.month + ' so far', money(r.month_cents), r.month_count + (r.month_count === 1 ? ' reply' : ' replies'),
+        r.counting_since ? 'Counted since ' + when(r.counting_since) : '');
+    }
+    c.appendChild(el('p', 'fine', 'The agents are counted the way the daily limit counts: every job is at least 1 cent. ' +
+      (r ? 'The bot\'s own replies are an estimate from their token counts at list price. They are billed separately and are not part of the daily limit.'
+         : 'The bot\'s own replies are billed separately.')));
   }
 
   function showLogins(d, pic){
@@ -271,6 +281,17 @@
     d.forEach(function(e){ item(u, e.what, when(e.at), null, e.from); });
   }
 
+  function showChecks(d){
+    if(!d){ return; }
+    var c = card('Checks');
+    if(!d.length){ return empty(c, 'Nothing has been read yet.'); }
+    var u = list(c);
+    d.forEach(function(k){
+      var li = item(u, k.name, when(k.at), k.ok ? '' : (k.last_ok ? 'Last answered ' + when(k.last_ok) : 'Has not answered since the bot started'));
+      pill(li, k.ok ? 'answered' : 'failed', k.ok ? 'ok' : 'warn');
+    });
+  }
+
   function render(pic){
     $('cards').textContent = '';
     $('asof').textContent = 'As of ' + when(pic.as_of) + ' Eastern';
@@ -285,6 +306,7 @@
     showJobs(pic.jobs);
     showSettings(pic.settings);
     showErrors(pic.errors);
+    showChecks(pic.checks);
   }
 
   /* ---------- login ---------- */
