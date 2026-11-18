@@ -1,9 +1,9 @@
 /* Portfolio pages (index, project, about, contact).
    The Assistant pages keep using style.css; this file is only for the portfolio.
-   Tokens are documented in docs/design-tokens.md once the look is settled. */
+   The tokens below are documented in docs/design-tokens.md; keep the two in step. */
 :root{
   --bg:#f3f2ec; --surface:#fbfaf6; --text:#15150f; --muted:#6d6b60;
-  --line:#15150f; --hair:#d3d1c6; --accent:#00913a; --accent-soft:#e3f1e6; --on-accent:#ffffff;
+  --line:#15150f; --hair:#d3d1c6; --accent:#007a31; --accent-soft:#e3f1e6; --on-accent:#ffffff;
   --danger:#c2410c; --grid:rgba(21,21,15,.05);
   --sans:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
