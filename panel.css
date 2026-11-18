@@ -247,7 +247,31 @@ select.p-input{appearance:auto}
 .p-flash-q{font-size:18px;font-weight:600;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}
 .p-flash-a{margin-top:16px;padding-top:16px;border-top:1px dashed var(--p-line-strong);font-size:16px;line-height:1.5;color:var(--p-ink-2);white-space:pre-wrap;overflow-wrap:anywhere}
 .p-file-input{padding:10px;font-size:var(--p-size-small)}
-.p-frame{display:block;width:100%;height:calc(100vh - var(--p-tabs-height) - 150px);min-height:420px;border:1px solid var(--p-line);border-radius:var(--p-radius);background:#fff}
+/* a workbook takes the whole window: one thin bar of the panel's, then the sealed frame */
+html.p-book-open{overflow:hidden}
+.p-book-full{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;background:var(--p-bg)}
+.p-book-bar{display:flex;align-items:center;gap:10px;padding:8px max(12px,env(safe-area-inset-right)) 8px max(12px,env(safe-area-inset-left));padding-top:max(8px,env(safe-area-inset-top));border-bottom:1px solid var(--p-line)}
+.p-book-name{flex:1;min-width:0;display:flex;flex-direction:column}
+.p-book-name strong{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-book-name .p-row-meta{margin-top:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.p-btn.p-book-back{min-height:40px;padding:0 12px;font-size:12px;flex:none}
+.p-frame{display:block;flex:1;width:100%;min-height:0;border:0;background:#fff}  /* white under a workbook that sets no background of its own, as a browser would give it */
+/* the Library as a notebook: classes down the side, tests across the top, pages in the middle */
+.p-book{display:grid;grid-template-columns:168px minmax(0,1fr);gap:var(--p-gap);align-items:start}
+.p-book.p-book-flat{grid-template-columns:minmax(0,1fr)}
+.p-book-flat .p-book-rail{display:none}
+.p-book-rail{display:flex;flex-direction:column;gap:4px;padding:6px;background:var(--p-surface);border:1px solid var(--p-line);border-radius:var(--p-radius);position:sticky;top:64px}
+.p-btn.p-book-tab{justify-content:space-between;gap:8px;width:100%;min-height:44px;padding:0 10px;border-color:transparent;background:transparent;color:var(--p-ink-2);font-size:13px;text-align:left;border-left:3px solid transparent;border-radius:var(--p-radius-small)}
+.p-btn.p-book-tab[aria-pressed="true"]{background:var(--p-accent-soft);color:var(--p-accent-ink);border-left-color:var(--p-accent);font-weight:600}
+.p-book-count{font-family:var(--p-mono);font-size:var(--p-size-tiny);color:var(--p-ink-3);font-weight:400}
+.p-book-side{display:grid;gap:var(--p-gap);min-width:0}
+.p-book-secs{margin-bottom:12px}
+@media (max-width:640px){
+  .p-book{grid-template-columns:minmax(0,1fr)}
+  .p-book-rail{position:static;flex-direction:row;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .p-btn.p-book-tab{width:auto;flex:none;border-left:0;border-bottom:3px solid transparent}
+  .p-btn.p-book-tab[aria-pressed="true"]{border-bottom-color:var(--p-accent)}
+}
 
 /* section tabs, fixed to the bottom on a phone */
 .p-tabs{
