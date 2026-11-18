@@ -8,7 +8,10 @@
    page checks and saves through a button. */
 (function(){
   var P = window.Panel, el = P.el, Login = window.AssistantLogin;
-  var VIEWS = [['plan', 'Schedule'], ['library', 'Library'], ['cards', 'Cards']];
+  var VIEWS = [['plan', 'Schedule'], ['library', 'Library'], ['pinned', 'Pinned']];
+  /* what a library item is: a workbook, a mock or practice test (a workbook the bot marks as one), or a card set */
+  var SORTS = [['workbook', 'Workbooks'], ['mock', 'Mock tests'], ['cards', 'Cards']];
+  function sortOf(i){ return i.kind === 'cards' ? 'cards' : i.mock ? 'mock' : 'workbook'; }
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   var view = 'plan', body = null, run = 0, data = null, search = '', listener = null, leave = null;
@@ -112,7 +115,7 @@
           var wrap = el('div');
           while(li.firstChild){ wrap.appendChild(li.firstChild); }
           li.appendChild(wrap);
-          P.button(li, 'Review', 'main', function(){ pick('cards'); });
+          P.button(li, 'Review', 'main', function(){ pick('pinned'); });
         }
       }
 
@@ -268,7 +271,7 @@
         if(words.length){
           /* a search looks through every notebook at once */
           var hits = d.items.filter(function(i){
-            var hay = (i['class'] + ' ' + i.test + ' ' + i.title + ' ' + (i.kind === 'cards' ? 'cards flashcards' : 'workbook')).toLowerCase();
+            var hay = (i['class'] + ' ' + i.test + ' ' + i.title + ' ' + (i.kind === 'cards' ? 'cards flashcards' : i.mock ? 'mock test practice' : 'workbook')).toLowerCase();
             return words.every(function(w){ return hay.indexOf(w) >= 0; });
           }).sort(byDate);
           book.classList.add('p-book-flat');
@@ -307,8 +310,16 @@
           tests.forEach(function(t){ tab(secs, 'p-chip', t || 'No test', null, part === t, function(){ part = t; draw(); }); });
           pc.appendChild(secs);
         }
-        var pl = P.rows(pc);
-        mine.filter(function(i){ return part === null || (i.test || '') === part; }).forEach(function(i){ itemRow(pl, i, false); });
+        /* the class's pages, by what they are */
+        var shown = mine.filter(function(i){ return part === null || (i.test || '') === part; });
+        SORTS.forEach(function(k){
+          var these = shown.filter(function(i){ return sortOf(i) === k[0]; });
+          var head = el('p', 'p-label p-book-kind', k[1] + ' · ' + these.length);
+          pc.appendChild(head);
+          if(!these.length){ line(pc, 'p-empty p-book-none', 'None yet.'); return; }
+          var pl = P.rows(pc);
+          these.forEach(function(i){ itemRow(pl, i, false); });
+        });
       }
       find.addEventListener('input', function(){ search = find.value; draw(); });
       draw();
@@ -350,34 +361,61 @@
   }
   function itemRow(list, i, wide){
     var cards = i.kind === 'cards';
-    var side = cards ? i.count + ' cards' : (i.total ? i.done + ' of ' + i.total + ' done' : 'workbook');
+    var side = cards ? i.count + ' cards' : (i.total ? i.done + ' of ' + i.total + ' done' : i.mock ? 'mock test' : 'workbook');
     var sub = (wide ? i['class'] + ' · ' : '') + (i.test || 'No test') + (i.test_date ? ' · ' + dayText(i.test_date, true) : '');
     var meta = cards ? (i.due ? i.due + ' due' : 'none due') + (i.missed ? ' · missed ' + i.missed + (i.missed === 1 ? ' time' : ' times') : '')
                      : (i.opened ? 'Last opened ' + P.when(i.opened) : 'Not opened yet');
     var li = P.row(list, i.title, side, sub, meta);
     var a = el('div', 'p-actions');
     P.button(a, cards ? 'Review' : 'Open', 'main', function(){ if(cards){ review(i.id); } else{ openBook(i.id); } });
+    P.button(a, i.pinned ? 'Unpin' : 'Pin', i.pinned ? 'p-pinned' : '', function(b){ pin(i, !i.pinned, b); });
+    if(!cards){
+      P.button(a, i.mock ? 'Not a mock test' : 'Mark as mock test', 'quiet p-link', function(b){
+        P.press('study_item_set', { id: i.id, mock: !i.mock }, b).then(function(r){ if(told(r, i.mock ? 'Moved to Workbooks.' : 'Moved to Mock tests.')){ refresh(); } }).catch(function(){});
+      });
+    }
     twice(a, 'Delete', 'Tap again to delete', 'quiet p-link p-danger-link', function(b){
       P.press('study_item_delete', { id: i.id }, b).then(function(r){ if(told(r, 'Deleted.')){ refresh(); } }).catch(function(){});
     });
     li.appendChild(a);
   }
 
-  /* ---------- Cards ---------- */
-  function showCards(){
+  function pin(i, on, b){
+    P.press('study_pin', { id: i.id, pinned: on }, b).then(function(r){ if(told(r, on ? 'Pinned.' : 'Unpinned.')){ refresh(); } }).catch(function(){});
+  }
+
+  /* ---------- Pinned: what he is working on now ---------- */
+  function showPinned(){
     fetchAll(function(d){
       clear();
-      var sets = d.items.filter(function(i){ return i.kind === 'cards'; })
-        .sort(function(a, b){ return (a.test_date || '9999') < (b.test_date || '9999') ? -1 : 1; });
-      var c = P.card(body, 'Flashcards');
-      if(!sets.length){ line(c, 'p-empty', 'No card sets yet. They arrive through the drop folder, or add a .json file under Library.'); return; }
+      var pins = d.items.filter(function(i){ return i.pinned; })
+        .sort(function(a, b){ return (b.pinned_at || '') < (a.pinned_at || '') ? -1 : 1; });
+      var due = d.items.reduce(function(n, i){ return n + (i.kind === 'cards' ? i.due : 0); }, 0);
+      var c = P.card(body, 'Pinned');
+      if(!pins.length){
+        line(c, 'p-empty', 'Nothing pinned. Tap Pin on a workbook, mock test or card set in the Library to keep it here while you work on it.');
+      }
+      else{
+        line(c, 'p-note', 'What you are working on now, newest pin first.');
+        SORTS.forEach(function(k){
+          var these = pins.filter(function(i){ return sortOf(i) === k[0]; });
+          if(!these.length){ return; }
+          c.appendChild(el('p', 'p-label p-book-kind', k[1] + ' · ' + these.length));
+          var l = P.rows(c);
+          these.forEach(function(i){ itemRow(l, i, true); });
+        });
+      }
+      c = P.card(body, 'Flashcards');
       line(c, 'p-note', 'A card you miss comes back today. One you know comes back after 1, 2, 4, 7, then 14 days. You can also text "quiz me".');
-      var list = P.rows(c);
+      /* every set with cards due today, so a review is never more than a tap away */
+      var sets = d.items.filter(function(i){ return i.kind === 'cards' && i.due; })
+        .sort(function(a, b){ return (a.test_date || '9999') < (b.test_date || '9999') ? -1 : 1; });
+      if(!sets.length){ line(c, 'p-empty', d.items.some(function(i){ return i.kind === 'cards'; }) ? 'No cards due today.' : 'No card sets yet.'); return; }
+      var l = P.rows(c);
       sets.forEach(function(i){
-        var li = P.row(list, i.title, i.due ? i.due + ' due' : 'none due', i['class'] + (i.test ? ' · ' + i.test : '') + (i.test_date ? ' · ' + dayText(i.test_date, true) : ''),
-                       i.count + ' cards · ' + i.known + ' known well' + (i.missed ? ' · missed ' + i.missed + (i.missed === 1 ? ' time' : ' times') : ''));
+        var li = P.row(l, i.title, i.due + ' due', i['class'] + (i.test ? ' · ' + i.test : '') + (i.test_date ? ' · ' + dayText(i.test_date, true) : ''));
         var a = el('div', 'p-actions');
-        P.button(a, i.due ? 'Review due cards' : 'Review all anyway', i.due ? 'main' : '', function(){ review(i.id, !i.due); });
+        P.button(a, 'Review due cards', 'main', function(){ review(i.id, false); });
         li.appendChild(a);
       });
     });
@@ -415,7 +453,7 @@
         a.textContent = '';
         count.textContent = 'Done. ' + right.length + ' right, ' + missed.length + ' missed' + (missed.length ? '. The missed ones are due again today.' : '.');
         leave = null;
-        save(function(){ P.button(a, 'Back to cards', 'main', function(){ pick('cards'); }); });
+        save(function(){ P.button(a, 'Back', 'main', function(){ pick(view); }); });
       }
       function next(){
         if(!queue.length){ done(); return; }
@@ -454,7 +492,7 @@
       /* The workbook takes the whole window, over the panel's own bars. One thin bar of the panel's stays
          on top of it: the way back, the title and the saved line. */
       var shell = el('div', 'p-book-full'), bar = el('div', 'p-book-bar');
-      P.button(bar, 'Back', 'p-book-back', function(){ pick('library'); });
+      P.button(bar, 'Back', 'p-book-back', function(){ pick(view); });
       var names = el('div', 'p-book-name');
       names.appendChild(el('strong', '', book.title));
       var status = el('span', 'p-row-meta', (book['class'] || '') + (book.test ? ' · ' + book.test : '') + (book.total ? ' · ' + book.done + ' of ' + book.total + ' done' : ''));
@@ -509,7 +547,7 @@
   }
 
   /* ---------- the section ---------- */
-  var SHOW = { plan: showPlan, library: showLibrary, cards: showCards }, nav = null;
+  var SHOW = { plan: showPlan, library: showLibrary, pinned: showPinned }, nav = null;
   function pick(v){
     view = v;
     try{ history.replaceState(null, '', '#study/' + view); }catch(e){}
@@ -521,6 +559,7 @@
   }
   P.section({ id: 'study', title: 'Study', render: function(root){
     var asked = (/^#study\/(\w+)/.exec(location.hash) || [])[1];
+    if(asked === 'cards'){ asked = 'pinned'; }   /* old links */
     if(SHOW[asked]){ view = asked; }
     nav = el('div', 'p-seg');
     nav.setAttribute('role', 'tablist');
