@@ -216,6 +216,32 @@ select.p-input{appearance:auto}
 .p-edit .p-chips{margin-bottom:4px}
 .p-add-box{margin-top:0;border-top:0}
 
+/* extras: chat, morning report, trading card */
+.p-chat{display:flex;flex-direction:column;gap:10px;max-height:55vh;overflow-y:auto;padding:4px 0 8px}
+.p-msg{display:flex;flex-direction:column;max-width:88%}
+.p-msg.you{align-self:flex-end;align-items:flex-end}
+.p-msg.bot{align-self:flex-start;align-items:flex-start;max-width:100%}
+.p-bubble{padding:10px 12px;border:1px solid var(--p-line);border-radius:var(--p-radius);background:var(--p-bg);font-size:15px;white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%}
+.p-msg.you .p-bubble{background:var(--p-accent-soft);border-color:var(--p-accent);color:var(--p-accent-ink)}
+.p-msg.bot .p-bubble{white-space:normal}
+.p-msg-at{font-family:var(--p-mono);font-size:var(--p-size-tiny);color:var(--p-ink-3);margin-top:3px}
+.p-typing{margin:6px 0}
+.p-chat-form{display:flex;gap:8px;align-items:flex-end;margin-top:10px}
+.p-chat-input{flex:1;min-width:0;min-height:52px;resize:vertical;line-height:1.4}
+.p-rich>*{margin:0 0 10px}
+.p-rich>*:last-child{margin-bottom:0}
+.p-rich p{font-size:15px;overflow-wrap:anywhere}
+.p-rich-h{font-size:15px;font-weight:600;margin-top:14px}
+.p-rich>.p-rich-h:first-child{margin-top:0}
+.p-list{padding-left:20px;font-size:15px}
+.p-list li{margin-top:4px;overflow-wrap:anywhere}
+.p-table-wrap{overflow-x:auto;max-width:100%}
+.p-table{border-collapse:collapse;font-size:14px}
+.p-table th,.p-table td{border:1px solid var(--p-line);padding:6px 10px;text-align:left;vertical-align:top}
+.p-table th{font-weight:600;background:var(--p-surface);white-space:nowrap}
+.p-a{color:var(--p-accent-ink);text-decoration:underline;overflow-wrap:anywhere}
+.p-code{font-family:var(--p-mono);font-size:13px}
+
 /* section tabs, fixed to the bottom on a phone */
 .p-tabs{
   position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;

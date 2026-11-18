@@ -67,7 +67,9 @@ panel. Both hold no data, no keys and nothing private: after the login they ask 
   Spend (today, credits left, the caps) and Logins (Canvas, Outlook, Google, with a way to fix each).
 - `panel-brain.js` is the Brain section: Memory (fix or delete a line, undo, put a file back from a daily copy),
   Recipes (edit, run now, delete) and Skills (add, edit or delete how-tos and email style notes).
-- `panel-daily.js` is the Assistant section: Today (tracker row and to-dos, the view the panel opens on), Waiting on you (drafts) and
-  Switches (with Pause Everything). It has no styles of its own.
+- `panel-daily.js` is the Assistant section: Today (tracker row and to-dos, the view the panel opens on), Chat, Morning,
+  Waiting on you (drafts) and Switches (with Pause Everything). It has no styles of its own.
+- `panel-extras.js` draws the chat box (the same as texting the Assistant, with tables and links built as text),
+  the morning report page and the trading card, which only shows when the bot has a trading summary.
 
 Never put a key, a phone number, an email address or a private link in this repo.
