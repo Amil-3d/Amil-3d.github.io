@@ -243,7 +243,7 @@
       P.button(row, 'I\'m signed in', '', function(b){
         P.press('login_fix_done', { site: s.id }, b).then(function(r){ if(told(r, 'Checking your sign-in. This takes up to a minute.') || r.status === 200){ showLogins(); } }).catch(function(){});
       });
-      row.appendChild(el('span', 'p-row-meta', 'Open for about ' + minutes + ' more minute' + (minutes === 1 ? '' : 's') + '. Treat that page like your mailbox: do not share it.'));
+      row.appendChild(el('span', 'p-row-meta', 'Open for about ' + minutes + ' more minute' + (minutes === 1 ? '' : 's') + '. Treat that page like your own signed-in ' + s.site + ': do not share it.'));
     }
     if(s.fixing){ opened(s.fixing.link, s.fixing.minutes_left); return; }
     P.button(row, 'Open a sign-in browser', s.state === 'broken' ? 'main' : '', function(b){
