@@ -9,7 +9,7 @@
   --p-ink:#15150f; --p-ink-2:#4f4d44; --p-ink-3:#6d6b60;
   --p-accent:#007a31; --p-accent-ink:#007a31; --p-accent-soft:#e3f1e6; --p-on-accent:#ffffff;
   --p-bad:#c2410c; --p-bad-soft:#fbeadf;
-  --p-grid:rgba(21,21,15,.05);
+  --p-grid:rgba(21,21,15,.05); --p-grid-major:rgba(21,21,15,.07);
   /* type */
   --p-sans:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
   --p-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -18,6 +18,8 @@
   --p-radius:0px; --p-radius-small:2px; --p-round:2px; --p-gap:14px; --p-pad:20px; --p-width:760px;
   --p-tap:46px;             /* smallest height of anything tappable */
   --p-tabs-height:58px;
+  /* motion: the site's easing; everything that moves stops under reduced motion */
+  --p-ease:cubic-bezier(.2,.7,.2,1);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -25,7 +27,7 @@
     --p-ink:#eceade; --p-ink-2:#b3b1a5; --p-ink-3:#8c8a7e;
     --p-accent:#2fd968; --p-accent-ink:#2fd968; --p-accent-soft:#12251a; --p-on-accent:#06140b;
     --p-bad:#ff7a45; --p-bad-soft:#2a160d;
-    --p-grid:rgba(236,234,222,.045);
+    --p-grid:rgba(236,234,222,.045); --p-grid-major:rgba(236,234,222,.06);
   }
 }
 :root[data-theme="dark"]{
@@ -33,7 +35,7 @@
   --p-ink:#eceade; --p-ink-2:#b3b1a5; --p-ink-3:#8c8a7e;
   --p-accent:#2fd968; --p-accent-ink:#2fd968; --p-accent-soft:#12251a; --p-on-accent:#06140b;
   --p-bad:#ff7a45; --p-bad-soft:#2a160d;
-  --p-grid:rgba(236,234,222,.045);
+  --p-grid:rgba(236,234,222,.045); --p-grid-major:rgba(236,234,222,.06);
 }
 
 *{box-sizing:border-box}
@@ -42,8 +44,12 @@ html{-webkit-text-size-adjust:100%}
 body{
   margin:0;background:var(--p-bg);color:var(--p-ink);font-family:var(--p-sans);font-size:var(--p-size);
   line-height:1.5;-webkit-font-smoothing:antialiased;
-  background-image:linear-gradient(var(--p-grid) 1px,transparent 1px),linear-gradient(90deg,var(--p-grid) 1px,transparent 1px);
-  background-size:24px 24px;
+  /* graph paper: a faint 24px grid with a stronger line every fifth square, like the site */
+  background-image:
+    linear-gradient(var(--p-grid-major) 1px,transparent 1px),linear-gradient(90deg,var(--p-grid-major) 1px,transparent 1px),
+    linear-gradient(var(--p-grid) 1px,transparent 1px),linear-gradient(90deg,var(--p-grid) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px;
+  font-variant-numeric:tabular-nums;
   padding-bottom:calc(var(--p-tabs-height) + env(safe-area-inset-bottom) + 20px);
 }
 a{color:inherit}
@@ -79,14 +85,19 @@ a{color:inherit}
 .p-btn{
   display:inline-flex;align-items:center;justify-content:center;min-height:var(--p-tap);padding:0 16px;
   font-family:var(--p-mono);font-size:var(--p-size-small);font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--p-ink);cursor:pointer;
-  background:transparent;border:1.5px solid var(--p-rule);border-radius:var(--p-radius);
-  text-decoration:none;-webkit-tap-highlight-color:transparent;transition:background .15s,color .15s,border-color .15s;
+  /* the fill wipes up from the bottom on hover, like the site's buttons */
+  background:transparent linear-gradient(var(--p-ink),var(--p-ink)) no-repeat 0 100%/100% 0;
+  border:1.5px solid var(--p-rule);border-radius:var(--p-radius);
+  text-decoration:none;-webkit-tap-highlight-color:transparent;
+  transition:background-size .3s var(--p-ease),background-color .15s,color .25s var(--p-ease),border-color .25s,transform .1s;
 }
-.p-btn:hover:not([disabled]){background:var(--p-ink);color:var(--p-bg)}
-.p-btn.main{background:var(--p-ink);border-color:var(--p-ink);color:var(--p-bg);font-weight:600}
-.p-btn.main:hover:not([disabled]){background:var(--p-accent);border-color:var(--p-accent);color:var(--p-on-accent)}
+.p-btn:hover:not([disabled]){background-size:100% 100%;color:var(--p-bg)}
+.p-btn:active:not([disabled]){transform:translateY(1px)}
+.p-btn.main{background-color:var(--p-ink);background-image:linear-gradient(var(--p-accent),var(--p-accent));border-color:var(--p-ink);color:var(--p-bg);font-weight:600}
+.p-btn.main:hover:not([disabled]){border-color:var(--p-accent);color:var(--p-on-accent)}
 .p-btn.quiet:hover:not([disabled]),.p-btn.p-link:hover:not([disabled]),.p-btn.p-seg-btn:hover:not([disabled]),.p-btn.p-file:hover:not([disabled]),.p-btn.p-book-tab:hover:not([disabled]){background:var(--p-accent-soft);color:var(--p-accent-ink)}
-.p-btn.danger:hover:not([disabled]),.p-btn.p-danger-link:hover:not([disabled]){background:var(--p-bad);border-color:var(--p-bad);color:var(--p-bg)}
+.p-btn.danger,.p-btn.p-danger-link{background-image:linear-gradient(var(--p-bad),var(--p-bad))}
+.p-btn.danger:hover:not([disabled]),.p-btn.p-danger-link:hover:not([disabled]){border-color:var(--p-bad);color:var(--p-bg)}
 .p-btn.quiet{border-color:transparent;text-transform:none;letter-spacing:0;background:transparent;color:var(--p-ink-2);padding:0 8px}
 .p-btn.danger{color:var(--p-bad);border-color:var(--p-bad)}
 .p-btn[disabled]{opacity:.55;cursor:default}
@@ -222,6 +233,7 @@ select.p-input{appearance:auto}
 .p-line-text.p-plain{font-family:inherit;font-size:15px}
 .p-lines .p-actions{margin-top:2px;gap:16px}
 .p-btn.p-danger-link{color:var(--p-bad)}
+.p-btn.p-danger-link:hover:not([disabled]){background:var(--p-bad)}
 .p-area.p-area-short{min-height:110px}
 .p-edit .p-chips{margin-bottom:4px}
 .p-add-box{margin-top:0;border-top:0}
@@ -294,7 +306,7 @@ html.p-book-open{overflow:hidden}
 .p-tab{
   flex:1;max-width:160px;min-height:var(--p-tabs-height);border:0;background:transparent;cursor:pointer;
   font-family:var(--p-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--p-ink-3);border-top:2px solid transparent;
-  -webkit-tap-highlight-color:transparent;
+  -webkit-tap-highlight-color:transparent;transition:color .2s,border-color .25s var(--p-ease),background-color .2s;
 }
 .p-tab[aria-current="page"]{color:var(--p-accent-ink);border-top-color:var(--p-accent);font-weight:600}
 
@@ -313,7 +325,7 @@ html.p-book-open{overflow:hidden}
     padding:64px 10px 10px;border-top:0;border-right:1.5px solid var(--p-rule)}
   .p-tab{flex:none;max-width:none;width:100%;min-height:var(--p-tap);padding:0 12px;text-align:left;font-size:13px;
     border-top:0;border-left:3px solid transparent;border-radius:var(--p-radius-small)}
-  .p-tab:hover{color:var(--p-ink)}
+  .p-tab:hover{color:var(--p-ink);border-left-color:var(--p-line-strong)}
   .p-tab[aria-current="page"]{background:var(--p-accent-soft);border-left-color:var(--p-accent)}
   #view .p-stack{display:flex;flex-wrap:wrap;align-items:flex-start}
   #view .p-stack > *{flex:1 1 100%;min-width:0}
@@ -327,4 +339,15 @@ html.p-book-open{overflow:hidden}
 .p-label.p-book-kind{margin:18px 0 6px;padding-top:12px;border-top:1px solid var(--p-line)}
 .p-book-secs + .p-label.p-book-kind,.p-card > h2 + .p-label.p-book-kind{margin-top:4px;padding-top:0;border-top:0}
 .p-empty.p-book-none{font-size:13px}
-.p-btn.p-pinned{background:var(--p-accent-soft);color:var(--p-accent-ink);border-color:var(--p-accent)}
+.p-btn.p-pinned{background-color:var(--p-accent-soft);color:var(--p-accent-ink);border-color:var(--p-accent)}
+
+/* Motion, from the site's polish pass: a section fades up when it opens, the brand mark turns on hover.
+   Only on a section change (the stack is made new then), never on a refresh inside it. */
+#view > .p-stack{animation:p-fadeup .45s var(--p-ease) both}
+@keyframes p-fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+::selection{background:var(--p-accent);color:var(--p-on-accent)}
+.p-card h1,.p-title{text-wrap:balance}
+@media (prefers-reduced-motion: reduce){
+  #view > .p-stack{animation:none}
+  .p-btn,.p-tab{transition:none}
+}
