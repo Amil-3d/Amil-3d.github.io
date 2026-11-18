@@ -112,3 +112,10 @@ Layout:
 - **Spec table:** a mono muted label column about 96px wide, with values on the right and `--hair` rules between rows.
 - **Focus:** a 2px `--accent` outline with a 2px offset.
 - **Motion:** about .15s for hovers. All animation is turned off under `prefers-reduced-motion`.
+
+## Where it is used
+
+- The portfolio pages: `portfolio.css`.
+- The Assistant page (`assistant.html`): `portfolio.css` plus `assistant.css`, on the same sheet and title block.
+- The control panel: the first block of `panel.css` holds the same values under `--p-` names
+  (`--p-bg`, `--p-surface`, `--p-line` is hair, `--p-rule` and `--p-line-strong` are line, `--p-ink-3` is muted).
