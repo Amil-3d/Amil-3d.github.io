@@ -115,7 +115,7 @@ a{color:inherit}
 .p-pill.ok{color:var(--p-accent-ink);border-color:var(--p-accent);background:var(--p-accent-soft)}
 .p-pill.bad{color:var(--p-bad);border-color:var(--p-bad);background:var(--p-bad-soft)}
 
-.p-row-top .p-pill{margin-left:8px}
+.p-row-top .p-pill{margin-left:8px;flex-shrink:0;white-space:nowrap;overflow-wrap:normal}
 .p-row-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
 .p-from-file{color:var(--p-accent-ink)}
 
@@ -243,6 +243,8 @@ select.p-input{appearance:auto}
 .p-rich p{font-size:15px;overflow-wrap:anywhere}
 .p-rich-h{font-size:15px;font-weight:600;margin-top:14px}
 .p-rich>.p-rich-h:first-child{margin-top:0}
+.p-answer{margin-top:12px;padding-top:12px;border-top:1px solid var(--p-line)}
+.p-answer li{padding:2px 0;border-top:0}
 .p-list{padding-left:20px;font-size:15px}
 .p-list li{margin-top:4px;overflow-wrap:anywhere}
 .p-table-wrap{overflow-x:auto;max-width:100%}
