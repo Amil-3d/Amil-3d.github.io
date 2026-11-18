@@ -65,6 +65,8 @@ panel. Both hold no data, no keys and nothing private: after the login they ask 
   `Panel.press()`, so the bot logs it.
 - `panel-inside.js` is the Inside section: Why (what each heartbeat run saw and why it texted or stayed quiet),
   Spend (today, credits left, the caps) and Logins (Canvas, Outlook, Google, with a way to fix each).
+- `panel-brain.js` is the Brain section: Memory (fix or delete a line, undo, put a file back from a daily copy),
+  Recipes (edit, run now, delete) and Skills (edit or delete how-tos and email style notes).
 - `panel-daily.js` is the Assistant section: Today (tracker row and to-dos, the view the panel opens on), Waiting on you (drafts) and
   Switches (with Pause Everything). It has no styles of its own.
 

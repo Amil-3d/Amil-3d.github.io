@@ -201,6 +201,20 @@ select.p-input{appearance:auto}
 .p-steps li{margin-top:6px}
 .p-actions .p-row-meta{flex-basis:100%;margin-top:0}
 
+/* brain: memory lines, recipes, skills */
+.p-files li{padding:2px 0}
+.p-btn.p-file{justify-content:flex-start;text-align:left;width:100%;min-height:44px;overflow-wrap:anywhere}
+.p-back{margin-top:0}
+.p-undo{margin:0 0 8px}
+.p-lines li{padding:10px 0}
+.p-lines .p-gap{padding:0;height:10px;border:0}
+.p-line-text{font-family:var(--p-mono);font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.p-line-text.p-plain{font-family:inherit;font-size:15px}
+.p-lines .p-actions{margin-top:2px;gap:16px}
+.p-btn.p-danger-link{color:var(--p-bad)}
+.p-area.p-area-short{min-height:110px}
+.p-edit .p-chips{margin-bottom:4px}
+
 /* section tabs, fixed to the bottom on a phone */
 .p-tabs{
   position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;
