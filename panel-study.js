@@ -11,7 +11,8 @@
   var VIEWS = [['plan', 'Schedule'], ['library', 'Library'], ['cards', 'Cards']];
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  var view = 'plan', body = null, run = 0, data = null, group = 'class', search = '', listener = null, leave = null;
+  var view = 'plan', body = null, run = 0, data = null, search = '', listener = null, leave = null;
+  var shelf = null, part = null;   /* the notebook open in the Library (null is everything) and its section (null is all of it) */
 
   /* ---------- small helpers ---------- */
   function line(parent, cls, text){ var p = el('p', cls, text); parent.appendChild(p); return p; }
@@ -75,6 +76,8 @@
   function clear(){
     if(leave){ var go = leave; leave = null; go(); }
     if(listener){ window.removeEventListener('message', listener); listener = null; }
+    document.documentElement.classList.remove('p-book-open');
+    if(document.fullscreenElement && document.exitFullscreen){ try{ document.exitFullscreen(); }catch(e){} }
     body.textContent = '';
   }
   function fetchAll(then){
@@ -234,41 +237,78 @@
   }
 
   /* ---------- Library ---------- */
+  /* The Library is laid out like a notebook: each class is a notebook down the side, each test is a
+     section across the top, and each workbook or card set is a page in it. */
   function showLibrary(){
     fetchAll(function(d){
       clear();
       var c = P.card(body, 'Library');
       var find = field(c, 'Search', 'search', search);
       find.placeholder = 'Class, test or title';
-      var chips = el('div', 'p-chips');
-      [['class', 'By class'], ['date', 'By test date']].forEach(function(g){
-        var b = P.button(chips, g[1], 'p-chip', function(){ group = g[0]; draw(); });
-        b.dataset.g = g[0];
-      });
-      c.appendChild(chips);
-      var out = el('div', 'p-stack');
-      body.appendChild(out);
+      var book = el('div', 'p-book'), rail = el('nav', 'p-book-rail'), side = el('div', 'p-book-side');
+      rail.setAttribute('aria-label', 'Classes');
+      book.appendChild(rail);
+      book.appendChild(side);
+      body.appendChild(book);
+      var names = d.classes.slice();
+      d.items.forEach(function(i){ if(i['class'] && names.indexOf(i['class']) < 0){ names.push(i['class']); } });
+      names.sort(function(a, b){ return a.toLowerCase() < b.toLowerCase() ? -1 : 1; });
+      if(shelf !== null && names.indexOf(shelf) < 0){ shelf = null; part = null; }
+      function byDate(a, b){ return (a.test_date || '9999') + a.title < (b.test_date || '9999') + b.title ? -1 : 1; }
+      function tab(parent, cls, label, count, on, go){
+        var b = P.button(parent, label, cls, go);
+        if(count !== null){ b.appendChild(el('span', 'p-book-count', String(count))); }
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        return b;
+      }
       function draw(){
-        Array.prototype.forEach.call(chips.children, function(b){ b.setAttribute('aria-pressed', b.dataset.g === group ? 'true' : 'false'); });
-        out.textContent = '';
+        rail.textContent = '';
+        side.textContent = '';
         var words = search.toLowerCase().split(/\s+/).filter(Boolean);
-        var items = d.items.filter(function(i){
-          var hay = (i['class'] + ' ' + i.test + ' ' + i.title + ' ' + (i.kind === 'cards' ? 'cards flashcards' : 'workbook')).toLowerCase();
-          return words.every(function(w){ return hay.indexOf(w) >= 0; });
+        if(words.length){
+          /* a search looks through every notebook at once */
+          var hits = d.items.filter(function(i){
+            var hay = (i['class'] + ' ' + i.test + ' ' + i.title + ' ' + (i.kind === 'cards' ? 'cards flashcards' : 'workbook')).toLowerCase();
+            return words.every(function(w){ return hay.indexOf(w) >= 0; });
+          }).sort(byDate);
+          book.classList.add('p-book-flat');
+          var rc = P.card(side, hits.length ? 'Found ' + hits.length : 'Nothing matches');
+          if(!hits.length){ line(rc, 'p-empty', 'Try fewer words.'); return; }
+          var rl = P.rows(rc);
+          hits.forEach(function(i){ itemRow(rl, i, true); });
+          return;
+        }
+        book.classList.remove('p-book-flat');
+        tab(rail, 'p-book-tab', 'Everything', d.items.length, shelf === null, function(){ shelf = null; part = null; draw(); });
+        names.forEach(function(n){
+          tab(rail, 'p-book-tab', n, d.items.filter(function(i){ return i['class'] === n; }).length, shelf === n,
+              function(){ shelf = n; part = null; draw(); });
         });
-        if(!items.length){ line(P.card(out, d.items.length ? 'Nothing matches' : 'Nothing here yet'), 'p-empty', d.items.length ? 'Try fewer words.' : 'Workbooks and card sets land here from the drop folder, or add a file below.'); return; }
-        var groups = {}, order = [];
-        items.forEach(function(i){
-          var key = group === 'class' ? i['class'] : (i.test_date || '');
-          if(!groups[key]){ groups[key] = []; order.push(key); }
-          groups[key].push(i);
-        });
-        order.sort(function(a, b){ return group === 'date' ? ((a || '9999') < (b || '9999') ? -1 : 1) : a.toLowerCase() < b.toLowerCase() ? -1 : 1; });
-        order.forEach(function(key){
-          var head = group === 'class' ? key : (key ? dayText(key, true) + (groups[key][0].test ? ' · ' + groups[key][0]['class'] + ' ' + groups[key][0].test : '') : 'No test date');
-          var gc = P.card(out, head), list = P.rows(gc);
-          groups[key].sort(function(a, b){ return (a.test_date || '9999') < (b.test_date || '9999') ? -1 : 1; }).forEach(function(i){ itemRow(list, i); });
-        });
+        var mine = d.items.filter(function(i){ return shelf === null || i['class'] === shelf; }).sort(byDate);
+        if(shelf === null){
+          /* everything, by test date: the next test first */
+          if(!mine.length){ line(P.card(side, 'Nothing here yet'), 'p-empty', 'Workbooks and card sets land here from the drop folder, or add a file below.'); return; }
+          var days = {}, order = [];
+          mine.forEach(function(i){ var k = i.test_date || ''; if(!days[k]){ days[k] = []; order.push(k); } days[k].push(i); });
+          order.forEach(function(k){
+            var l = P.rows(P.card(side, k ? dayText(k, true) : 'No test date'));
+            days[k].forEach(function(i){ itemRow(l, i, true); });
+          });
+          return;
+        }
+        var tests = [];
+        mine.forEach(function(i){ var t = i.test || ''; if(tests.indexOf(t) < 0){ tests.push(t); } });
+        if(part !== null && tests.indexOf(part) < 0){ part = null; }
+        var pc = P.card(side, shelf);
+        if(!mine.length){ line(pc, 'p-empty', 'Nothing for ' + shelf + ' yet. Add a file below, or export one from its class project.'); return; }
+        if(tests.length > 1){
+          var secs = el('div', 'p-chips p-book-secs');
+          tab(secs, 'p-chip', 'All', null, part === null, function(){ part = null; draw(); });
+          tests.forEach(function(t){ tab(secs, 'p-chip', t || 'No test', null, part === t, function(){ part = t; draw(); }); });
+          pc.appendChild(secs);
+        }
+        var pl = P.rows(pc);
+        mine.filter(function(i){ return part === null || (i.test || '') === part; }).forEach(function(i){ itemRow(pl, i, false); });
       }
       find.addEventListener('input', function(){ search = find.value; draw(); });
       draw();
@@ -308,10 +348,10 @@
       line(c, 'p-row-meta', 'The drop folder is checked every ' + d.inbox.every_minutes + ' minutes.' + (d.inbox.problem ? ' Last check failed.' : ''));
     });
   }
-  function itemRow(list, i){
+  function itemRow(list, i, wide){
     var cards = i.kind === 'cards';
     var side = cards ? i.count + ' cards' : (i.total ? i.done + ' of ' + i.total + ' done' : 'workbook');
-    var sub = (group === 'class' ? (i.test || 'No test') + (i.test_date ? ' · ' + dayText(i.test_date, true) : '') : i['class']) ;
+    var sub = (wide ? i['class'] + ' · ' : '') + (i.test || 'No test') + (i.test_date ? ' · ' + dayText(i.test_date, true) : '');
     var meta = cards ? (i.due ? i.due + ' due' : 'none due') + (i.missed ? ' · missed ' + i.missed + (i.missed === 1 ? ' time' : ' times') : '')
                      : (i.opened ? 'Last opened ' + P.when(i.opened) : 'Not opened yet');
     var li = P.row(list, i.title, side, sub, meta);
@@ -411,17 +451,31 @@
       clear();
       if(r.status !== 200){ line(body, 'p-empty', 'That workbook could not be opened just now.'); return; }
       var book = r.body, pending = null, timer = null, last = '';
-      var c = P.card(body, book.title);
-      var status = line(c, 'p-row-meta', (book['class'] || '') + (book.test ? ' · ' + book.test : '') + (book.total ? ' · ' + book.done + ' of ' + book.total + ' done' : ''));
-      var a = el('div', 'p-actions p-back');
-      P.button(a, 'Back to the library', '', function(){ pick('library'); });
-      c.appendChild(a);
+      /* The workbook takes the whole window, over the panel's own bars. One thin bar of the panel's stays
+         on top of it: the way back, the title and the saved line. */
+      var shell = el('div', 'p-book-full'), bar = el('div', 'p-book-bar');
+      P.button(bar, 'Back', 'p-book-back', function(){ pick('library'); });
+      var names = el('div', 'p-book-name');
+      names.appendChild(el('strong', '', book.title));
+      var status = el('span', 'p-row-meta', (book['class'] || '') + (book.test ? ' · ' + book.test : '') + (book.total ? ' · ' + book.done + ' of ' + book.total + ' done' : ''));
+      names.appendChild(status);
+      bar.appendChild(names);
+      if(shell.requestFullscreen){
+        /* hides the browser's own bars too, where the browser can */
+        var big = P.button(bar, 'Full screen', 'p-book-back', function(){
+          if(document.fullscreenElement){ document.exitFullscreen(); } else{ shell.requestFullscreen().catch(function(){}); }
+        });
+        shell.addEventListener('fullscreenchange', function(){ big.textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen'; });
+      }
+      shell.appendChild(bar);
       var frame = el('iframe', 'p-frame');
       frame.setAttribute('sandbox', 'allow-scripts');       /* its own scripts and nothing else: no same-origin, no forms, no popups */
       frame.setAttribute('referrerpolicy', 'no-referrer');
       frame.title = book.title;
       frame.src = Login.api + book.frame;                   /* a one-time address the bot just made for this login */
-      body.appendChild(frame);
+      shell.appendChild(frame);
+      body.appendChild(shell);
+      document.documentElement.classList.add('p-book-open');
       function save(){
         if(timer){ clearTimeout(timer); timer = null; }
         if(!pending || pending.state === last){ return; }
@@ -434,7 +488,7 @@
       /* The only thing the workbook can do to this page: send it a message. Nothing in it is trusted. */
       listener = function(e){
         if(e.source !== frame.contentWindow || !e.data || typeof e.data !== 'object'){ return; }
-        if(e.data.study === 'ready'){ frame.contentWindow.postMessage({ study: 'state', state: book.state || '' }, '*'); return; }
+        if(e.data.study === 'ready'){ frame.contentWindow.postMessage({ study: 'state', state: book.state || '', theme: theme() }, '*'); return; }
         if(e.data.study !== 'progress'){ return; }
         var done = e.data.done, total = e.data.total, state = e.data.state;
         if(typeof state !== 'string' || state.length > 20000){ return; }
@@ -445,6 +499,13 @@
       window.addEventListener('message', listener);
       leave = save;
     }).catch(function(e){ if(e.message !== 'signed out' && mine === run){ clear(); line(body, 'p-empty', 'The bot did not answer.'); } });
+  }
+
+  /* Light or dark as the panel is showing it now, so a workbook can match (it cannot see this page) */
+  function theme(){
+    var set = document.documentElement.getAttribute('data-theme');
+    if(set === 'light' || set === 'dark'){ return set; }
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
   /* ---------- the section ---------- */
