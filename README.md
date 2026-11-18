@@ -2,7 +2,7 @@
 
 Static site, hosted on GitHub Pages at <https://amil-3d.github.io>
 
-It is a project portfolio: a home page with the project grid, plus separate About and Contact pages.
+It is a project portfolio: a home page with a rotating featured-project figure and the project index, one page per project, plus About and Contact pages.
 
 ## Adding or editing a project
 
@@ -19,8 +19,9 @@ The site updates about a minute after the commit.
 3. In the editor, add a line per photo to that project's **Photos** box:
    `img/your-folder/your-photo.jpg | what the photo shows`
 
-The first photo is the card image; the rest become thumbnails under it. Clicking the card photo opens
-a full-size viewer with arrow-key navigation. Keep photos under ~1 MB each; landscape crops best.
+The first photo is the project's thumbnail in the index and the first photo on its project page; the rest
+become thumbnails under it. Clicking a photo on the project page opens a full-size viewer with arrow-key
+navigation. Keep photos under ~1 MB each; landscape crops best.
 
 ## Adding a video
 
@@ -30,18 +31,21 @@ inline. Keep videos web-sized — 1280 px long edge, faststart enabled.
 
 ## Card options
 
-- **Featured** — full-width card with the photos beside the text. Two or three of these reads well; all of them does not.
-- **Card size: Small** — a lighter card for smaller projects.
+- **Featured** — the project's first photo joins the rotating figure at the top of the home page (it changes every
+  6 seconds, pauses on hover, and has previous, pause and next buttons). Three to five of these reads well.
+- **Card size: Small** — kept in the data but not used by the current design.
+- Each project's page lives at `project.html?p=<title in lowercase, dashes for spaces>`, so renaming a project changes its address.
 
 ## Files
 
-- `index.html` — home page: intro, project grid, gallery, lightbox
+- `index.html` — home page: intro, rotating featured figure, project index
+- `project.html` — one page per project (photos, video, notes, skills), picked by `?p=`
 - `about.html` — About page (intro and skills)
 - `contact.html` — Contact page (email, phone, LinkedIn, GitHub)
+- `portfolio.css`, `portfolio.js` — styling and scripts for the four portfolio pages above
 - `assistant.html`, `assistant.css`, `assistant.js` — the Assistant project page and its private dashboard. They hold no data: the page fetches it from the bot, and the private part only after a password
-- `style.css` — shared styling for every page, including the accent color (`--accent`)
-- `site.js` — shared dark/light toggle and footer year
-- `favicon.svg`, `favicon.png`, `apple-touch-icon.png` — the gear tab icon
+- `style.css`, `site.js` — the older styling and toggle, still used by `assistant.html` and `privacy.html` until those are reskinned
+- `favicon.svg`, `favicon.png`, `apple-touch-icon.png` — the cube and quadcopter tab icon
 - `projects.json` — project content, the only file you normally edit
 - `editor.html` — form UI that writes `projects.json` for you
 - `img/` — project photos, one subfolder per project
