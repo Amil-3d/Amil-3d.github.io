@@ -1,4 +1,4 @@
-/* The panel's extras: the chat box, the morning report page and the trading card. The Assistant
+/* The panel's extras: the chat box, the morning report page, the trading card and long jobs. The Assistant
    section (panel-daily.js) shows them. Like the rest of the panel this file holds no data, and
    nothing from the bot is ever put on the page as HTML: a reply's tables, lists and links are built
    piece by piece as text, and a link is only made for an https address. Styles come from panel.css. */
@@ -191,5 +191,72 @@
     }).catch(function(){});
   }
 
-  window.PanelExtras = { chat: chat, morning: morning, trading: trading, rich: rich };
+  /* ---------- Long jobs in the Claude app ---------- */
+  var STATUS = { asked: ['Working', ''], late: ['Late', 'bad'], done: ['Back', 'ok'] };
+  function answerText(text){   /* the task writes Markdown: headings become plain lines, code fences go */
+    return String(text || '').replace(/^```.*$/gm, '').replace(/^#{1,6}\s+/gm, '');
+  }
+  function jobs(body, alive, open){
+    P.ask('/panel/jobs').then(function(r){
+      if(!alive()){ return; }
+      body.textContent = '';
+      if(r.status !== 200){ body.appendChild(el('p', 'p-empty', 'That could not be read just now. Try again in a minute.')); return; }
+      var j = r.body, c = P.card(body, 'Long jobs');
+      c.appendChild(el('p', 'p-note', 'Big jobs that need only the web and writing run in the Claude app on your subscription, outside the spending caps. They can take a while, and I text you when one is back. Nothing that needs your email, Canvas, the tracker or Outlook goes there.'));
+      if(!j.on || !j.ready){
+        c.appendChild(el('p', 'p-empty', j.on ? 'The Claude app task is not set up yet, so long jobs go to the usual worker. The steps are in docs/long-jobs-task-prompt.md in the bot repo.' : (j.why || 'Off.')));
+      } else if(j.paused){
+        c.appendChild(el('p', 'p-note', 'Everything is paused, so no job is sent until you turn it back on.'));
+      } else {
+        var input = el('textarea', 'p-input p-area');
+        input.rows = 4;
+        input.placeholder = 'What should it do? Say everything it needs to know.';
+        input.setAttribute('aria-label', 'The job');
+        c.appendChild(input);
+        var a = el('div', 'p-actions');
+        P.button(a, 'Send to the Claude app', 'main', function(b){
+          var text = input.value.trim();
+          if(!text){ P.say('Say what the job is first.', true); return; }
+          P.press('job_send', { job: text }, b).then(function(r){
+            if(r.status !== 200){ return; }
+            if(r.body.ok === false){ P.say(r.body.why || 'Not sent.', true); return; }
+            P.say('Sent as ' + r.body.id + '. I\'ll text you when it\'s back.');
+            jobs(body, alive);
+          }).catch(function(){});
+        });
+        c.appendChild(a);
+        c.appendChild(el('p', 'p-row-meta', j.today + ' of ' + j.most + ' sent today.'));
+      }
+      if(j.problem){ c.appendChild(el('p', 'p-note', 'The last check for answers failed (' + j.problem + '). It tries again in 5 minutes.')); }
+      var list = P.card(body, 'Sent');
+      if(!(j.jobs || []).length){ list.appendChild(el('p', 'p-empty', 'No long job yet.')); return; }
+      var ul = P.rows(list);
+      j.jobs.forEach(function(job){
+        var li = P.row(ul, job.title, P.when(job.at), null, job.status === 'done' ? 'Back ' + P.when(job.done_at) : null);
+        var s = STATUS[job.status] || [job.status, ''];
+        P.pill(li.querySelector('.p-row-top'), s[0], s[1]);
+        if(job.status === 'done'){
+          var show = el('div', 'p-actions');
+          P.button(show, open === job.id ? 'Hide the answer' : 'Read the answer', 'quiet', function(){ jobs(body, alive, open === job.id ? '' : job.id); });
+          li.appendChild(show);
+        }
+        if(open === job.id){ answer(li, job.id); }
+      });
+    }).catch(function(e){
+      if(e.message !== 'signed out' && alive()){ body.textContent = ''; body.appendChild(el('p', 'p-empty', 'The bot did not answer. Try again in a minute.')); }
+    });
+  }
+  function answer(parent, id){
+    var box = el('div', 'p-answer');
+    box.appendChild(el('p', 'p-empty', 'Loading…'));
+    parent.appendChild(box);
+    P.ask('/panel/jobs?id=' + encodeURIComponent(id)).then(function(r){
+      box.textContent = '';
+      if(r.status !== 200){ box.appendChild(el('p', 'p-empty', 'That answer could not be read just now.')); return; }
+      box.appendChild(el('p', 'p-row-meta', 'You asked: ' + r.body.job));
+      box.appendChild(rich(answerText(r.body.text), true));
+    }).catch(function(){});
+  }
+
+  window.PanelExtras = { chat: chat, morning: morning, trading: trading, jobs: jobs, rich: rich };
 })();

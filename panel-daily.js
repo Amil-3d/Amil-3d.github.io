@@ -1,12 +1,12 @@
-/* The Assistant section of the panel: Today, Chat, Morning, Waiting on you, Switches.
-   Chat, Morning and the trading card on Today are drawn by panel-extras.js.
+/* The Assistant section of the panel: Today, Chat, Morning, Jobs, Waiting on you, Switches.
+   Chat, Morning, Jobs and the trading card on Today are drawn by panel-extras.js.
    Like the rest of the panel it holds no data. Everything is fetched from the bot after the login,
    every value is put on the page as text, and every button goes through Panel.press(), so the bot
    writes each press to the log. Styles come only from panel.css. */
 (function(){
   var P = window.Panel, el = P.el;
   var X = window.PanelExtras;
-  var VIEWS = [['today', 'Today'], ['chat', 'Chat'], ['morning', 'Morning'], ['waiting', 'Waiting'], ['switches', 'Switches']];   /* the panel opens on the first */
+  var VIEWS = [['today', 'Today'], ['chat', 'Chat'], ['morning', 'Morning'], ['jobs', 'Jobs'], ['waiting', 'Waiting'], ['switches', 'Switches']];   /* the panel opens on the first */
   var view = (/^#assistant\/(\w+)/.exec(location.hash) || [])[1];
   if(!VIEWS.some(function(v){ return v[0] === view; })){ view = VIEWS[0][0]; }
   var body = null, timer = null, run = 0;
@@ -376,7 +376,8 @@
   /* ---------- the section ---------- */
   var SHOW = { waiting: showWaiting, today: showToday, switches: showSwitches,
     chat: function(){ run++; var mine = body; X.chat(body, function(){ return view === 'chat' && mine.isConnected; }); },
-    morning: function(){ run++; X.morning(body); } };
+    morning: function(){ run++; X.morning(body); },
+    jobs: function(){ run++; var mine = body; X.jobs(body, function(){ return view === 'jobs' && mine.isConnected; }); } };
   P.section({ id: 'assistant', title: 'Assistant', render: function(root){
     clearTimeout(timer);
     var asked = (/^#assistant\/(\w+)/.exec(location.hash) || [])[1];
