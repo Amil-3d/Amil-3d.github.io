@@ -321,3 +321,8 @@ html.p-book-open{overflow:hidden}
   .p-msg{max-width:70%}
   .p-book{grid-template-columns:220px minmax(0,1fr)}
 }
+/* Study: a class notebook lists its pages by what they are; a pinned item shows its pin */
+.p-label.p-book-kind{margin:18px 0 6px;padding-top:12px;border-top:1px solid var(--p-line)}
+.p-book-secs + .p-label.p-book-kind,.p-card > h2 + .p-label.p-book-kind{margin-top:4px;padding-top:0;border-top:0}
+.p-empty.p-book-none{font-size:13px}
+.p-btn.p-pinned{background:var(--p-accent-soft);color:var(--p-accent-ink);border-color:var(--p-accent)}
