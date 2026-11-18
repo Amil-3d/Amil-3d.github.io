@@ -473,3 +473,16 @@ button.btn{cursor:pointer;font-weight:400}
 .offgrid figcaption{margin-top:var(--s2)}
 @media(max-width:760px){.off .h{padding:var(--s5) var(--s5) var(--s4)}.offgrid{grid-template-columns:1fr 1fr;gap:var(--s3);padding:0 var(--s5) var(--s5)}}
 @media print{.off{display:none}}
+
+/* drag or swipe sideways to move through photos */
+.drag{cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.drag img{-webkit-user-drag:none;user-select:none}
+.drag.dragging,.drag.dragging *{cursor:grabbing!important}
+.fig .ph.drag.dragging img.on,.stage.drag.dragging img,#lb.drag.dragging #lbimg{translate:var(--dx,0) 0}
+.stage.drag .open{cursor:inherit}
+.strip{cursor:grab;user-select:none}
+.strip button{cursor:inherit}
+.strip.dragging{cursor:grabbing;scroll-behavior:auto}
+.strip img{-webkit-user-drag:none}
+#lb.drag{cursor:default}
+#lb.drag #lbimg{cursor:grab}

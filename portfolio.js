@@ -82,6 +82,60 @@
       r.classList.add('rv'); io.observe(r);
     });
   }
+  /* Drag (mouse) or swipe (touch) sideways on el to step through photos.
+     A drag also swallows the click that would follow it, so a link or zoom button underneath does not fire. */
+  function swipe(el, onPrev, onNext){
+    if(!el || !window.PointerEvent){ return; }
+    var x0 = 0, y0 = 0, down = false, moved = false;
+    el.classList.add('drag');
+    el.addEventListener('dragstart', function(e){ e.preventDefault(); });
+    el.addEventListener('pointerdown', function(e){
+      if(e.button || e.target.closest('video')){ return; }
+      down = true; moved = false; x0 = e.clientX; y0 = e.clientY;
+    });
+    el.addEventListener('pointermove', function(e){
+      if(!down){ return; }
+      var dx = e.clientX - x0;
+      if(!moved && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(e.clientY - y0)){
+        moved = true; el.classList.add('dragging');
+        try{ el.setPointerCapture(e.pointerId); }catch(err){}
+      }
+      if(moved){ el.style.setProperty('--dx', Math.max(-60, Math.min(60, dx * .35)) + 'px'); }
+    });
+    function end(e){
+      if(!down){ return; }
+      down = false;
+      el.classList.remove('dragging'); el.style.removeProperty('--dx');
+      if(!moved){ return; }
+      var dx = e.clientX - x0;
+      if(e.type === 'pointerup' && Math.abs(dx) > 40){ (dx < 0 ? onNext : onPrev)(); }
+    }
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+    el.addEventListener('click', function(e){
+      if(moved){ e.preventDefault(); e.stopPropagation(); moved = false; }
+    }, true);
+  }
+  /* Drag a row of thumbnails sideways with the mouse. Touch already scrolls it. */
+  function dragScroll(el){
+    if(!el || !window.PointerEvent){ return; }
+    var x0 = 0, s0 = 0, down = false, moved = false;
+    el.addEventListener('dragstart', function(e){ e.preventDefault(); });
+    el.addEventListener('pointerdown', function(e){
+      if(e.pointerType !== 'mouse' || e.button){ return; }
+      down = true; moved = false; x0 = e.clientX; s0 = el.scrollLeft;
+    });
+    window.addEventListener('pointermove', function(e){
+      if(!down){ return; }
+      var dx = e.clientX - x0;
+      if(Math.abs(dx) > 5){ moved = true; el.classList.add('dragging'); }
+      if(moved){ el.scrollLeft = s0 - dx; }
+    });
+    window.addEventListener('pointerup', function(){ down = false; el.classList.remove('dragging'); });
+    el.addEventListener('click', function(e){
+      if(moved){ e.preventDefault(); e.stopPropagation(); moved = false; }
+    }, true);
+  }
   var LOAD_FAIL = '<p class="empty m">Projects load from projects.json. View this page over http, not by opening the file.</p>';
 
   var page = document.body.getAttribute('data-page');
@@ -225,6 +279,7 @@
       pbtn.setAttribute('aria-pressed', String(userPaused));
     }
     pbtn.addEventListener('click', function(){ userPaused = !userPaused; syncPause(); schedule(); });
+    swipe(ph, function(){ show(idx - 1); }, function(){ show(idx + 1); });
     syncPause();
     show(0);
   }
@@ -338,6 +393,8 @@
     show(0);
     var strip = document.getElementById('strip');
     if(strip){ strip.addEventListener('click', function(e){ var b = e.target.closest('button'); if(b){ show(+b.getAttribute('data-i')); } }); }
+    swipe(stage, function(){ show(cur - 1); }, function(){ show(cur + 1); });
+    dragScroll(strip);
     var gp = document.getElementById('gprev'), gn = document.getElementById('gnext');
     if(gp){ gp.addEventListener('click', function(){ show(cur - 1); }); }
     if(gn){ gn.addEventListener('click', function(){ show(cur + 1); }); }
@@ -376,6 +433,7 @@
     document.getElementById('lbclose').addEventListener('click', lbClose);
     document.getElementById('lbprev').addEventListener('click', function(e){ e.stopPropagation(); lbI--; lbShow(); });
     document.getElementById('lbnext').addEventListener('click', function(e){ e.stopPropagation(); lbI++; lbShow(); });
+    swipe(lb, function(){ lbI--; lbShow(); }, function(){ lbI++; lbShow(); });
     lb.addEventListener('click', function(e){ if(e.target === lb || e.target.id === 'lbimg'){ lbClose(); } });
     document.addEventListener('keydown', function(e){
       if(!lb.classList.contains('on')){ return; }
