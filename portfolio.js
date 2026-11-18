@@ -62,11 +62,15 @@
     return m ? m.src : '';
   }
   function pageURL(p){ return 'project.html?p=' + encodeURIComponent(slug(p.title)); }
+  var projectsP = null;
   function loadProjects(){
-    return fetch('projects.json').then(function(r){
-      if(!r.ok){ throw new Error('projects.json ' + r.status); }
-      return r.json();
-    });
+    if(!projectsP){
+      projectsP = fetch('projects.json').then(function(r){
+        if(!r.ok){ throw new Error('projects.json ' + r.status); }
+        return r.json();
+      });
+    }
+    return projectsP;
   }
   /* Rows fade up the first time they scroll into view. Skipped for reduced motion. */
   function reveal(host){
@@ -140,11 +144,228 @@
 
   var page = document.body.getAttribute('data-page');
 
+  /* =================== motion ===================
+     Everything here is skipped when the system asks for reduced motion. */
+  var PF = document.body.classList.contains('pf');
+  var CALM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  /* Fade and slide things up the first time they scroll into view, staggered within a group. */
+  var fxIO = null;
+  function fx(root){
+    if(!PF || CALM || !('IntersectionObserver' in window)){ return; }
+    if(!fxIO){
+      fxIO = new IntersectionObserver(function(es){
+        es.forEach(function(e){
+          if(!e.isIntersecting){ return; }
+          e.target.classList.add('fx-in'); fxIO.unobserve(e.target);
+          var n = e.target.querySelectorAll ? e.target.querySelectorAll('[data-count]') : [];
+          Array.prototype.forEach.call(n, countUp);
+          if(e.target.hasAttribute('data-count')){ countUp(e.target); }
+        });
+      }, { rootMargin:'0px 0px -8% 0px' });
+    }
+    var sel = '.glance>div,.kf>div,.did li,.spec tr,.ask,.pn a,.about>div>p,.path li,.skills dt,.skills dd,.me,' +
+      '.off .h,.offgrid figure,.clist li,.note,.closer .m,.idx .h,.flt,.ticker,.proj .gal,.lab2,.proj .txt>p';
+    var groups = [];
+    (root || document).querySelectorAll(sel).forEach(function(el){
+      if(el.classList.contains('fx')){ return; }
+      var par = el.parentNode, g = null;
+      groups.forEach(function(x){ if(x.p === par){ g = x; } });
+      if(!g){ g = { p:par, n:0 }; groups.push(g); }
+      el.style.setProperty('--fxd', Math.min(g.n++, 8) * 70 + 'ms');
+      el.classList.add('fx'); fxIO.observe(el);
+    });
+  }
+  /* Count the numbers in a key fact up from zero: "80 → 300+" runs both numbers. */
+  function countUp(el){
+    if(el.fxDone){ return; }
+    el.fxDone = true;
+    var full = el.getAttribute('data-count'), parts = full.split(/(\d+(?:\.\d+)?)/);
+    if(parts.length < 2 || CALM){ return; }
+    var t0 = null, D = 1100;
+    function frame(t){
+      if(t0 === null){ t0 = t; }
+      var k = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = parts.map(function(x, i){
+        if(i % 2 === 0){ return x; }
+        var dec = (x.split('.')[1] || '').length;
+        return (parseFloat(x) * e).toFixed(dec);
+      }).join('');
+      if(k < 1){ requestAnimationFrame(frame); } else { el.textContent = full; }
+    }
+    requestAnimationFrame(frame);
+  }
+  /* Split a line into words that rise in one after another when it scrolls into view. */
+  function words(el){
+    if(!el || CALM || !('IntersectionObserver' in window)){ return; }
+    var i = 0;
+    (function walk(node){
+      Array.prototype.slice.call(node.childNodes).forEach(function(c){
+        if(c.nodeType === 3){
+          var f = document.createDocumentFragment();
+          c.textContent.split(/(\s+)/).forEach(function(w){
+            if(!w){ return; }
+            if(/^\s+$/.test(w)){ f.appendChild(document.createTextNode(' ')); return; }
+            var o = document.createElement('span'); o.className = 'w';
+            var n = document.createElement('span'); n.textContent = w; n.style.transitionDelay = (i++ * 45) + 'ms';
+            o.appendChild(n); f.appendChild(o);
+          });
+          node.replaceChild(f, c);
+        } else if(c.nodeType === 1){ walk(c); }
+      });
+    })(el);
+    el.classList.add('words');
+    new IntersectionObserver(function(es, io){
+      es.forEach(function(e){ if(e.isIntersecting){ el.classList.add('fx-in'); io.disconnect(); } });
+    }, { rootMargin:'0px 0px -12% 0px' }).observe(el);
+  }
+  if(PF){
+    /* scroll progress along the bottom edge of the title block */
+    var tbar = document.querySelector('.tb');
+    if(tbar){
+      var prog = document.createElement('i'); prog.className = 'prog'; prog.setAttribute('aria-hidden', 'true');
+      tbar.appendChild(prog);
+      var tick = false;
+      var upd = function(){
+        tick = false;
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        prog.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ')';
+        tbar.classList.toggle('stuck', window.scrollY > 30);
+      };
+      window.addEventListener('scroll', function(){ if(!tick){ tick = true; requestAnimationFrame(upd); } }, { passive:true });
+      upd();
+    }
+    fx(document);
+    words(document.querySelector('.closer .big'));
+  }
+  /* Hero figure: crosshair lines and a coordinate readout follow the cursor, and the photo leans a little. */
+  function crosshair(fig){
+    var ph = fig && fig.querySelector('.ph');
+    if(!ph || CALM || !FINE){ return; }
+    var ch = document.createElement('div'); ch.className = 'xh'; ch.setAttribute('aria-hidden', 'true');
+    ch.innerHTML = '<i class="xv"></i><i class="xhz"></i><b class="m"></b>';
+    ph.appendChild(ch);
+    var lab = ch.querySelector('b');
+    ph.addEventListener('pointermove', function(e){
+      var r = ph.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      ch.style.setProperty('--x', x + 'px'); ch.style.setProperty('--y', y + 'px');
+      ph.style.setProperty('--px', ((x / r.width - .5) * -10).toFixed(2) + 'px');
+      ph.style.setProperty('--py', ((y / r.height - .5) * -10).toFixed(2) + 'px');
+      lab.textContent = 'X ' + pad(Math.round(x / r.width * 99)) + '  Y ' + pad(Math.round(y / r.height * 99));
+      lab.classList.toggle('flip', x > r.width - 120);
+      lab.classList.toggle('up', y > r.height - 40);
+    });
+    ph.addEventListener('pointerenter', function(){ ch.classList.add('on'); });
+    ph.addEventListener('pointerleave', function(){
+      ch.classList.remove('on'); ph.style.removeProperty('--px'); ph.style.removeProperty('--py');
+    });
+  }
+  /* A slow ticker of every skill tag, between the hero and the index. */
+  function ticker(list){
+    var host = document.getElementById('ticker');
+    if(!host){ return; }
+    var tags = [];
+    list.forEach(function(p){ (p.tags || []).forEach(function(t){ if(tags.indexOf(t) < 0){ tags.push(t); } }); });
+    if(tags.length < 4){ host.hidden = true; return; }
+    var run = '<span class="run">' + tags.map(function(t){
+      return '<a href="index.html?tag=' + encodeURIComponent(t) + '#work">' + esc(t) + '</a><i>+</i>';
+    }).join('') + '</span>';
+    host.innerHTML = '<div class="belt">' + run + (CALM ? '' : run.replace('class="run"', 'class="run" aria-hidden="true"')) + '</div>';
+    host.style.setProperty('--tdur', Math.round(tags.length * 2.6) + 's');
+    if(!CALM){ host.querySelectorAll('.run[aria-hidden] a').forEach(function(a){ a.tabIndex = -1; }); }
+  }
+
+  /* =================== Work dropdown in the nav ===================
+     Lists every project, grouped by area, on every portfolio page. Opens on hover or on the
+     caret button, closes on Escape, on a click outside, or when focus leaves it. */
+  if(document.body.classList.contains('pf') && page !== '404'){
+    loadProjects().then(workMenu).catch(function(){});
+  }
+  function workMenu(list){
+    var tb = document.querySelector('.tb'), nav = tb && tb.querySelector('.nav');
+    var work = nav && nav.querySelector('a[href*="#work"]');
+    if(!work || !list.length){ return; }
+    var here = page === 'project' ? (new URLSearchParams(location.search).get('p') || '') : null;
+    var cats = [], by = {};
+    list.forEach(function(p, i){
+      var c = p.category || 'Projects';
+      if(!by[c]){ by[c] = []; cats.push(c); }
+      by[c].push({ p:p, n:i + 1 });
+    });
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'ddbtn'; btn.id = 'ddbtn';
+    btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', 'ddmenu');
+    btn.setAttribute('aria-label', 'Show all projects');
+    btn.innerHTML = '<svg viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
+    var wrap = document.createElement('span');
+    wrap.className = 'ddwrap';
+    work.parentNode.insertBefore(wrap, work);
+    wrap.appendChild(work); wrap.appendChild(btn);
+
+    var menu = document.createElement('div');
+    menu.className = 'ddmenu'; menu.id = 'ddmenu'; menu.hidden = true;
+    menu.innerHTML = '<div class="ddhead m"><span>Project index</span><span class="muted">' + list.length + ' entries</span></div>' +
+      '<div class="ddcols">' + cats.map(function(c){
+        return '<div class="ddgroup"><a class="ddcat m" href="index.html?cat=' + encodeURIComponent(c) + '#work">' + esc(c) + '</a>' +
+          by[c].map(function(x){
+            var cur = here !== null && slug(x.p.title) === here;
+            return '<a class="dditem" href="' + pageURL(x.p) + '"' + (cur ? ' aria-current="page"' : '') + '>' +
+              '<span class="m">' + pad(x.n) + '</span><span>' + esc(x.p.title) + '</span></a>';
+          }).join('') + '</div>';
+      }).join('') + '</div>' +
+      '<a class="ddall m" href="index.html#work">See the full index <span aria-hidden="true">→</span></a>';
+    tb.appendChild(menu);
+
+    var open = false, timer = null;
+    function set(v){
+      clearTimeout(timer);
+      if(v === open){ return; }
+      open = v;
+      btn.setAttribute('aria-expanded', String(v));
+      if(v){
+        menu.hidden = false;
+        void menu.offsetWidth;
+        menu.classList.add('on');
+      } else {
+        menu.classList.remove('on');
+        timer = setTimeout(function(){ if(!open){ menu.hidden = true; } }, 200);
+      }
+    }
+    function later(v, ms){ clearTimeout(timer); timer = setTimeout(function(){ set(v); }, ms); }
+    btn.addEventListener('click', function(){ set(!open); });
+    var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if(fine){
+      wrap.addEventListener('mouseenter', function(){ later(true, 90); });
+      wrap.addEventListener('mouseleave', function(){ later(false, 220); });
+      menu.addEventListener('mouseenter', function(){ clearTimeout(timer); });
+      menu.addEventListener('mouseleave', function(){ later(false, 220); });
+    }
+    document.addEventListener('keydown', function(e){
+      if(!open){ return; }
+      if(e.key === 'Escape'){ set(false); btn.focus(); return; }
+      if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+        var items = Array.prototype.slice.call(menu.querySelectorAll('a'));
+        var k = items.indexOf(document.activeElement);
+        k = e.key === 'ArrowDown' ? (k + 1) % items.length : (k <= 0 ? items.length - 1 : k - 1);
+        items[k].focus(); e.preventDefault();
+      }
+    });
+    document.addEventListener('pointerdown', function(e){
+      if(open && !menu.contains(e.target) && !wrap.contains(e.target)){ set(false); }
+    });
+    tb.addEventListener('focusout', function(e){
+      if(open && e.relatedTarget && !menu.contains(e.relatedTarget) && !wrap.contains(e.relatedTarget)){ set(false); }
+    });
+  }
+
   /* =================== home =================== */
   if(page === 'home'){
     loadProjects().then(function(list){
+      ticker(list);
       renderIndex(list);
       heroRotate(list);
+      crosshair(document.getElementById('fig'));
     }).catch(function(){
       document.getElementById('projects').innerHTML = LOAD_FAIL;
     });
@@ -332,7 +553,7 @@
     if(kf){
       kf.hidden = !facts.length;
       kf.innerHTML = facts.map(function(f){
-        return '<div><dt>' + esc(f.label || '') + '</dt><dd>' + esc(f.value) + '</dd></div>';
+        return '<div><dt>' + esc(f.label || '') + '</dt><dd data-count="' + esc(f.value) + '">' + esc(f.value) + '</dd></div>';
       }).join('');
     }
 
@@ -363,6 +584,7 @@
       '<span class="cta"><a class="btn p" href="contact.html">Ask me about it</a>' +
       '<button type="button" class="btn" id="pprint">Print this sheet</button></span></div>';
     document.getElementById('pprint').addEventListener('click', function(){ window.print(); });
+    fx(document);
 
     var prev = list[(i - 1 + list.length) % list.length], next = list[(i + 1) % list.length];
     document.getElementById('pn').innerHTML =

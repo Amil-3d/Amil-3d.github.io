@@ -486,3 +486,109 @@ button.btn{cursor:pointer;font-weight:400}
 .strip img{-webkit-user-drag:none}
 #lb.drag{cursor:default}
 #lb.drag #lbimg{cursor:grab}
+
+/* Work dropdown in the title block */
+.ddwrap{display:inline-flex;align-items:center;gap:2px}
+.ddbtn{background:none;border:0;color:var(--muted);cursor:pointer;width:22px;height:28px;display:grid;place-items:center;padding:0;border-radius:var(--radius-sm)}
+.ddbtn svg{transition:transform .25s var(--ease)}
+.ddbtn:hover,.ddbtn[aria-expanded="true"]{color:var(--accent)}
+.ddbtn[aria-expanded="true"] svg{transform:rotate(180deg)}
+.pf .tb>.ddmenu{position:absolute;right:-1.5px;top:100%;z-index:60;width:min(720px,calc(100% + 3px));padding:0;margin-top:var(--rule);
+  background:var(--bg);border:var(--rule) solid var(--line);border-top:0;
+  opacity:0;transform:translateY(-6px);clip-path:inset(0 0 100% 0);pointer-events:none;
+  transition:opacity .2s ease,transform .25s var(--ease),clip-path .3s var(--ease)}
+.pf .tb>.ddmenu.on{opacity:1;transform:none;clip-path:inset(0 0 0 0);pointer-events:auto}
+.ddmenu[hidden]{display:none}
+.ddhead{display:flex;justify-content:space-between;padding:var(--s3) var(--s4);border-bottom:1px solid var(--line)}
+.ddcols{display:grid;grid-template-columns:1fr 1fr}
+.ddgroup{padding:var(--s3) 0 var(--s2);border-bottom:1px solid var(--hair);min-width:0}
+.ddgroup:nth-child(odd){border-right:1px solid var(--hair)}
+.ddgroup:nth-last-child(-n+2):nth-child(odd),.ddgroup:last-child{border-bottom:0}
+.ddcat{display:block;padding:0 var(--s4) 6px;color:var(--accent);text-decoration:none;font-size:9.5px}
+.ddcat:hover{text-decoration:underline}
+.dditem{display:grid;grid-template-columns:26px 1fr;gap:var(--s2);align-items:baseline;padding:7px var(--s4);text-decoration:none;
+  font-family:var(--sans);font-size:15px;font-weight:500;letter-spacing:-.005em;text-transform:none;color:var(--text);position:relative;transition:background .15s,padding-left .25s var(--ease)}
+.dditem .m{color:var(--muted);font-size:10.5px}
+.dditem:hover,.dditem:focus-visible{background:var(--surface);padding-left:22px}
+.dditem:hover span:last-child,.dditem[aria-current="page"] span:last-child{color:var(--accent)}
+.dditem[aria-current="page"]::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.ddall{display:block;padding:var(--s3) var(--s4);border-top:1px solid var(--line);text-decoration:none;color:var(--text)}
+.ddall:hover{background:var(--text);color:var(--bg)}
+.ddall span{display:inline-block;transition:transform .25s var(--ease)}
+.ddall:hover span{transform:translateX(4px)}
+@media(max-width:620px){
+  .pf .tb>.ddmenu{right:0;width:100%;border-left:0;border-right:0;max-height:calc(100vh - 70px);overflow:auto}
+  .ddcols{grid-template-columns:1fr}
+  .ddgroup{border-right:0!important;border-bottom:1px solid var(--hair)!important}
+  .ddgroup:last-child{border-bottom:0!important}
+  .dditem{padding-top:10px;padding-bottom:10px}
+}
+@media print{.ddbtn,.ddmenu{display:none!important}}
+
+/* ===== More motion (all of it off under prefers-reduced-motion, see the rule near the end) ===== */
+/* reveal on scroll */
+.fx{opacity:0}
+.fx.fx-in{animation:fadeup .75s var(--ease) var(--fxd,0ms) both}
+.pf .kf>div.fx{animation:none}
+.pf .kf>div.fx.fx-in{animation:fadeup .75s var(--ease) var(--fxd,0ms) both}
+/* word-by-word line */
+.words .w{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.14em;margin-bottom:-.14em}
+.words .w>span{display:inline-block;transform:translateY(110%);transition:transform .8s var(--ease)}
+.words.fx-in .w>span{transform:none}
+/* scroll progress on the title block */
+.pf .tb>.prog{position:absolute;left:0;right:0;bottom:calc(var(--rule) * -1);height:3px;padding:0;border:0;background:var(--accent);transform:scaleX(0);transform-origin:left;pointer-events:none;z-index:2}
+.pf .tb{transition:box-shadow .3s}
+/* skills ticker */
+.ticker{overflow:hidden;border-bottom:var(--rule) solid var(--line);background:var(--surface);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.ticker .belt{display:flex;width:max-content;animation:belt var(--tdur,80s) linear infinite}
+.ticker:hover .belt,.ticker:focus-within .belt{animation-play-state:paused}
+.ticker .run{display:flex;align-items:center;flex:none}
+.ticker a{padding:13px 0;text-decoration:none;color:var(--text);white-space:nowrap;transition:color .15s}
+.ticker a:hover{color:var(--accent)}
+.ticker i{font-style:normal;color:var(--accent);padding:0 18px}
+@keyframes belt{to{transform:translateX(-50%)}}
+/* crosshair on the hero figure */
+.xh{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .2s}
+.xh.on{opacity:1}
+.xh i{position:absolute;background:var(--accent);opacity:.75}
+.xh .xv{top:0;bottom:0;width:1px;left:var(--x,50%)}
+.xh .xhz{left:0;right:0;height:1px;top:var(--y,50%)}
+.xh b{position:absolute;left:var(--x,50%);top:var(--y,50%);margin:8px 0 0 10px;padding:3px 6px;background:var(--accent);color:var(--on-accent);font-weight:500;font-size:10px;white-space:pre}
+.xh b.flip{transform:translateX(calc(-100% - 20px))}
+.xh b.up{margin-top:-28px}
+.pf .fig .ph img{translate:var(--px,0) var(--py,0);scale:1.03;transition:opacity .9s ease,translate .4s var(--ease)}
+.pf .fig .ph.dragging img.on{translate:var(--dx,0) 0}
+/* drawing-in rules: section dividers draw across */
+.pf .hero,.pf .ph-head{position:relative}
+.pf .hero::after,.pf .ph-head::after{content:"";position:absolute;left:0;right:0;bottom:calc(var(--rule) * -1);height:var(--rule);background:var(--accent);transform-origin:left;animation:drawline 1.4s var(--ease) .2s both}
+@keyframes drawline{0%{transform:scaleX(0);opacity:1}70%{transform:scaleX(1);opacity:1}100%{transform:scaleX(1);opacity:0}}
+/* registration marks turn slowly */
+.pf .reg{animation:regspin 24s linear infinite}
+@keyframes regspin{to{rotate:360deg}}
+/* key fact values pop a touch as they count */
+.pf .kf dd{transition:letter-spacing .4s var(--ease)}
+/* off-the-clock photos tilt on hover */
+.pf .offgrid figure{transition:transform .5s var(--ease)}
+.pf .offgrid figure:nth-child(odd):hover{transform:rotate(-1.2deg) translateY(-4px)}
+.pf .offgrid figure:nth-child(even):hover{transform:rotate(1.2deg) translateY(-4px)}
+.pf .me .ph img{transition:transform 1.2s var(--ease)}
+.pf .me:hover .ph img{transform:scale(1.04)}
+/* chips and filter buttons lift */
+.pf .chip,.pf .flt button{transition:transform .25s var(--ease),border-color .15s,color .15s,background .15s}
+.pf a.chip:hover,.pf .flt button:hover{transform:translateY(-2px)}
+/* the green word in the headline gets an underline that draws in */
+.pf .hero h1 em{background:linear-gradient(currentColor,currentColor) 0 92%/0 .06em no-repeat;animation:underdraw .9s var(--ease) 1s both}
+@keyframes underdraw{to{background-size:100% .06em}}
+
+@media (prefers-reduced-motion: reduce){
+  .fx{opacity:1}
+  .words .w>span{transform:none}
+  .ticker .belt{animation:none;flex-wrap:wrap}
+  .ticker{-webkit-mask-image:none;mask-image:none}
+  .pf .tb>.prog,.xh{display:none}
+  .pf .hero::after,.pf .ph-head::after{display:none}
+  .pf .fig .ph img{scale:1}
+  .pf .tb>.ddmenu{transition:none}
+}
+@media print{.ticker,.prog,.xh{display:none!important}.fx{opacity:1!important;animation:none!important}}
