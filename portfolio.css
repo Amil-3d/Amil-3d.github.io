@@ -592,3 +592,14 @@ button.btn{cursor:pointer;font-weight:400}
   .pf .tb>.ddmenu{transition:none}
 }
 @media print{.ticker,.prog,.xh{display:none!important}.fx{opacity:1!important;animation:none!important}}
+
+/* looping ring of photos (home figure and project gallery) */
+.ringhost{perspective:1400px;overflow:hidden}
+.ringhost .sl{position:absolute;inset:0;will-change:transform;backface-visibility:hidden}
+.ringhost .sl img,.ringhost .sl video{position:absolute;inset:0;width:100%;height:100%;display:block}
+.fig .ph.ringhost .sl img{opacity:1;object-fit:cover}
+.pf .fig .ph.ringhost .sl img{animation:none}
+.stage.ringhost .sl img,.stage.ringhost .sl video{object-fit:contain;background:var(--surface)}
+.pf .stage.ringhost .sl img,.pf .stage.ringhost .sl video{animation:none}
+.ringhost.dragging .sl img{translate:none}
+.ringhost.dragging .xh{opacity:0}
