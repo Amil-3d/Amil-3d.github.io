@@ -75,22 +75,71 @@
   /* =================== home =================== */
   if(page === 'home'){
     loadProjects().then(function(list){
-      var host = document.getElementById('projects');
-      host.innerHTML = list.map(function(p, i){
-        var r = roleParts(p), src = lead(p);
-        return '<a class="row" href="' + pageURL(p) + '">' +
-          '<div class="n m">' + pad(i + 1) + '</div>' +
-          (src ? '<img src="' + esc(src) + '" alt="" loading="lazy">' : '<div></div>') +
-          '<div><h3>' + esc(p.title) + '</h3><div class="m muted">' + esc(r.org) + '</div></div>' +
-          '<p>' + esc(short(p.summary, 130)) + '</p>' +
-          '<div class="y m">' + esc(r.period) + ' &rarr;</div></a>';
-      }).join('');
-      var count = document.getElementById('count');
-      if(count){ count.textContent = list.length + ' entries'; }
+      renderIndex(list);
       heroRotate(list);
     }).catch(function(){
       document.getElementById('projects').innerHTML = LOAD_FAIL;
     });
+  }
+
+  /* Project index with filters. The filter lives in the URL (?cat=Drones or ?tag=Onshape),
+     so a filtered view can be linked to: the About page and the project pages do that. */
+  function renderIndex(list){
+    var host = document.getElementById('projects'), bar = document.getElementById('filters'),
+        count = document.getElementById('count');
+    var q = new URLSearchParams(location.search);
+    var cat = q.get('cat') || '', tag = q.get('tag') || '';
+    var cats = [];
+    list.forEach(function(p){ if(p.category && cats.indexOf(p.category) < 0){ cats.push(p.category); } });
+    if(cat && cats.indexOf(cat) < 0){ cat = ''; }
+    function hasTag(p, t){
+      return (p.tags || []).some(function(x){ return x.toLowerCase() === t.toLowerCase(); });
+    }
+    function match(p){
+      if(cat && p.category !== cat){ return false; }
+      if(tag && !hasTag(p, tag)){ return false; }
+      return true;
+    }
+    function draw(){
+      var shown = 0;
+      host.innerHTML = list.map(function(p, i){
+        if(!match(p)){ return ''; }
+        shown++;
+        var r = roleParts(p), src = lead(p), f = (p.facts || [])[0];
+        return '<a class="row" href="' + pageURL(p) + '">' +
+          '<div class="n m">' + pad(i + 1) + '</div>' +
+          (src ? '<img src="' + esc(src) + '" alt="" loading="lazy">' : '<div></div>') +
+          '<div class="ti"><h3>' + esc(p.title) + '</h3><div class="m muted">' +
+            esc([r.org, r.period].filter(Boolean).join(' · ')) + '</div></div>' +
+          '<p>' + esc(p.brief || short(p.summary, 130)) + '</p>' +
+          '<div class="fact">' + (f ? '<b>' + esc(f.value) + '</b><span>' + esc(f.label) + '</span>' : '') + '</div></a>';
+      }).join('') || '<p class="empty">Nothing matches that filter. <a href="index.html#work">Show everything</a>.</p>';
+      if(count){ count.textContent = (shown === list.length ? list.length : shown + ' of ' + list.length) + ' entries'; }
+      if(bar){
+        var btn = function(label, value, n){
+          return '<button type="button" data-cat="' + esc(value) + '" aria-pressed="' + (cat === value && !tag) + '">' +
+            esc(label) + ' <i>' + n + '</i></button>';
+        };
+        bar.innerHTML = btn('All', '', list.length) + cats.map(function(c){
+          return btn(c, c, list.filter(function(p){ return p.category === c; }).length);
+        }).join('') + (tag ? '<button type="button" class="tagf" data-cat="" aria-label="Remove the ' + esc(tag) +
+          ' filter">Skill: ' + esc(tag) + ' ×</button>' : '');
+      }
+    }
+    if(bar){
+      bar.addEventListener('click', function(e){
+        var b = e.target.closest('button');
+        if(!b){ return; }
+        cat = b.getAttribute('data-cat'); tag = '';
+        try{ history.replaceState(null, '', (cat ? '?cat=' + encodeURIComponent(cat) : location.pathname) + '#work'); }catch(err){}
+        draw();
+      });
+    }
+    draw();
+    if((cat || tag) && location.hash !== '#work'){
+      var w = document.getElementById('work');
+      if(w){ w.scrollIntoView(); }
+    }
   }
 
   /* Hero figure: cycles through the lead photo of each featured project on a timer.
@@ -189,7 +238,9 @@
     if(!slides.length){
       gal = '<div class="stage"><p class="empty m">No photos yet</p></div>';
     } else {
-      gal = '<div class="stage" id="stage"></div>' +
+      gal = '<div class="stagewrap"><div class="stage" id="stage"></div>' +
+        (slides.length > 1 ? '<button type="button" class="gnav prev" id="gprev" aria-label="Previous photo">&larr;</button>' +
+          '<button type="button" class="gnav next" id="gnext" aria-label="Next photo">&rarr;</button>' : '') + '</div>' +
         '<div class="gcap m"><span id="gcap"></span><span id="gnum"></span></div>' +
         (slides.length > 1 ? '<div class="strip" id="strip">' + slides.map(function(m, k){
           var t = m.type === 'video' ? m.poster : m.src;
@@ -198,20 +249,45 @@
             (m.type === 'video' ? '<span class="play">&#9654;</span>' : '') + '</button>';
         }).join('') + '</div>' : '');
     }
+    var desc = document.querySelector('meta[name="description"]');
+    if(desc && (p.brief || p.summary)){ desc.setAttribute('content', p.brief || short(p.summary, 150)); }
+    var brief = document.getElementById('pbrief');
+    if(brief){ brief.textContent = p.brief || ''; brief.hidden = !p.brief; }
+    var kf = document.getElementById('pfacts'), facts = (p.facts || []).filter(function(f){ return f && f.value; });
+    if(kf){
+      kf.hidden = !facts.length;
+      kf.innerHTML = facts.map(function(f){
+        return '<div><dt>' + esc(f.label || '') + '</dt><dd>' + esc(f.value) + '</dd></div>';
+      }).join('');
+    }
+
     var rows = [];
     if(r.org){ rows.push(['Team', r.org]); }
     if(r.detail){ rows.push(['Role', r.detail]); }
     if(r.period){ rows.push(['Period', r.period]); }
-    var tags = (p.tags || []).map(function(t){ return '<span class="chip">' + esc(t) + '</span>'; }).join('');
+    if(p.category){
+      rows.push(['Area', '<a href="index.html?cat=' + encodeURIComponent(p.category) + '#work">' + esc(p.category) + '</a>', true]);
+    }
+    var tags = (p.tags || []).map(function(t){
+      return '<a class="chip" href="index.html?tag=' + encodeURIComponent(t) + '#work" title="Other projects with ' + esc(t) + '">' + esc(t) + '</a>';
+    }).join('');
     if(tags){ rows.push(['Skills', '<div class="chips">' + tags + '</div>', true]); }
     var more = p.link ? '<p><a class="btn p" href="' + esc(p.link) + '">More on this project &rarr;</a></p>' : '';
+    var did = (p.did || []).length
+      ? '<div class="m muted lab2">What I did</div><ul class="did">' +
+        p.did.map(function(d){ return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>'
+      : '';
 
     document.getElementById('pmain').innerHTML =
       '<div class="proj"><div class="gal">' + gal + '</div>' +
-      '<div class="txt"><div class="m muted" style="margin-bottom:12px">Notes</div><p>' + esc(p.summary) + '</p>' +
+      '<div class="txt">' + did + '<div class="m muted lab2">' + (did ? 'The story' : 'Notes') + '</div><p>' + esc(p.summary) + '</p>' +
       '<table class="spec">' + rows.map(function(x){
         return '<tr><th class="m">' + esc(x[0]) + '</th><td>' + (x[2] ? x[1] : esc(x[1])) + '</td></tr>';
-      }).join('') + '</table>' + more + '</div></div>';
+      }).join('') + '</table>' + more + '</div></div>' +
+      '<div class="ask"><span>Want the details on this build, or the CAD?</span>' +
+      '<span class="cta"><a class="btn p" href="contact.html">Ask me about it</a>' +
+      '<button type="button" class="btn" id="pprint">Print this sheet</button></span></div>';
+    document.getElementById('pprint').addEventListener('click', function(){ window.print(); });
 
     var prev = list[(i - 1 + list.length) % list.length], next = list[(i + 1) % list.length];
     document.getElementById('pn').innerHTML =
@@ -221,7 +297,7 @@
     if(!slides.length){ return; }
     var stage = document.getElementById('stage'), cur = 0;
     function show(k){
-      cur = k;
+      cur = k = (k + slides.length) % slides.length;
       var m = slides[k];
       if(m.type === 'video'){
         stage.innerHTML = '<video controls preload="metadata"' + (m.poster ? ' poster="' + esc(m.poster) + '"' : '') +
@@ -230,14 +306,27 @@
         stage.innerHTML = '<img src="' + esc(m.src) + '" alt="' + esc(m.alt) + '">' +
           '<button class="open" aria-label="View larger"></button>';
       }
-      document.getElementById('gcap').textContent = m.alt;
+      document.getElementById('gcap').textContent = 'Fig. ' + pad(k + 1) + ' — ' + m.alt;
       document.getElementById('gnum').textContent = (k + 1) + ' / ' + slides.length;
       var strip = document.getElementById('strip');
-      if(strip){ strip.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-current', String(+b.getAttribute('data-i') === k)); }); }
+      if(strip){ strip.querySelectorAll('button').forEach(function(b){
+        var on = +b.getAttribute('data-i') === k;
+        b.setAttribute('aria-current', String(on));
+        if(on && b.scrollIntoView && strip.scrollWidth > strip.clientWidth){ strip.scrollLeft = b.offsetLeft - strip.clientWidth / 2 + b.clientWidth / 2; }
+      }); }
     }
     show(0);
     var strip = document.getElementById('strip');
     if(strip){ strip.addEventListener('click', function(e){ var b = e.target.closest('button'); if(b){ show(+b.getAttribute('data-i')); } }); }
+    var gp = document.getElementById('gprev'), gn = document.getElementById('gnext');
+    if(gp){ gp.addEventListener('click', function(){ show(cur - 1); }); }
+    if(gn){ gn.addEventListener('click', function(){ show(cur + 1); }); }
+    document.addEventListener('keydown', function(e){
+      if(slides.length < 2 || (lb && lb.classList.contains('on'))){ return; }
+      if(/^(INPUT|TEXTAREA|SELECT|VIDEO)$/.test((e.target.tagName || ''))){ return; }
+      if(e.key === 'ArrowLeft'){ show(cur - 1); }
+      if(e.key === 'ArrowRight'){ show(cur + 1); }
+    });
     stage.addEventListener('click', function(e){
       if(e.target.closest('.open')){ lbOpen(slides.filter(function(m){ return m.type === 'image'; }), slides[cur].src); }
     });

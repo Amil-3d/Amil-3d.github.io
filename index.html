@@ -8,7 +8,17 @@
 <meta property="og:title" content="Amil Dhookie — Mechanical Engineering">
 <meta property="og:description" content="Rocket structures, UAV systems, FPV drones, 3D printing, and design for manufacture.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="img/printed-rc-plane/printed-rc-plane-01-printed-plane-assembled.jpg">
+<meta property="og:url" content="https://amil-3d.github.io/">
+<meta property="og:image" content="https://amil-3d.github.io/img/printed-rc-plane/printed-rc-plane-01-printed-plane-assembled.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Amil Dhookie","url":"https://amil-3d.github.io/",
+ "jobTitle":"Mechanical engineering student","affiliation":{"@type":"CollegeOrUniversity","name":"Virginia Tech"},
+ "sameAs":["https://www.linkedin.com/in/amildhookie","https://github.com/Amil-3d"]}
+</script>
+<link rel="canonical" href="https://amil-3d.github.io/">
+<meta name="theme-color" content="#f3f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0f0e" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,6 +28,7 @@
 <link rel="stylesheet" href="portfolio.css">
 </head>
 <body data-page="home">
+<a class="skip" href="#main">Skip to content</a>
 <div class="sheet">
 <header class="tb m">
   <a class="cell" href="index.html"><small>Name</small><b>Amil Dhookie</b></a>
@@ -27,7 +38,7 @@
   <nav class="nav" aria-label="Main"><a href="index.html#work" aria-current="page">Work</a><a href="about.html">About</a><a href="contact.html">Contact</a><button id="theme" aria-label="Toggle color theme">◐</button></nav>
 </header>
 
-<main>
+<main id="main">
 <section class="hero">
   <div class="l">
     <div class="m acc">— Mechanical Engineering · Virginia Tech</div>
@@ -46,8 +57,15 @@
     </div>
   </figure>
 </section>
+<dl class="glance" aria-label="At a glance">
+  <div><dt>Now</dt><dd><a href="project.html?p=orbital-launch-vehicle-team">Structures, VT Orbital Launch Vehicle Team</a></dd></div>
+  <div><dt>Builds</dt><dd>Rockets, fixed-wing UAVs, FPV quads, printers</dd></div>
+  <div><dt>CAD</dt><dd>Fusion 360, Onshape, SOLIDWORKS (learning)</dd></div>
+  <div><dt>Shop</dt><dd>FDM printing, soldering, laser cutting, composites</dd></div>
+</dl>
 <section class="idx" id="work">
   <div class="h m"><h2 class="m" style="margin:0;font-weight:500">Project index</h2><span class="muted" id="count"></span></div>
+  <div class="flt" id="filters" role="group" aria-label="Filter projects by area"></div>
   <div id="projects"></div>
 </section>
 </main>

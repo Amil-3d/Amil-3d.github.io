@@ -110,6 +110,9 @@ Layout:
 - **Title block:** a row of bordered cells. Each cell has a tiny muted label over a bold mono value. The nav sits in the last cell.
 - **Index row:** a green mono number, a thumbnail, a title, muted text, and a right-aligned mono meta column. The rows are separated by `--hair` rules and get the `--surface` fill on hover.
 - **Spec table:** a mono muted label column about 96px wide, with values on the right and `--hair` rules between rows.
+- **Key facts strip:** a row of bordered cells under a page header. Each holds one value in mono, 22 to 30px, weight 600, in `--accent`, over a 13.5px `--muted` label.
+- **Filter chips:** mono 11px uppercase buttons with a `--hair` border. The active one is a `--text` fill with `--bg` text.
+- **Arrow list:** rows split by `--hair` rules, each led by a small mono `→` in `--accent`.
 - **Focus:** a 2px `--accent` outline with a 2px offset.
 - **Motion:** about .15s for hovers. All animation is turned off under `prefers-reduced-motion`.
 
@@ -119,3 +122,8 @@ Layout:
 - The Assistant page (`assistant.html`): `portfolio.css` plus `assistant.css`, on the same sheet and title block.
 - The control panel: the first block of `panel.css` holds the same values under `--p-` names
   (`--p-bg`, `--p-surface`, `--p-line` is hair, `--p-rule` and `--p-line-strong` are line, `--p-ink-3` is muted).
+
+## Print
+
+Under `@media print` the tokens switch to black on white, and the nav, buttons, filters and thumbnails are hidden,
+so a project page prints as one clean sheet.

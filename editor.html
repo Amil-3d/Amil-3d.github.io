@@ -104,7 +104,7 @@ button.sm{padding:4px 9px;font-size:12px}
 var items = [];
 
 function blank(){
-  return {title:"", role:"", featured:false, size:"", images:[], video:null, summary:"", tags:[], link:""};
+  return {title:"", role:"", featured:false, size:"", category:"", brief:"", facts:[], did:[], images:[], video:null, summary:"", tags:[], link:""};
 }
 
 /* Photos round-trip through a textarea as one line per photo:
@@ -127,6 +127,19 @@ function textToPhotos(txt){
   });
 }
 
+/* Key facts round-trip as one line per fact:  250 g | weight limit it was designed around */
+function factsToText(p){
+  return (p.facts || []).map(function(f){ return f.label ? f.value + ' | ' + f.label : f.value; }).join('\n');
+}
+function textToFacts(txt){
+  return txt.split('\n').map(function(l){ return l.trim(); }).filter(Boolean).map(function(line){
+    var bar = line.indexOf('|');
+    if(bar === -1){ return {value:line, label:''}; }
+    return {value:line.slice(0, bar).trim(), label:line.slice(bar + 1).trim()};
+  });
+}
+function lines(txt){ return txt.split('\n').map(function(l){ return l.trim(); }).filter(Boolean); }
+
 function render(){
   var box = document.getElementById('items');
   box.innerHTML = '';
@@ -141,6 +154,14 @@ function render(){
       '<div class="row">' +
         '<div><label>Title</label><input type="text" data-f="title" data-i="' + i + '"></div>' +
         '<div><label>Role / context</label><input type="text" data-f="role" data-i="' + i + '"></div>' +
+      '</div>' +
+      '<div class="row">' +
+        '<div><label>One-line brief (what it is and how it turned out; shows in the index and under the title)</label><input type="text" data-f="brief" data-i="' + i + '"></div>' +
+        '<div><label>Area (the filter on the home page, e.g. Aerospace, Drones, 3D printing)</label><input type="text" data-f="category" data-i="' + i + '"></div>' +
+      '</div>' +
+      '<div class="row">' +
+        '<div><label>Key facts — up to 3, one per line, as <code>250 g | what the number is</code></label><textarea class="photos" data-f="facts" data-i="' + i + '"></textarea></div>' +
+        '<div><label>What I did — one line each, start with a verb (Designed, Soldered, Tuned)</label><textarea class="photos" data-f="did" data-i="' + i + '"></textarea></div>' +
       '</div>' +
       '<label>Summary (2–3 sentences: what you built, what you were responsible for, what it took)</label>' +
       '<textarea data-f="summary" data-i="' + i + '"></textarea>' +
@@ -162,6 +183,10 @@ function render(){
     d.querySelector('[data-f=title]').value = p.title;
     d.querySelector('[data-f=role]').value = p.role;
     d.querySelector('[data-f=summary]').value = p.summary;
+    d.querySelector('[data-f=brief]').value = p.brief || '';
+    d.querySelector('[data-f=category]').value = p.category || '';
+    d.querySelector('[data-f=facts]').value = factsToText(p);
+    d.querySelector('[data-f=did]').value = (p.did || []).join('\n');
     d.querySelector('[data-f=images]').value = photosToText(p);
     d.querySelector('[data-f=videoSrc]').value = (p.video && p.video.src) || '';
     d.querySelector('[data-f=videoPoster]').value = (p.video && p.video.poster) || '';
@@ -186,6 +211,10 @@ document.getElementById('items').addEventListener('input', function(e){
   i = Number(i);
   if(f === 'tags'){
     items[i].tags = e.target.value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+  } else if(f === 'facts'){
+    items[i].facts = textToFacts(e.target.value);
+  } else if(f === 'did'){
+    items[i].did = lines(e.target.value);
   } else if(f === 'featured'){
     items[i].featured = e.target.checked;
   } else if(f === 'images'){
@@ -225,6 +254,10 @@ function clean(list){
     var o = {title:p.title, role:p.role};
     if(p.featured){ o.featured = true; }
     if(p.size){ o.size = p.size; }
+    if(p.category){ o.category = p.category; }
+    if(p.brief){ o.brief = p.brief; }
+    if((p.facts || []).length){ o.facts = p.facts.map(function(f){ return {value:f.value, label:f.label || ''}; }); }
+    if((p.did || []).length){ o.did = p.did; }
     o.summary = p.summary;
     var imgs = p.images || [];
     if(imgs.length){
