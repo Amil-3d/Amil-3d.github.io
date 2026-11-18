@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Project · Amil Dhookie</title>
 <meta name="description" content="A project by Amil Dhookie, mechanical engineering student at Virginia Tech.">
+<meta name="theme-color" content="#f3f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0f0e" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,6 +16,7 @@
 <link rel="stylesheet" href="portfolio.css">
 </head>
 <body data-page="project">
+<a class="skip" href="#main">Skip to content</a>
 <div class="sheet">
 <header class="tb m">
   <a class="cell" href="index.html"><small>Name</small><b>Amil Dhookie</b></a>
@@ -23,15 +26,17 @@
   <nav class="nav" aria-label="Main"><a href="index.html#work" aria-current="page">Work</a><a href="about.html">About</a><a href="contact.html">Contact</a><button id="theme" aria-label="Toggle color theme">◐</button></nav>
 </header>
 
-<main>
+<main id="main">
 <section class="ph-head">
   <div class="no m" id="pno">—</div>
   <div class="t">
     <a class="crumb m" href="index.html#work">&larr; Project index</a>
     <h1 id="ptitle">Loading…</h1>
     <div class="m acc" id="prole"></div>
+    <p class="brief" id="pbrief" hidden></p>
   </div>
 </section>
+<dl class="kf" id="pfacts" aria-label="Key facts" hidden></dl>
 <div id="pmain"></div>
 <nav class="pn" id="pn" aria-label="More projects"></nav>
 </main>

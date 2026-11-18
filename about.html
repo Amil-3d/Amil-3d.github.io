@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>About · Amil Dhookie</title>
 <meta name="description" content="About Amil Dhookie, mechanical engineering student at Virginia Tech.">
+<link rel="canonical" href="https://amil-3d.github.io/about.html">
+<meta name="theme-color" content="#f3f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0f0e" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,6 +17,7 @@
 <link rel="stylesheet" href="portfolio.css">
 </head>
 <body data-page="about">
+<a class="skip" href="#main">Skip to content</a>
 <div class="sheet">
 <header class="tb m">
   <a class="cell" href="index.html"><small>Name</small><b>Amil Dhookie</b></a>
@@ -23,7 +27,7 @@
   <nav class="nav" aria-label="Main"><a href="index.html#work">Work</a><a href="about.html" aria-current="page">About</a><a href="contact.html">Contact</a><button id="theme" aria-label="Toggle color theme">◐</button></nav>
 </header>
 
-<main>
+<main id="main">
 <section class="ph-head">
   <div class="no m">02</div>
   <div class="t"><div class="m acc">— Mechanical Engineering · Virginia Tech</div><h1>About</h1></div>
@@ -31,13 +35,26 @@
 <section class="about">
   <div>
     <p>I'm a mechanical engineering student at Virginia Tech. I got here the long way around, Lego, then RC cars, then drones, then printers, and somewhere in there taking things apart turned into designing them.</p>
+    <p>Most of what I build flies or moves, and my approach is the same every time: test, tune, measure, repeat.</p>
+    <h2>Lately</h2>
+    <ol class="path">
+      <li><span>2026</span><div><b>Structures, VT Orbital Launch Vehicle Team.</b> <a href="project.html?p=orbital-launch-vehicle-team">Designed the wiring channel</a> in the forward closure of a two-stage rocket.</div></li>
+      <li><span>2024</span><div><b>Captain, SUAS competition team.</b> Mechanical and systems lead on a <a href="project.html?p=competition-fixed-wing-uav">fixed-wing UAV</a> through 2026.</div></li>
+      <li><span>2024</span><div><b>Building and modding on my own time.</b> <a href="project.html?p=fpv-quadcopter-builds">FPV quads</a>, and <a href="project.html?p=fdm-printer-modding">the printers</a> that make parts for everything else.</div></li>
+    </ol>
     <div class="cta"><a class="btn p" href="index.html#work">See the work</a><a class="btn" href="contact.html">Get in touch</a></div>
   </div>
   <div>
+    <h2>Skills, and where to see them</h2>
     <dl class="skills">
-      <dt class="m">CAD &amp; Design</dt><dd>Fusion 360 · Onshape · SOLIDWORKS (learning)</dd>
-      <dt class="m">Programming</dt><dd>Python, Java</dd>
-      <dt class="m">Fabrication</dt><dd>FDM 3D printing, rapid prototyping, PC assembly, RC/UAV electronics</dd>
+      <dt class="m">CAD &amp; Design</dt><dd>Fusion 360 · Onshape · SOLIDWORKS (learning)
+        <span class="ev">Seen in <a href="project.html?p=competition-fixed-wing-uav">Competition UAV</a>, <a href="project.html?p=custom-pc-case-and-build">PC case</a>, <a href="project.html?p=ducted-prop-guard-drone">Ducted drone</a></span></dd>
+      <dt class="m">Fabrication</dt><dd>FDM 3D printing, rapid prototyping, laser cutting, composites
+        <span class="ev">Seen in <a href="project.html?p=orbital-launch-vehicle-team">OLVT</a>, <a href="project.html?p=3d-printed-rc-plane">Printed RC plane</a>, <a href="project.html?p=fdm-printer-modding">Printer modding</a></span></dd>
+      <dt class="m">Electronics</dt><dd>Soldering, RC/UAV electronics, PC assembly
+        <span class="ev">Seen in <a href="project.html?p=fpv-quadcopter-builds">FPV quads</a>, <a href="project.html?p=hand-wired-macropad">Macropad</a></span></dd>
+      <dt class="m">Programming</dt><dd>Python, Java
+        <span class="ev">Seen in <a href="project.html?p=text-message-ai-assistant">Text-message assistant</a></span></dd>
       <dt class="m">Languages</dt><dd>English, Spanish, Afrikaans</dd>
     </dl>
   </div>
