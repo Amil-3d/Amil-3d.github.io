@@ -121,6 +121,6 @@ window.AssistantLogin = (function(){
     return sent;
   }
 
-  return { call: call, wire: wire, signOut: signOut, forget: function(){ remember(null); },
+  return { api: API, call: call, wire: wire, signOut: signOut, forget: function(){ remember(null); },
            has: function(){ return !!token; }, minutes: minutes };
 })();

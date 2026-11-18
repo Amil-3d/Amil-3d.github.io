@@ -242,6 +242,13 @@ select.p-input{appearance:auto}
 .p-a{color:var(--p-accent-ink);text-decoration:underline;overflow-wrap:anywhere}
 .p-code{font-family:var(--p-mono);font-size:13px}
 
+/* study: a flashcard, the file picker, and the sealed frame a workbook is shown in */
+.p-flash{margin:10px 0 14px;padding:22px var(--p-pad);border:1px solid var(--p-line-strong);border-radius:var(--p-radius);background:var(--p-bg);min-height:150px}
+.p-flash-q{font-size:18px;font-weight:600;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}
+.p-flash-a{margin-top:16px;padding-top:16px;border-top:1px dashed var(--p-line-strong);font-size:16px;line-height:1.5;color:var(--p-ink-2);white-space:pre-wrap;overflow-wrap:anywhere}
+.p-file-input{padding:10px;font-size:var(--p-size-small)}
+.p-frame{display:block;width:100%;height:calc(100vh - var(--p-tabs-height) - 150px);min-height:420px;border:1px solid var(--p-line);border-radius:var(--p-radius);background:#fff}
+
 /* section tabs, fixed to the bottom on a phone */
 .p-tabs{
   position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;

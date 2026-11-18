@@ -69,6 +69,9 @@ panel. Both hold no data, no keys and nothing private: after the login they ask 
   Recipes (edit, run now, delete) and Skills (add, edit or delete how-tos and email style notes).
 - `panel-daily.js` is the Assistant section: Today (tracker row and to-dos, the view the panel opens on), Chat, Morning,
   Waiting on you (drafts) and Switches (with Pause Everything). It has no styles of its own.
+- `panel-study.js` is the Study section: Schedule (tests by class, study days, your own timelines), Library (by class,
+  by test date, search, add a file) and Cards (flashcard review). A workbook opens in a sealed frame served by the bot
+  (`sandbox="allow-scripts"`, a one-time address): it has no login, no network and no way to reach the panel.
 - `panel-extras.js` draws the chat box (the same as texting the Assistant, with tables and links built as text),
   the morning report page and the trading card, which only shows when the bot has a trading summary.
 
