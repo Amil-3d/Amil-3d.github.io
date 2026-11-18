@@ -26,10 +26,11 @@
 <link rel="icon" href="favicon.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="stylesheet" href="portfolio.css">
+<style>@view-transition{navigation:auto}</style>
 </head>
-<body data-page="home">
+<body class="pf" data-page="home">
 <a class="skip" href="#main">Skip to content</a>
-<div class="sheet">
+<div class="sheet"><i class="reg tl" aria-hidden="true"></i><i class="reg tr" aria-hidden="true"></i><i class="reg bl" aria-hidden="true"></i><i class="reg br" aria-hidden="true"></i>
 <header class="tb m">
   <a class="cell" href="index.html"><small>Name</small><b>Amil Dhookie</b></a>
   <div class="hide-s"><small>Discipline</small><b>Mechanical Eng.</b></div>
@@ -42,7 +43,8 @@
 <section class="hero">
   <div class="l">
     <div class="m acc">— Mechanical Engineering · Virginia Tech</div>
-    <h1>Flying and moving <em>hardware.</em></h1>
+    <h1><span class="ln"><span>Flying and</span></span> <span class="ln"><span>moving</span></span> <span class="ln"><span><em>hardware.</em></span></span></h1>
+    <div class="dim m" aria-hidden="true"><i></i><span id="dimtxt">2024 — present</span><i></i></div>
     <p class="lede">I design and build rocket structures, fixed-wing UAVs, FPV quads and printed mechanisms. My approach is the same every time: <b>test, tune, measure, repeat.</b></p>
     <div class="cta"><a class="btn p" href="#work">See the work ↓</a><a class="btn" href="contact.html">Contact</a></div>
   </div>
@@ -64,9 +66,13 @@
   <div><dt>Shop</dt><dd>FDM printing, soldering, laser cutting, composites</dd></div>
 </dl>
 <section class="idx" id="work">
-  <div class="h m"><h2 class="m" style="margin:0;font-weight:500">Project index</h2><span class="muted" id="count"></span></div>
+  <div class="h m"><h2 class="sh">Project index</h2><span class="muted" id="count"></span></div>
   <div class="flt" id="filters" role="group" aria-label="Filter projects by area"></div>
   <div id="projects"></div>
+</section>
+<section class="closer">
+  <div class="m acc">— Next sheet</div>
+  <p class="big">Got a build that needs designing, printing or flying? <a href="contact.html">Let's talk<span aria-hidden="true"> →</span></a></p>
 </section>
 </main>
 <footer class="foot m">

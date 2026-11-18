@@ -26,6 +26,7 @@ Supporting colors:
 | `--accent-soft` | Tinted background behind accent content | `#e3f1e6` | `#12251a` |
 | `--on-accent` | Text on a solid accent fill | `#ffffff` | `#06140b` |
 | `--grid` | Background grid lines, 24 px apart | `rgba(21,21,15,.05)` | `rgba(236,234,222,.045)` |
+| `--grid-major` | Stronger grid line every fifth square (120 px), portfolio pages only | `rgba(21,21,15,.07)` | `rgba(236,234,222,.06)` |
 
 Contrast against `--bg`:
 
@@ -69,7 +70,7 @@ Type scale:
 - Labels (`.m`): mono, 11px, uppercase, letter-spacing .08em, usually in `--muted` or `--accent`.
 - Small title-block labels: mono, 9.5px, uppercase, `--muted`.
 - Headings: sans, weight 600, letter-spacing -.015em to -.035em (tighter as they get larger).
-  - h1 on the home page: clamp(44px, 6.4vw, 72px), line-height .98.
+  - h1 on the home page: clamp(46px, 7.2vw, 88px), line-height .94, letter-spacing -.045em.
   - h1 on other pages: clamp(36px, 5vw, 56px).
   - Row and card titles: 19 to 21px.
 
@@ -114,7 +115,15 @@ Layout:
 - **Filter chips:** mono 11px uppercase buttons with a `--hair` border. The active one is a `--text` fill with `--bg` text.
 - **Arrow list:** rows split by `--hair` rules, each led by a small mono `→` in `--accent`.
 - **Focus:** a 2px `--accent` outline with a 2px offset.
-- **Motion:** about .15s for hovers. All animation is turned off under `prefers-reduced-motion`.
+- **Motion:** about .15s for colour hovers. Movement (reveals, wipes, nudges) runs .25 to .9s on `--ease`,
+  `cubic-bezier(.2,.7,.2,1)`. All animation is turned off under `prefers-reduced-motion`.
+- **Registration marks:** a 15px crosshair with a ring, in `--muted`, centred on each corner of the sheet.
+- **Dimension line:** a mono label between two 1px `--muted` lines with end ticks and arrowheads.
+- **Corner brackets:** two 22px L-shaped marks in `--accent`, 2px thick, on the hero photo.
+- **Button hover:** the fill wipes up from the bottom (`--text` on secondary, `--accent` on primary).
+- **Section heading (`.sh`):** sans, 22 to 30px, weight 600, letter-spacing -.025em.
+
+The polish rules are scoped to `body.pf`, which only the portfolio pages carry.
 
 ## Where it is used
 

@@ -314,3 +314,139 @@ button.btn{cursor:pointer;font-weight:400}
   a{text-decoration:none}
 }
 .gcap #gnum{white-space:nowrap}
+
+/* ===== Polish pass: scoped to body.pf (the portfolio pages), so the Assistant page is unchanged ===== */
+.pf ::selection{background:var(--accent);color:var(--on-accent)}
+.pf{scrollbar-color:var(--muted) transparent;font-variant-numeric:tabular-nums;
+  /* graph paper: a faint 24px grid with a stronger line every fifth square */
+  background-image:
+    linear-gradient(var(--grid-major) 1px,transparent 1px),linear-gradient(90deg,var(--grid-major) 1px,transparent 1px),
+    linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px}
+:root{--grid-major:rgba(21,21,15,.07);--ease:cubic-bezier(.2,.7,.2,1)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--grid-major:rgba(236,234,222,.06)}}
+:root[data-theme="dark"]{--grid-major:rgba(236,234,222,.06)}
+.pf h1,.pf h2,.pf h3,.pf .big{text-wrap:balance}
+.pf p{text-wrap:pretty}
+
+/* registration marks at the corners of the sheet */
+.pf .sheet{position:relative}
+.reg{position:absolute;width:15px;height:15px;pointer-events:none;color:var(--muted);
+  background:linear-gradient(currentColor,currentColor) center/100% 1px no-repeat,linear-gradient(currentColor,currentColor) center/1px 100% no-repeat}
+.reg::after{content:"";position:absolute;inset:3px;border:1px solid currentColor;border-radius:50%}
+.reg.tl{left:-8.5px;top:-8.5px}.reg.tr{right:-8.5px;top:-8.5px}
+.reg.bl{left:-8.5px;bottom:-8.5px}.reg.br{right:-8.5px;bottom:-8.5px}
+@media(max-width:620px){.reg{display:none}}
+
+/* title block stays in reach */
+.pf .tb{position:sticky;top:0;z-index:50;background:var(--bg)}
+.pf .tb .nav a{position:relative;padding:4px 0}
+.pf .tb .nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease)}
+.pf .tb .nav a:hover::after,.pf .tb .nav a[aria-current="page"]::after{transform:scaleX(1)}
+.pf #theme{transition:transform .4s var(--ease),color .15s,border-color .15s}
+.pf #theme:hover{transform:rotate(180deg)}
+
+/* hero: bigger type, lines rise in, a dimension line under the heading */
+.pf .hero h1{font-size:clamp(46px,7.2vw,88px);line-height:.94;letter-spacing:-.045em;margin:20px 0 26px}
+.pf .hero .ln{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
+.pf .hero .ln>span{display:block;animation:rise .9s var(--ease) both}
+.pf .hero .ln:nth-child(2)>span{animation-delay:.08s}
+.pf .hero .ln:nth-child(3)>span{animation-delay:.16s}
+.pf .hero .l>.m,.pf .hero .lede,.pf .hero .cta,.pf .hero .dim{animation:fadeup .8s var(--ease) both}
+.pf .hero .dim{animation-delay:.3s}.pf .hero .lede{animation-delay:.38s}.pf .hero .cta{animation-delay:.46s}
+.pf .hero .fig{animation:fadein 1.1s ease .15s both}
+.dim{display:flex;align-items:center;gap:10px;color:var(--muted);margin:0 0 26px;max-width:440px;white-space:nowrap}
+.dim i{flex:1;height:1px;background:var(--muted);position:relative;min-width:16px}
+.dim i::before{content:"";position:absolute;top:-5px;width:1px;height:11px;background:var(--muted)}
+.dim i:first-child::before{left:0}.dim i:last-child::before{right:0}
+.dim i::after{content:"";position:absolute;top:-3px;border:3.5px solid transparent}
+.dim i:first-child::after{left:1px;border-right-color:var(--muted);border-left-width:0}
+.dim i:last-child::after{right:1px;border-left-color:var(--muted);border-right-width:0}
+@keyframes rise{from{transform:translateY(105%)}to{transform:none}}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+
+/* hero figure: corner brackets and a slow push-in on the current photo */
+.pf .fig .ph::before,.pf .fig .ph::after{content:"";position:absolute;z-index:2;width:22px;height:22px;pointer-events:none;border:2px solid var(--accent)}
+.pf .fig .ph::before{left:10px;top:10px;border-right:0;border-bottom:0}
+.pf .fig .ph::after{right:10px;bottom:10px;border-left:0;border-top:0}
+.pf .fig .ph img.on{animation:push 7s ease-out both}
+@keyframes push{from{transform:scale(1.07)}to{transform:scale(1)}}
+
+/* buttons: the arrow nudges, the fill wipes in */
+.pf .btn{position:relative;overflow:hidden;z-index:0;transition:color .25s var(--ease),border-color .25s}
+.pf .btn::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--text);transform:translateY(101%);transition:transform .3s var(--ease)}
+.pf .btn:hover{background:transparent;color:var(--bg)}
+.pf .btn:hover::before{transform:none}
+.pf .btn.p{background:var(--text)}
+.pf .btn.p::before{background:var(--accent)}
+.pf .btn.p:hover{background:var(--text);color:var(--on-accent);border-color:var(--accent)}
+.pf .btn:active{transform:translateY(1px)}
+
+/* section heading */
+.sh{font-family:var(--sans);font-size:clamp(22px,2.6vw,30px);font-weight:600;letter-spacing:-.025em;line-height:1.1;margin:0;text-transform:none;color:var(--text)}
+.pf .idx .h{align-items:baseline;padding:var(--s5) var(--s4) var(--s4)}
+
+/* index rows: accent rule, photo push-in, arrow */
+.pf .row{position:relative}
+.pf .row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transform-origin:top;transition:transform .3s var(--ease)}
+.pf .row:hover::before,.pf .row:focus-visible::before{transform:scaleY(1)}
+.row .th{display:block;width:184px;height:116px;margin:var(--s3) 0;overflow:hidden;border:1px solid var(--hair);background:var(--surface);transition:border-color .2s}
+.row .th img{width:100%;height:100%;margin:0;border:0;transition:transform .6s var(--ease)}
+.pf .row:hover .th{border-color:var(--line)}
+.pf .row:hover .th img{transform:scale(1.06)}
+.row .go{display:inline-block;color:var(--accent);opacity:0;transform:translateX(-6px);transition:opacity .2s,transform .3s var(--ease)}
+.pf .row:hover .go{opacity:1;transform:none}
+.pf .row .fact b{transition:color .15s}
+.pf .row:hover .fact b{color:var(--accent)}
+.row.rv{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease),transform .6s var(--ease),background .15s}
+.row.rv.in{opacity:1;transform:none}
+@media(max-width:1020px){.row .th{width:150px;height:96px}}
+@media(max-width:900px){.row .th{width:120px;height:84px;margin:0}}
+@media(max-width:480px){.row .th{width:96px;height:72px}}
+
+/* closing line on the home page */
+.closer{padding:var(--s8) 40px;border-top:var(--rule) solid var(--line)}
+.closer .big{font-size:clamp(28px,4.4vw,54px);line-height:1.04;letter-spacing:-.035em;font-weight:600;margin:var(--s4) 0 0;max-width:20ch}
+.closer a{color:var(--accent);text-decoration:none;white-space:nowrap;background:linear-gradient(currentColor,currentColor) 0 100%/0 2px no-repeat;transition:background-size .35s var(--ease)}
+.closer a:hover{background-size:100% 2px}
+.closer a span{display:inline-block;transition:transform .3s var(--ease)}
+.closer a:hover span{transform:translateX(6px)}
+@media(max-width:620px){.closer{padding:var(--s7) var(--s5)}}
+
+/* page headers: the big number reads as a drawing zone */
+.pf .ph-head .no{font-size:15px;font-weight:600}
+.pf .ph-head h1{letter-spacing:-.04em;animation:fadeup .7s var(--ease) both}
+.pf .brief{animation:fadeup .7s var(--ease) .1s both}
+.pf .kf>div{animation:fadeup .6s var(--ease) both}
+.pf .kf>div:nth-child(2){animation-delay:.08s}.pf .kf>div:nth-child(3){animation-delay:.16s}
+
+/* project page: the gallery follows while the notes scroll */
+@media(min-width:861px){
+  .pf .proj .gal{border-right:0;position:sticky;top:76px;align-self:start}
+  .pf .proj .txt{border-left:1px solid var(--line)}
+}
+.pf .stage img,.pf .stage video{animation:fadein .35s ease both}
+.pf .strip button{transition:opacity .2s,transform .2s var(--ease)}
+.pf .strip button:hover{transform:translateY(-2px)}
+.pf .did li{transition:padding-left .25s var(--ease)}
+.pf .did li:hover{padding-left:32px}
+.pf .pn a b{transition:color .15s,transform .3s var(--ease)}
+.pf .pn a:first-child:hover b{transform:translateX(-4px)}
+.pf .pn a+a:hover b{transform:translateX(4px)}
+.pf .clist a .v{transition:color .15s,transform .3s var(--ease)}
+.pf .clist a:hover .v{transform:translateX(6px)}
+.pf #lb.on{animation:fadein .2s ease both}
+.pf #lb.on img{animation:fadeup .3s var(--ease) both}
+
+@media (prefers-reduced-motion: reduce){
+  .pf *,.pf *::before,.pf *::after{animation:none!important;transition:none!important}
+  .row.rv{opacity:1;transform:none}
+}
+@media print{
+  .reg,.closer,.dim{display:none!important}
+  .pf{background-image:none}
+  .pf .tb{position:static}
+  .pf .proj .gal{position:static}
+  .pf *{animation:none!important}
+}

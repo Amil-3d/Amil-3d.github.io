@@ -68,6 +68,20 @@
       return r.json();
     });
   }
+  /* Rows fade up the first time they scroll into view. Skipped for reduced motion. */
+  function reveal(host){
+    if(!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches){ return; }
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin:'0px 0px -6% 0px' });
+    var k = 0;
+    host.querySelectorAll('.row').forEach(function(r){
+      if(r.getBoundingClientRect().top < window.innerHeight){ r.style.transitionDelay = (k++ * 60) + 'ms'; }
+      r.classList.add('rv'); io.observe(r);
+    });
+  }
   var LOAD_FAIL = '<p class="empty m">Projects load from projects.json. View this page over http, not by opening the file.</p>';
 
   var page = document.body.getAttribute('data-page');
@@ -108,8 +122,8 @@
         var r = roleParts(p), src = lead(p), f = (p.facts || [])[0];
         return '<a class="row" href="' + pageURL(p) + '">' +
           '<div class="n m">' + pad(i + 1) + '</div>' +
-          (src ? '<img src="' + esc(src) + '" alt="" loading="lazy">' : '<div></div>') +
-          '<div class="ti"><h3>' + esc(p.title) + '</h3><div class="m muted">' +
+          (src ? '<span class="th"><img src="' + esc(src) + '" alt="" loading="lazy"></span>' : '<div></div>') +
+          '<div class="ti"><h3>' + esc(p.title) + '<span class="go" aria-hidden="true"> →</span></h3><div class="m muted">' +
             esc([r.org, r.period].filter(Boolean).join(' · ')) + '</div></div>' +
           '<p>' + esc(p.brief || short(p.summary, 130)) + '</p>' +
           '<div class="fact">' + (f ? '<b>' + esc(f.value) + '</b><span>' + esc(f.label) + '</span>' : '') + '</div></a>';
@@ -136,6 +150,12 @@
       });
     }
     draw();
+    reveal(host);
+    var dim = document.getElementById('dimtxt');
+    if(dim){
+      var yrs = (list.map(function(p){ return p.role || ''; }).join(' ').match(/\b(19|20)\d{2}\b/g) || []).map(Number);
+      dim.textContent = list.length + ' projects' + (yrs.length ? ' · ' + Math.min.apply(null, yrs) + ' — present' : '');
+    }
     if((cat || tag) && location.hash !== '#work'){
       var w = document.getElementById('work');
       if(w){ w.scrollIntoView(); }
