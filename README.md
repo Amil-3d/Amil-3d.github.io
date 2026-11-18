@@ -71,7 +71,7 @@ panel. Both hold no data, no keys and nothing private: after the login they ask 
   Spend (today, credits left, the caps) and Logins (Canvas, Outlook, Google, with a way to fix each).
 - `panel-brain.js` is the Brain section: Memory (fix or delete a line, undo, put a file back from a daily copy),
   Recipes (edit, run now, delete) and Skills (add, edit or delete how-tos and email style notes).
-- `panel-daily.js` is the Assistant section: Today (tracker row and to-dos, the view the panel opens on), Chat, Morning,
+- `panel-daily.js` is the Assistant section: Today (tracker row and to-dos, the view the panel opens on), Chat, Morning, Jobs (long jobs in the Claude app),
   Waiting on you (drafts) and Switches (with Pause Everything). It has no styles of its own.
 - `panel-study.js` is the Study section: Schedule (tests by class, study days, your own timelines), Library (laid out like a notebook:
   classes down the side, tests across the top, pages in the middle, with search and add a file) and Cards (flashcard
