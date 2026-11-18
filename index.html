@@ -11,208 +11,51 @@
 <meta property="og:image" content="img/printed-rc-plane/printed-rc-plane-01-printed-plane-assembled.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="portfolio.css">
 </head>
-<body>
-
-<nav>
-  <div class="wrap">
-    <a class="brand" href="index.html">amil<span>.</span>dhookie</a>
-    <a class="nl" href="index.html#work" aria-current="page">work</a>
-    <a class="nl" href="about.html">about</a>
-    <a class="nl" href="contact.html">contact</a>
-    <button id="theme" aria-label="Toggle color theme">◐</button>
-  </div>
-</nav>
-
-<header id="top">
-  <div class="wrap">
-    <div class="tag">Mechanical Engineering · Virginia Tech</div>
-    <h1>Amil Dhookie</h1>
-    <p class="lede">I design and build <strong>flying and moving hardware</strong>: rocket structures, fixed-wing UAVs, FPV quads, and printed mechanisms. My approach is the same every time: <strong>test, tune, measure, repeat</strong>.</p>
-    <div class="cta">
-      <a class="btn pri" href="#work">See the work</a>
-      <a class="btn" href="contact.html">Contact</a>
-      <a class="btn" href="https://www.linkedin.com/in/amildhookie">LinkedIn</a>
-      <a class="btn" href="https://github.com/Amil-3d">GitHub</a>
-    </div>
-  </div>
+<body data-page="home">
+<div class="sheet">
+<header class="tb m">
+  <a class="cell" href="index.html"><small>Name</small><b>Amil Dhookie</b></a>
+  <div class="hide-s"><small>Discipline</small><b>Mechanical Eng.</b></div>
+  <div class="hide-s"><small>School</small><b>Virginia Tech</b></div>
+  <div class="hide-s"><small>Sheet</small><b id="psheet">01 / Work</b></div>
+  <nav class="nav" aria-label="Main"><a href="index.html#work" aria-current="page">Work</a><a href="about.html">About</a><a href="contact.html">Contact</a><button id="theme" aria-label="Toggle color theme">◐</button></nav>
 </header>
 
-<section id="work">
-  <div class="wrap">
-    <div class="shead"><h2>Projects</h2><div class="rule"></div></div>
-    <div class="grid" id="projects"></div>
+<main>
+<section class="hero">
+  <div class="l">
+    <div class="m acc">— Mechanical Engineering · Virginia Tech</div>
+    <h1>Flying and moving <em>hardware.</em></h1>
+    <p class="lede">I design and build rocket structures, fixed-wing UAVs, FPV quads and printed mechanisms. My approach is the same every time: <b>test, tune, measure, repeat.</b></p>
+    <div class="cta"><a class="btn p" href="#work">See the work ↓</a><a class="btn" href="contact.html">Contact</a></div>
   </div>
+  <figure class="fig" id="fig" style="margin:0" aria-roledescription="carousel" aria-label="Featured projects">
+    <a class="ph" href="#work" aria-live="polite"><img class="on" src="img/printed-rc-plane/printed-rc-plane-01-printed-plane-assembled.jpg" alt="3D-printed RC plane, assembled"></a>
+    <figcaption class="cap m"><span id="figcap">Fig. 01 — 3D-printed RC plane</span><span id="figmeta" class="hide-xs"></span></figcaption>
+    <div class="ctl">
+      <button id="figprev" aria-label="Previous project">&larr;</button>
+      <button id="figpause" aria-label="Pause slideshow">❚❚</button>
+      <button id="fignext" aria-label="Next project">&rarr;</button>
+      <div class="ticks" aria-hidden="true"></div>
+    </div>
+  </figure>
 </section>
-
-<footer class="wrap">
+<section class="idx" id="work">
+  <div class="h m"><h2 class="m" style="margin:0;font-weight:500">Project index</h2><span class="muted" id="count"></span></div>
+  <div id="projects"></div>
+</section>
+</main>
+<footer class="foot m">
   <span>© <span id="yr">2026</span> Amil Dhookie</span>
-  <span>Built and hosted on GitHub Pages</span>
+  <nav aria-label="Footer"><a href="https://www.linkedin.com/in/amildhookie">LinkedIn</a><a href="https://github.com/Amil-3d">GitHub</a><a href="assistant.html">Assistant</a></nav>
 </footer>
-
-<div id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
-  <img id="lbimg" alt="">
-  <div class="cap" id="lbcap"></div>
-  <button class="prev" id="lbprev" aria-label="Previous photo">&larr;</button>
-  <button class="next" id="lbnext" aria-label="Next photo">&rarr;</button>
-  <button class="close" id="lbclose" aria-label="Close viewer">&times;</button>
 </div>
-
-<script src="site.js"></script>
-<script>
-
-function esc(s){
-  return String(s == null ? '' : s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-
-/* Media list for one project: images (and a video, if there is one) as slides.
-   Accepts either the newer "images" array or a single legacy "image" string. */
-function mediaOf(p){
-  var out = [];
-  var imgs = p.images;
-  if(!imgs && p.image){ imgs = [p.image]; }
-  (imgs || []).forEach(function(it){
-    var src = typeof it === 'string' ? it : it.src;
-    if(!src){ return; }
-    out.push({ type:'image', src:src, alt:(typeof it === 'string' ? p.title : (it.alt || p.title)) });
-  });
-  if(p.video && p.video.src){
-    out.push({
-      type:'video', src:p.video.src,
-      poster:p.video.poster || '',
-      alt:(p.video.label || 'Video') + ' — ' + p.title
-    });
-  }
-  return out;
-}
-
-var MEDIA = [];   // MEDIA[cardIndex] = slides for that card
-
-function slideHTML(m){
-  if(m.type === 'video'){
-    return '<video controls preload="metadata"' +
-      (m.poster ? ' poster="' + esc(m.poster) + '"' : '') +
-      '><source src="' + esc(m.src) + '" type="video/mp4">Your browser cannot play this video.</video>';
-  }
-  return '<img src="' + esc(m.src) + '" alt="' + esc(m.alt) + '" loading="lazy">' +
-    '<button class="open" aria-label="View larger"></button>' +
-    '<span class="badge">Click to enlarge</span>';
-}
-
-function cardHTML(p, ci){
-  var slides = MEDIA[ci];
-  var media;
-  if(!slides.length){
-    media = '<div class="media"><div class="stage empty">[ add photos: set "images" in projects.json ]</div></div>';
-  } else {
-    var strip = slides.length > 1
-      ? '<div class="strip" role="tablist">' + slides.map(function(m, i){
-          var thumbSrc = m.type === 'video' ? m.poster : m.src;
-          return '<button data-card="' + ci + '" data-i="' + i + '" aria-current="' + (i === 0) + '" ' +
-            'aria-label="' + esc(m.alt) + '">' +
-            (thumbSrc ? '<img src="' + esc(thumbSrc) + '" alt="" loading="lazy">' : '') +
-            (m.type === 'video' ? '<span class="play">&#9654;</span>' : '') +
-            '</button>';
-        }).join('') + '</div>'
-      : '';
-    media = '<div class="media"><div class="stage" data-stage="' + ci + '">' +
-      slideHTML(slides[0]) + '</div>' + strip + '</div>';
-  }
-
-  var chips = (p.tags || []).map(function(t){ return '<span class="chip">' + esc(t) + '</span>'; }).join('');
-  var more = p.link ? '<a class="more" href="' + esc(p.link) + '">More on this project &rarr;</a>' : '';
-  var cls = 'card' + (p.featured ? ' wide' : '') + (p.size === 'small' ? ' small' : '');
-
-  return '<article class="' + cls + '">' + media +
-    '<div class="body"><h3>' + esc(p.title) + '</h3>' +
-    '<div class="role">' + esc(p.role) + '</div>' +
-    '<p>' + esc(p.summary) + '</p>' +
-    '<div class="chips">' + chips + '</div>' + more +
-    '</div></article>';
-}
-
-/* ---- lightbox ---- */
-var lb = document.getElementById('lb'), lbimg = document.getElementById('lbimg'),
-    lbcap = document.getElementById('lbcap');
-var lbCard = 0, lbIndex = 0;
-
-function lbPhotos(ci){
-  return MEDIA[ci].filter(function(m){ return m.type === 'image'; });
-}
-function lbShow(){
-  var list = lbPhotos(lbCard);
-  if(!list.length){ return; }
-  if(lbIndex < 0){ lbIndex = list.length - 1; }
-  if(lbIndex >= list.length){ lbIndex = 0; }
-  var m = list[lbIndex];
-  lbimg.src = m.src;
-  lbimg.alt = m.alt;
-  lbcap.textContent = m.alt + '  (' + (lbIndex + 1) + '/' + list.length + ')';
-}
-function lbOpen(ci, src){
-  lbCard = ci;
-  var list = lbPhotos(ci);
-  lbIndex = 0;
-  list.forEach(function(m, i){ if(m.src === src){ lbIndex = i; } });
-  lb.classList.add('on');
-  document.body.style.overflow = 'hidden';
-  lbShow();
-}
-function lbClose(){
-  lb.classList.remove('on');
-  lbimg.src = '';
-  document.body.style.overflow = '';
-}
-document.getElementById('lbclose').addEventListener('click', lbClose);
-document.getElementById('lbprev').addEventListener('click', function(e){ e.stopPropagation(); lbIndex--; lbShow(); });
-document.getElementById('lbnext').addEventListener('click', function(e){ e.stopPropagation(); lbIndex++; lbShow(); });
-lb.addEventListener('click', function(e){ if(e.target === lb || e.target === lbimg){ lbClose(); } });
-document.addEventListener('keydown', function(e){
-  if(!lb.classList.contains('on')){ return; }
-  if(e.key === 'Escape'){ lbClose(); }
-  if(e.key === 'ArrowLeft'){ lbIndex--; lbShow(); }
-  if(e.key === 'ArrowRight'){ lbIndex++; lbShow(); }
-});
-
-/* ---- wiring ---- */
-function wire(container){
-  container.addEventListener('click', function(e){
-    var thumb = e.target.closest('.strip button');
-    if(thumb){
-      var ci = +thumb.getAttribute('data-card'), i = +thumb.getAttribute('data-i');
-      var strip = thumb.parentNode;
-      strip.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-current', b === thumb); });
-      var stage = strip.parentNode.querySelector('.stage');
-      stage.innerHTML = slideHTML(MEDIA[ci][i]);
-      return;
-    }
-    var opener = e.target.closest('.stage .open');
-    if(opener){
-      var st = opener.closest('.stage');
-      lbOpen(+st.getAttribute('data-stage'), st.querySelector('img').getAttribute('src'));
-    }
-  });
-}
-
-fetch('projects.json')
-  .then(function(r){ return r.json(); })
-  .then(function(list){
-    MEDIA = list.map(mediaOf);
-    var host = document.getElementById('projects');
-    host.innerHTML = list.map(cardHTML).join('');
-    wire(host);
-  })
-  .catch(function(){
-    document.getElementById('projects').innerHTML =
-      '<p style="font-family:var(--mono);font-size:13px;color:var(--ink-3)">Projects load from projects.json — view this page over http, not by double-clicking the file.</p>';
-  });
-</script>
+<script src="portfolio.js"></script>
 </body>
 </html>
