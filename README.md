@@ -73,6 +73,8 @@ panel. Both hold no data, no keys and nothing private: after the login they ask 
   classes down the side, tests across the top, pages in the middle, with search and add a file) and Cards (flashcard
   review). A workbook opens over the whole window in a sealed frame served by the bot
   (`sandbox="allow-scripts"`, a one-time address): it has no login, no network and no way to reach the panel.
+- On a screen 1000px wide or more the panel uses the whole window: the sections move to a rail on the left and
+  cards sit side by side. It is one block at the end of `panel.css`; below that width the phone layout is unchanged.
 - `panel-extras.js` draws the chat box (the same as texting the Assistant, with tables and links built as text),
   the morning report page and the trading card, which only shows when the bot has a trading summary.
 

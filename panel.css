@@ -289,3 +289,25 @@ html.p-book-open{overflow:hidden}
 @media(min-width:800px){
   .p-main{padding:28px 16px}
 }
+
+/* a wide screen: the sections move to a rail down the left, and the page uses the whole window.
+   Cards sit side by side and wrap; anything that is not a card keeps a row to itself.
+   Below this width nothing here applies, so the phone layout is the one above. */
+@media(min-width:1000px){
+  :root{--p-rail:200px; --p-card-min:440px}
+  body:has(.p-tabs:not([hidden])){padding-left:var(--p-rail);padding-bottom:0}
+  body:has(.p-tabs:not([hidden])) .p-main{max-width:none;padding:24px 28px 40px}
+  .p-tabs{top:0;right:auto;width:var(--p-rail);flex-direction:column;justify-content:flex-start;gap:2px;
+    padding:64px 10px 10px;border-top:0;border-right:1px solid var(--p-line)}
+  .p-tab{flex:none;max-width:none;width:100%;min-height:var(--p-tap);padding:0 12px;text-align:left;font-size:13px;
+    border-top:0;border-left:3px solid transparent;border-radius:var(--p-radius-small)}
+  .p-tab:hover{color:var(--p-ink)}
+  .p-tab[aria-current="page"]{background:var(--p-accent-soft);border-left-color:var(--p-accent)}
+  #view .p-stack{display:flex;flex-wrap:wrap;align-items:flex-start}
+  #view .p-stack > *{flex:1 1 100%;min-width:0}
+  #view .p-stack > .p-card{flex:1 1 var(--p-card-min)}
+  #view .p-stack > .p-seg{flex:0 1 760px}
+  .p-chat{max-height:calc(100vh - 330px)}
+  .p-msg{max-width:70%}
+  .p-book{grid-template-columns:220px minmax(0,1fr)}
+}
