@@ -214,6 +214,7 @@ select.p-input{appearance:auto}
 .p-btn.p-danger-link{color:var(--p-bad)}
 .p-area.p-area-short{min-height:110px}
 .p-edit .p-chips{margin-bottom:4px}
+.p-add-box{margin-top:0;border-top:0}
 
 /* section tabs, fixed to the bottom on a phone */
 .p-tabs{

@@ -262,8 +262,45 @@
       });
     });
 
+    if(w.skills.length < w.most.skills){
+      var ac = P.card(body, 'Add a how-to'), abox = el('div', 'p-edit p-add-box');
+      abox.hidden = true;
+      var open2 = el('div', 'p-actions p-back');
+      P.button(open2, 'Write one', '', function(){ abox.hidden = false; open2.hidden = true; nt.focus(); });
+      ac.appendChild(open2);
+      var nt = field(abox, 'Title (starts with "How to")', 'How to ');
+      var nw = field(abox, 'Use when', '');
+      var ns = field(abox, 'Steps (up to ' + w.most.steps + ' characters)', '', true);
+      var aa = el('div', 'p-actions');
+      P.button(aa, 'Add', 'main', function(b){
+        P.press('skill_add', { title: nt.value, when: nw.value, steps: ns.value }, b).then(function(x){
+          if(told(x, x.body.applies || 'Added.')){ w.skills = x.body.skills; drawSkills(w); }
+        }).catch(function(){});
+      });
+      P.button(aa, 'Cancel', 'quiet', function(){ abox.hidden = true; open2.hidden = false; });
+      abox.appendChild(aa);
+      ac.appendChild(abox);
+    }
+
     var c = P.card(body, 'Email style notes');
-    if(!w.style.length){ line(c, 'p-empty', 'No style notes yet. They come from what you say about drafts.'); return; }
+    if(w.style.length < w.most.style){
+      var sform = el('form', 'p-add'), sin = el('input', 'p-input'), sgo = el('button', 'p-btn', 'Add');
+      sin.type = 'text';
+      sin.placeholder = 'A new style note';
+      sin.setAttribute('aria-label', 'A new email style note');
+      sgo.type = 'submit';
+      sform.appendChild(sin);
+      sform.appendChild(sgo);
+      sform.addEventListener('submit', function(e){
+        e.preventDefault();
+        if(!sin.value.trim()){ return; }
+        P.press('style_add', { rule: sin.value }, sgo).then(function(x){
+          if(told(x, x.body.applies || 'Added.')){ w.style = x.body.style; drawSkills(w); }
+        }).catch(function(){});
+      });
+      c.appendChild(sform);
+    }
+    if(!w.style.length){ line(c, 'p-empty p-after', 'No style notes yet. They also come from what you say about drafts.'); return; }
     var list = el('ul', 'p-rows p-lines');
     c.appendChild(list);
     w.style.forEach(function(s, i){
