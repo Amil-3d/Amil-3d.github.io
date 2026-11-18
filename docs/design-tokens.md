@@ -123,6 +123,14 @@ Layout:
 - **Button hover:** the fill wipes up from the bottom (`--text` on secondary, `--accent` on primary).
 - **Section heading (`.sh`):** sans, 22 to 30px, weight 600, letter-spacing -.025em.
 
+- **Dropdown (Work menu):** hangs off the title block with the same `--rule` border and no shadow. A mono header row,
+  groups headed by a 9.5px `--accent` label, items in sans 15px/500 with a muted mono number, and a full-width mono
+  footer link that inverts on hover. It opens by unrolling downward (clip-path) over .3s.
+- **Ticker:** a `--surface` band of mono labels separated by `--accent` plus signs, drifting left and pausing on hover.
+- **Reveal on scroll:** blocks fade up 10px over .75s, staggered 70ms within a group.
+- **Crosshair:** 1px `--accent` lines and a small `--accent` readout that follow the cursor over the hero photo.
+- **Scroll progress:** a 3px `--accent` line along the bottom of the title block.
+
 The polish rules are scoped to `body.pf`, which only the portfolio pages carry.
 
 ## Where it is used
