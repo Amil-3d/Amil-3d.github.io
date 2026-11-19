@@ -431,3 +431,14 @@ html.p-book-open #view > .p-stack{animation:none}
 @media (prefers-reduced-motion: reduce){
   .p-sticky,.p-sticky.fresh{transition:none;animation:none}
 }
+
+/* Study library: the ⋯ menu on each item */
+.p-more{position:relative;margin-left:auto}
+.p-btn.p-more-btn{min-width:46px;padding:0 12px;font-size:18px;letter-spacing:0}
+.p-menu{position:absolute;right:0;top:calc(100% + 6px);z-index:30;min-width:220px;display:flex;flex-direction:column;gap:0;
+  background:var(--p-surface);border:1px solid var(--p-line-strong);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.p-menu .p-btn{width:100%;justify-content:flex-start;text-align:left;border:0;border-bottom:1px solid var(--p-line);margin:0}
+.p-menu .p-btn:last-child{border-bottom:0}
+.p-menu-move{padding:8px;border-bottom:1px solid var(--p-line)}
+.p-menu-move .p-input{width:100%;min-height:44px}
+.p-pin-mark{align-self:center;font:500 var(--p-size-tiny) var(--p-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--p-accent-ink)}
