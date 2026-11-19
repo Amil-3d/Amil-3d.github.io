@@ -79,6 +79,7 @@
   function clear(){
     if(leave){ var go = leave; leave = null; go(); }
     if(listener){ window.removeEventListener('message', listener); listener = null; }
+    closeMenu();
     document.documentElement.classList.remove('p-book-open');
     if(document.fullscreenElement && document.exitFullscreen){ try{ document.exitFullscreen(); }catch(e){} }
     body.textContent = '';
@@ -247,9 +248,9 @@
       clear();
       var c = P.card(body, 'Library');
       var find = field(c, 'Search', 'search', search);
-      find.placeholder = 'Class, test or title';
+      find.placeholder = 'Notebook, test or title';
       var book = el('div', 'p-book'), rail = el('nav', 'p-book-rail'), side = el('div', 'p-book-side');
-      rail.setAttribute('aria-label', 'Classes');
+      rail.setAttribute('aria-label', 'Notebooks');
       book.appendChild(rail);
       book.appendChild(side);
       body.appendChild(book);
@@ -303,7 +304,8 @@
         mine.forEach(function(i){ var t = i.test || ''; if(tests.indexOf(t) < 0){ tests.push(t); } });
         if(part !== null && tests.indexOf(part) < 0){ part = null; }
         var pc = P.card(side, shelf);
-        if(!mine.length){ line(pc, 'p-empty', 'Nothing for ' + shelf + ' yet. Add a file below, or export one from its class project.'); return; }
+        classTools(pc, shelf, mine.length);
+        if(!mine.length){ line(pc, 'p-empty', 'Nothing in ' + shelf + ' yet. Add a file below, or export one from its Claude project.'); return; }
         if(tests.length > 1){
           var secs = el('div', 'p-chips p-book-secs');
           tab(secs, 'p-chip', 'All', null, part === null, function(){ part = null; draw(); });
@@ -321,8 +323,57 @@
           these.forEach(function(i){ itemRow(pl, i, false); });
         });
       }
+      /* rename or remove the open notebook (a class or a project): its tests and pages move with a new name, and
+         Canvas uses the new name too. A removed one stays gone, and Canvas does not bring it back. */
+      function classTools(pc, name, count){
+        var a = el('div', 'p-actions p-class-tools');
+        P.button(a, 'Rename', 'quiet p-link', function(){
+          a.textContent = '';
+          var box = el('div', 'p-edit');
+          var input = field(box, 'New name for ' + name, 'text', name);
+          input.maxLength = 30;
+          var b2 = el('div', 'p-actions');
+          P.button(b2, 'Save', 'main', function(b){
+            var to = input.value.trim();
+            if(!to){ P.say('Give it a name.', true); return; }
+            P.press('study_class_rename', { label: name, to: to }, b).then(function(r){
+              if(told(r, 'Renamed to ' + r.body.label + '.')){ shelf = r.body.label; showLibrary(); }
+            }).catch(function(){});
+          });
+          P.button(b2, 'Cancel', 'quiet p-link', function(){ draw(); });
+          box.appendChild(b2);
+          a.appendChild(box);
+          input.focus();
+        });
+        if(count){
+          line(a, 'p-row-meta', 'To remove ' + name + ', move or delete its ' + count + (count === 1 ? ' page' : ' pages') + ' first (the ⋯ menu on each).');
+        }
+        else{
+          twice(a, 'Remove notebook', 'Tap again to remove ' + name + ' and its tests', 'quiet p-link p-danger-link', function(b){
+            P.press('study_class_remove', { label: name }, b).then(function(r){
+              if(told(r, 'Removed ' + name + (r.body.tests ? ', with its ' + r.body.tests + (r.body.tests === 1 ? ' test.' : ' tests.') : '.'))){ shelf = null; showLibrary(); }
+            }).catch(function(){});
+          });
+        }
+        pc.appendChild(a);
+      }
       find.addEventListener('input', function(){ search = find.value; draw(); });
       draw();
+
+      c = P.card(body, 'Add a notebook');
+      line(c, 'p-note', 'A class or a project, like the DC motor project. Open a notebook on the left to rename or remove it.');
+      var cbox = el('div', 'p-edit p-add-box');
+      var cname = field(cbox, 'Name', 'text', '');
+      cname.maxLength = 30;
+      cname.placeholder = 'Econ, DC motor project ...';
+      var ca = el('div', 'p-actions');
+      P.button(ca, 'Add notebook', 'main', function(b){
+        var n = cname.value.trim();
+        if(!n){ P.say('Give it a name.', true); return; }
+        P.press('study_class_add', { label: n }, b).then(function(r){ if(told(r, 'Added ' + r.body.label + '.')){ shelf = r.body.label; showLibrary(); } }).catch(function(){});
+      });
+      cbox.appendChild(ca);
+      c.appendChild(cbox);
 
       c = P.card(body, 'Add a file');
       line(c, 'p-note', 'A workbook (.html) or a card set (.json). It is filed the same way as the drop folder.');
@@ -333,7 +384,7 @@
       file.accept = '.html,.htm,.json,text/html,application/json';
       file.setAttribute('aria-label', 'File');
       box.appendChild(file);
-      var cls = picker(box, 'Class', [['', 'As the file says']].concat(d.classes.map(function(x){ return [x, x]; })), '');
+      var cls = picker(box, 'Notebook', [['', 'As the file says']].concat(d.classes.map(function(x){ return [x, x]; })), '');
       var test = field(box, 'Test (optional)', 'text', '');
       test.maxLength = 80;
       var a = el('div', 'p-actions');
@@ -368,16 +419,72 @@
     var li = P.row(list, i.title, side, sub, meta);
     var a = el('div', 'p-actions');
     P.button(a, cards ? 'Review' : 'Open', 'main', function(){ if(cards){ review(i.id); } else{ openBook(i.id); } });
-    P.button(a, i.pinned ? 'Unpin' : 'Pin', i.pinned ? 'p-pinned' : '', function(b){ pin(i, !i.pinned, b); });
-    if(!cards){
-      P.button(a, i.mock ? 'Not a mock test' : 'Mark as mock test', 'quiet p-link', function(b){
-        P.press('study_item_set', { id: i.id, mock: !i.mock }, b).then(function(r){ if(told(r, i.mock ? 'Moved to Workbooks.' : 'Moved to Mock tests.')){ refresh(); } }).catch(function(){});
-      });
-    }
-    twice(a, 'Delete', 'Tap again to delete', 'quiet p-link p-danger-link', function(b){
-      P.press('study_item_delete', { id: i.id }, b).then(function(r){ if(told(r, 'Deleted.')){ refresh(); } }).catch(function(){});
-    });
+    if(i.pinned){ a.appendChild(el('span', 'p-pin-mark', 'Pinned')); }
+    more(a, i);
     li.appendChild(a);
+  }
+
+  /* The ⋯ menu on a library item: pin, move to another notebook, mock test or not, delete */
+  var openMenu = null;
+  function closeMenu(){
+    if(!openMenu){ return; }
+    var m = openMenu; openMenu = null;
+    m.box.remove();
+    m.btn.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('click', m.away, true);
+    document.removeEventListener('keydown', m.key, true);
+  }
+  function more(parent, i){
+    var wrap = el('div', 'p-more');
+    var btn = P.button(wrap, '⋯', 'p-more-btn', function(){
+      var was = openMenu && openMenu.btn === btn;
+      closeMenu();
+      if(was){ return; }
+      var box = el('div', 'p-menu');
+      box.setAttribute('role', 'menu');
+      P.button(box, i.pinned ? 'Unpin' : 'Pin', 'quiet', function(b){ closeMenu(); pin(i, !i.pinned, b); });
+      if(i.kind !== 'cards'){
+        P.button(box, i.mock ? 'Not a mock test' : 'Mark as mock test', 'quiet', function(b){
+          closeMenu();
+          P.press('study_item_set', { id: i.id, mock: !i.mock }, b).then(function(r){ if(told(r, i.mock ? 'Moved to Workbooks.' : 'Moved to Mock tests.')){ refresh(); } }).catch(function(){});
+        });
+      }
+      var names = (data && data.classes ? data.classes.slice() : []);
+      (data && data.items || []).forEach(function(x){ if(x['class'] && names.indexOf(x['class']) < 0){ names.push(x['class']); } });
+      names = names.filter(function(n){ return n !== i['class']; }).sort(function(x, y){ return x.toLowerCase() < y.toLowerCase() ? -1 : 1; });
+      if(names.length){
+        var mv = el('div', 'p-menu-move');
+        var s = el('select', 'p-input');
+        s.setAttribute('aria-label', 'Move to notebook');
+        var first = el('option', '', 'Move to…'); first.value = ''; s.appendChild(first);
+        names.forEach(function(n){ var o = el('option', '', n); o.value = n; s.appendChild(o); });
+        s.addEventListener('change', function(){
+          if(!s.value){ return; }
+          var to = s.value;
+          closeMenu();
+          P.press('study_item_set', { id: i.id, 'class': to }, btn).then(function(r){ if(told(r, 'Moved to ' + to + '.')){ refresh(); } }).catch(function(){});
+        });
+        mv.appendChild(s);
+        box.appendChild(mv);
+      }
+      twice(box, 'Delete', 'Tap again to delete', 'quiet p-danger-link', function(b){
+        closeMenu();
+        P.press('study_item_delete', { id: i.id }, b).then(function(r){ if(told(r, 'Deleted.')){ refresh(); } }).catch(function(){});
+      });
+      wrap.appendChild(box);
+      var m = { box: box, btn: btn };
+      m.away = function(e){ if(!wrap.contains(e.target)){ closeMenu(); } };
+      m.key = function(e){ if(e.key === 'Escape'){ closeMenu(); btn.focus(); } };
+      openMenu = m;
+      btn.setAttribute('aria-expanded', 'true');
+      document.addEventListener('click', m.away, true);
+      document.addEventListener('keydown', m.key, true);
+      var f = box.querySelector('button'); if(f){ f.focus(); }
+    });
+    btn.setAttribute('aria-label', 'More for ' + i.title);
+    btn.setAttribute('aria-haspopup', 'menu');
+    btn.setAttribute('aria-expanded', 'false');
+    parent.appendChild(wrap);
   }
 
   function pin(i, on, b){
