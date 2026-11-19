@@ -352,6 +352,9 @@ html.p-book-open{overflow:hidden}
    Only on a section change (the stack is made new then), never on a refresh inside it. */
 #view > .p-stack{animation:p-fadeup .45s var(--p-ease) both}
 @keyframes p-fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* An open workbook is position:fixed over the whole window. A transform left on an ancestor (this fade's end
+   state) would pin it to that ancestor instead and squash the frame to a strip, so the fade stops while one is open. */
+html.p-book-open #view > .p-stack{animation:none}
 ::selection{background:var(--p-accent);color:var(--p-on-accent)}
 .p-card h1,.p-title{text-wrap:balance}
 @media (prefers-reduced-motion: reduce){
