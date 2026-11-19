@@ -10,6 +10,9 @@
   --p-accent:#007a31; --p-accent-ink:#007a31; --p-accent-soft:#e3f1e6; --p-on-accent:#ffffff;
   --p-bad:#c2410c; --p-bad-soft:#fbeadf;
   --p-grid:rgba(21,21,15,.05); --p-grid-major:rgba(21,21,15,.07);
+  /* sticky notes on the Ideas board */
+  --p-note-yellow:#f7e9a6; --p-note-green:#cdeccf; --p-note-blue:#cfe2f5; --p-note-pink:#f6d3dc;
+  --p-note-orange:#f8d9b8; --p-note-white:#ffffff; --p-board:#fbfaf6;
   /* type */
   --p-sans:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
   --p-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -28,6 +31,8 @@
     --p-accent:#2fd968; --p-accent-ink:#2fd968; --p-accent-soft:#12251a; --p-on-accent:#06140b;
     --p-bad:#ff7a45; --p-bad-soft:#2a160d;
     --p-grid:rgba(236,234,222,.045); --p-grid-major:rgba(236,234,222,.06);
+    --p-note-yellow:#3a3417; --p-note-green:#16301d; --p-note-blue:#162636; --p-note-pink:#381c25;
+    --p-note-orange:#3a2614; --p-note-white:#1d201e; --p-board:#111413;
   }
 }
 :root[data-theme="dark"]{
@@ -36,6 +41,8 @@
   --p-accent:#2fd968; --p-accent-ink:#2fd968; --p-accent-soft:#12251a; --p-on-accent:#06140b;
   --p-bad:#ff7a45; --p-bad-soft:#2a160d;
   --p-grid:rgba(236,234,222,.045); --p-grid-major:rgba(236,234,222,.06);
+  --p-note-yellow:#3a3417; --p-note-green:#16301d; --p-note-blue:#162636; --p-note-pink:#381c25;
+  --p-note-orange:#3a2614; --p-note-white:#1d201e; --p-board:#111413;
 }
 
 *{box-sizing:border-box}
@@ -350,4 +357,74 @@ html.p-book-open{overflow:hidden}
 @media (prefers-reduced-motion: reduce){
   #view > .p-stack{animation:none}
   .p-btn,.p-tab{transition:none}
+}
+
+/* Ideas: a whiteboard of sticky notes on its own sheet of graph paper. Square corners and ink rules like the
+   rest of the panel; a note lifts with a hard offset while it is dragged. */
+.p-note-yellow{--p-note:var(--p-note-yellow)} .p-note-green{--p-note:var(--p-note-green)} .p-note-blue{--p-note:var(--p-note-blue)}
+.p-note-pink{--p-note:var(--p-note-pink)} .p-note-orange{--p-note:var(--p-note-orange)} .p-note-white{--p-note:var(--p-note-white)}
+.p-ideas-new{min-height:70px}
+.p-ideas-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:10px}
+.p-ideas-row .p-ideas-add{margin-left:auto}
+.p-swatches{display:flex;gap:6px}
+.p-swatch{width:30px;height:30px;padding:0;border:1px solid var(--p-rule);background:var(--p-note);cursor:pointer;border-radius:0}
+.p-swatch[aria-checked="true"]{outline:2px solid var(--p-accent);outline-offset:2px}
+.p-ideas-tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--p-line)}
+.p-ideas-seg{flex:0 0 auto;padding:2px}
+.p-ideas-seg .p-seg-btn{min-height:34px;padding:0 14px}
+.p-ideas-zoom{display:flex;gap:2px}
+.p-ideas-zoom .p-btn{min-height:34px;min-width:34px;justify-content:center;font-family:var(--p-mono)}
+.p-ideas-count{margin-left:auto;font-family:var(--p-mono);font-size:var(--p-size-tiny);color:var(--p-ink-3);letter-spacing:.06em;text-transform:uppercase}
+.p-ideas-holder{min-width:0;max-width:100%}
+.p-board-wrap{position:relative;overflow:auto;width:100%;height:min(72vh,820px);border:1.5px solid var(--p-rule);background:var(--p-board);
+  -webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.p-board-sizer{position:relative}
+.p-board{position:absolute;left:0;top:0;transform-origin:0 0;
+  background-image:
+    linear-gradient(var(--p-grid-major) 1px,transparent 1px),linear-gradient(90deg,var(--p-grid-major) 1px,transparent 1px),
+    linear-gradient(var(--p-grid) 1px,transparent 1px),linear-gradient(90deg,var(--p-grid) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px}
+.p-board-lines{position:absolute;left:0;top:0;pointer-events:none}
+.p-board-line{stroke:var(--p-ink-3);stroke-width:1.5;stroke-dasharray:5 5}
+.p-board-empty{position:absolute;left:48px;top:48px;display:grid;gap:4px;max-width:420px;color:var(--p-ink-3);font-size:15px}
+.p-board-empty strong{color:var(--p-ink);font-size:18px}
+.p-sticky{position:absolute;display:flex;flex-direction:column;min-height:132px;background:var(--p-note);color:var(--p-ink);
+  border:1px solid var(--p-rule);box-shadow:0 0 0 0 var(--p-rule);
+  transition:box-shadow .18s var(--p-ease),transform .18s var(--p-ease)}
+.p-sticky.small{min-height:76px}
+.p-sticky.lifted{box-shadow:5px 5px 0 0 var(--p-rule);transform:translate(-2px,-2px);z-index:5}
+.p-sticky.fresh{animation:p-stick .6s var(--p-ease) both}
+@keyframes p-stick{from{opacity:0;transform:translateY(-14px) rotate(-2deg)}to{opacity:1;transform:none}}
+.p-sticky-head{display:flex;gap:8px;align-items:baseline;padding:6px 10px;border-bottom:1px dashed var(--p-line-strong);
+  font-family:var(--p-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--p-ink-2);
+  cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.p-sticky.lifted .p-sticky-head{cursor:grabbing}
+.p-sticky-head:focus-visible{outline:2px solid var(--p-accent);outline-offset:-2px}
+.p-sticky-num{font-weight:600;color:var(--p-ink)}
+.p-sticky-from{color:var(--p-accent-ink)}
+.p-sticky-at{margin-left:auto;white-space:nowrap}
+.p-sticky-text{flex:1;padding:10px 12px 4px;font-size:15px;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}
+.p-sticky.small .p-sticky-text{font-size:13px;padding-top:6px}
+.p-sticky-near{padding:0 12px;font-family:var(--p-mono);font-size:10px;color:var(--p-ink-3)}
+.p-sticky-near:empty{display:none}
+.p-sticky-acts{display:flex;flex-wrap:wrap;gap:0;padding:2px 4px 4px}
+.p-sticky-acts .p-btn{min-height:32px;padding:0 8px;font-size:11px}
+.p-sticky-acts .p-btn.main{min-height:32px}
+.p-btn.p-sticky-del{color:var(--p-bad)}
+.p-sticky.editing{z-index:6;padding:8px;gap:8px;width:280px !important;box-shadow:5px 5px 0 0 var(--p-rule)}
+.p-sticky-edit{min-height:120px;background:var(--p-surface)}
+@media (hover:hover){
+  .p-board .p-sticky .p-sticky-acts{opacity:0;transition:opacity .15s}
+  .p-board .p-sticky:hover .p-sticky-acts,.p-board .p-sticky:focus-within .p-sticky-acts{opacity:1}
+}
+.p-ideas-list{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.p-sticky.in-list{position:relative}
+.p-sticky.in-list .p-sticky-head{cursor:default;touch-action:auto}
+.p-sticky.in-list.editing{width:auto !important}
+@media(min-width:1000px){
+  #view .p-stack > .p-ideas-bar{flex:1 1 100%}
+  .p-board-wrap{height:calc(100vh - 330px);min-height:420px}
+}
+@media (prefers-reduced-motion: reduce){
+  .p-sticky,.p-sticky.fresh{transition:none;animation:none}
 }
