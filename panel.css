@@ -440,5 +440,6 @@ html.p-book-open #view > .p-stack{animation:none}
 .p-menu .p-btn{width:100%;justify-content:flex-start;text-align:left;border:0;border-bottom:1px solid var(--p-line);margin:0}
 .p-menu .p-btn:last-child{border-bottom:0}
 .p-menu-move{padding:8px;border-bottom:1px solid var(--p-line)}
-.p-menu-move .p-input{width:100%;min-height:44px}
+.p-menu-move .p-input{width:100%;min-height:44px;color:var(--p-accent-ink)}
+.p-menu .p-btn:not(.p-danger-link){color:var(--p-accent-ink)}
 .p-pin-mark{align-self:center;font:500 var(--p-size-tiny) var(--p-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--p-accent-ink)}
