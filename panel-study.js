@@ -303,6 +303,7 @@
         mine.forEach(function(i){ var t = i.test || ''; if(tests.indexOf(t) < 0){ tests.push(t); } });
         if(part !== null && tests.indexOf(part) < 0){ part = null; }
         var pc = P.card(side, shelf);
+        classTools(pc, shelf, mine.length);
         if(!mine.length){ line(pc, 'p-empty', 'Nothing for ' + shelf + ' yet. Add a file below, or export one from its class project.'); return; }
         if(tests.length > 1){
           var secs = el('div', 'p-chips p-book-secs');
@@ -321,8 +322,57 @@
           these.forEach(function(i){ itemRow(pl, i, false); });
         });
       }
+      /* rename or remove the open class: its tests and pages move with a new name, and Canvas uses the new
+         name too. A removed class stays gone, and Canvas does not bring it back. */
+      function classTools(pc, name, count){
+        var a = el('div', 'p-actions p-class-tools');
+        P.button(a, 'Rename', 'quiet p-link', function(){
+          a.textContent = '';
+          var box = el('div', 'p-edit');
+          var input = field(box, 'New name for ' + name, 'text', name);
+          input.maxLength = 30;
+          var b2 = el('div', 'p-actions');
+          P.button(b2, 'Save', 'main', function(b){
+            var to = input.value.trim();
+            if(!to){ P.say('Give it a name.', true); return; }
+            P.press('study_class_rename', { label: name, to: to }, b).then(function(r){
+              if(told(r, 'Renamed to ' + r.body.label + '.')){ shelf = r.body.label; showLibrary(); }
+            }).catch(function(){});
+          });
+          P.button(b2, 'Cancel', 'quiet p-link', function(){ draw(); });
+          box.appendChild(b2);
+          a.appendChild(box);
+          input.focus();
+        });
+        if(count){
+          line(a, 'p-row-meta', 'To remove ' + name + ', move or delete its ' + count + (count === 1 ? ' page' : ' pages') + ' first.');
+        }
+        else{
+          twice(a, 'Remove class', 'Tap again to remove ' + name + ' and its tests', 'quiet p-link p-danger-link', function(b){
+            P.press('study_class_remove', { label: name }, b).then(function(r){
+              if(told(r, 'Removed ' + name + (r.body.tests ? ', with its ' + r.body.tests + (r.body.tests === 1 ? ' test.' : ' tests.') : '.'))){ shelf = null; showLibrary(); }
+            }).catch(function(){});
+          });
+        }
+        pc.appendChild(a);
+      }
       find.addEventListener('input', function(){ search = find.value; draw(); });
       draw();
+
+      c = P.card(body, 'Add a class');
+      line(c, 'p-note', 'A class Canvas does not know about. Open a class on the left to rename or remove it.');
+      var cbox = el('div', 'p-edit p-add-box');
+      var cname = field(cbox, 'Name', 'text', '');
+      cname.maxLength = 30;
+      cname.placeholder = 'Econ, BLDC Motor ...';
+      var ca = el('div', 'p-actions');
+      P.button(ca, 'Add class', 'main', function(b){
+        var n = cname.value.trim();
+        if(!n){ P.say('Give it a name.', true); return; }
+        P.press('study_class_add', { label: n }, b).then(function(r){ if(told(r, 'Added ' + r.body.label + '.')){ shelf = r.body.label; showLibrary(); } }).catch(function(){});
+      });
+      cbox.appendChild(ca);
+      c.appendChild(cbox);
 
       c = P.card(body, 'Add a file');
       line(c, 'p-note', 'A workbook (.html) or a card set (.json). It is filed the same way as the drop folder.');
